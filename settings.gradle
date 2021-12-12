@@ -19,3 +19,4 @@ include ':app'
 //project(':samples').projectDir = file('support/compose/ui/ui/samples')
 
 include ':samples'
+include ':processor'
