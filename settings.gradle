@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ComposeSamples"
 include ':app'
+//include ':support'
+//include 'samples'
+//project(':samples').projectDir = file('support/compose/ui/ui/samples')
+
