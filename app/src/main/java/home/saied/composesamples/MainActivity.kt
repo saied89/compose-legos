@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.samples.AndroidViewSample
 import androidx.compose.ui.tooling.preview.Preview
 import home.saied.composesamples.ui.theme.ComposeSamplesTheme
+import home.saied.samples.samples
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

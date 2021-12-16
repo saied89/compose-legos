@@ -42,6 +42,7 @@ android {
     kotlin {
         sourceSets {
             main {
+                kotlin.srcDir("build/generated/ksp/release/kotlin")
                 kotlin.srcDir("../support/compose/ui/ui/samples/src/main/java/androidx/compose/ui/samples")
             }
         }
@@ -49,7 +50,7 @@ android {
 }
 
 dependencies {
-
+    api(project(":processor-api"))
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("com.google.android.material:material:1.4.0")

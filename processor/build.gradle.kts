@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("com.squareup:javapoet:1.13.0")
+    implementation(project(":processor-api"))
     implementation("com.google.devtools.ksp:symbol-processing-api:$kspVersion")
+    implementation("com.squareup:kotlinpoet-ksp:1.10.2")
 }
