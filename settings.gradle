@@ -20,3 +20,4 @@ include ':app'
 
 include ':samples'
 include ':processor'
+include ':processor-api'
