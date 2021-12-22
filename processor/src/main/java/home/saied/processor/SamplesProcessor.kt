@@ -7,26 +7,29 @@ import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.writeTo
+import home.saied.processor_api.SampleFile
+import home.saied.processor_api.SampleInfo
 import java.io.File
 
 class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) : SymbolProcessor {
 
+    lateinit var sampleFileInfoList: List<SampleFile>
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        resolver.getAllFiles().filter { file ->
+        sampleFileInfoList = resolver.getAllFiles().filter { file ->
 //            logger.warn("sample file:${file.filePath}")
             file.declarations.any(::isSampledComposable)
-        }.toList().forEach { file ->
-            val toList = file.declarations.filter(::isSampledComposable)
-            logger.warn("file:${file.fileName}")
-            toList.forEach {
-                logger.warn("  " + it.simpleName.asString() + ":" + readDeclarationSourceCode(it))
-            }
+        }.toList().map { file ->
+            val sampleDeclarations = file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }
+            val sampleInfoList = sampleDeclarations.map {
+                SampleInfo(it.simpleName.asString(), readDeclarationSourceCode(it), it.docString, file.packageName.asString())
+            }.toList()
+            SampleFile(file.fileName, sampleInfoList)
         }
         return emptyList()
     }
 
-    private fun readDeclarationSourceCode(declaration: KSDeclaration): String {
-        check(declaration is KSFunctionDeclaration)
+    private fun readDeclarationSourceCode(declaration: KSFunctionDeclaration): String {
         return declaration.containingFile!!.let {
             val declarationLineNumber = (declaration.location as FileLocation).lineNumber
             File(it.filePath).useLines { lines ->
@@ -55,7 +58,7 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
 
     @OptIn(KotlinPoetKspPreview::class)
     override fun finish() {
-        buildSamplesFileSpec(listOf()).writeTo(codeGenerator, true)
+        buildSamplesFileSpec(sampleFileInfoList).writeTo(codeGenerator, true)
     }
 }
 

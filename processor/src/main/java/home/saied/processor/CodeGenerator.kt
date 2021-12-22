@@ -3,6 +3,7 @@ package home.saied.processor
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import home.saied.processor_api.SampleFile
+import home.saied.processor_api.SampleInfo
 
 const val PACKAGE_NAME = "home.saied.samples"
 
@@ -27,24 +28,27 @@ val sampleClassSpec = TypeSpec.classBuilder("Sample").primaryConstructor(flux)
 val sampleListTypeSpec =
     List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "Sample"))
 
-private fun samplesInitBlock(sampleFileList: List<SampleFile>): CodeBlock =
-    CodeBlock.builder().add("buildList {\n")
-        .addStatement(
+private fun samplesInitBlock(sampleList: List<SampleInfo>): CodeBlock {
+    val builder = CodeBlock.builder().add("buildList {\n")
+    sampleList.forEach { sampleInf ->
+        builder.addStatement(
             "    add(%N(%S,%S,{ %M() }))",
             sampleClassSpec,
-            "greeting",
-            "greeting",
-            MemberName("androidx.compose.ui.samples", "AndroidViewSample")
+            sampleInf.name,
+            sampleInf.body,
+            MemberName(sampleInf.packageName, sampleInf.name)
         )
-        .add("}").build()
+    }
+    return builder.add("}").build()
+}
 
-val samplesPropertySpec =
-    PropertySpec.builder("samples", sampleListTypeSpec).initializer(samplesInitBlock(listOf()))
+fun samplesPropertySpec(sampleFile: SampleFile) =
+    PropertySpec.builder("samples", sampleListTypeSpec).initializer(samplesInitBlock(sampleFile.sampleList))
         .build()
 
 fun buildSamplesFileSpec(sampleFileList: List<SampleFile>): FileSpec {
     return FileSpec.builder(PACKAGE_NAME, "Samples")
         .addType(sampleClassSpec)
-        .addProperty(samplesPropertySpec)
+        .addProperty(samplesPropertySpec(sampleFileList[0]))
         .build()
 }
