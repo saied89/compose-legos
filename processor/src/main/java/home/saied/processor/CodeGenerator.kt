@@ -43,12 +43,16 @@ private fun samplesInitBlock(sampleList: List<SampleInfo>): CodeBlock {
 }
 
 fun samplesPropertySpec(sampleFile: SampleFile) =
-    PropertySpec.builder("samples", sampleListTypeSpec).initializer(samplesInitBlock(sampleFile.sampleList))
+    PropertySpec.builder("${sampleFile.fileName.substringBefore('.')}List", sampleListTypeSpec).initializer(samplesInitBlock(sampleFile.sampleList))
         .build()
 
 fun buildSamplesFileSpec(sampleFileList: List<SampleFile>): FileSpec {
     return FileSpec.builder(PACKAGE_NAME, "Samples")
         .addType(sampleClassSpec)
-        .addProperty(samplesPropertySpec(sampleFileList[0]))
+        .apply {
+            sampleFileList.forEach {
+                addProperty(samplesPropertySpec(it))
+            }
+        }
         .build()
 }
