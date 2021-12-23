@@ -1,4 +1,4 @@
-package home.saied.processor_api
+package home.saied.processor
 
 data class SampleFile(val fileName: String, val sampleList: List<SampleInfo>)
 

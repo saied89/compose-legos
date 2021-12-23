@@ -2,8 +2,6 @@ package home.saied.processor
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import home.saied.processor_api.SampleFile
-import home.saied.processor_api.SampleInfo
 
 const val PACKAGE_NAME = "home.saied.samples"
 
