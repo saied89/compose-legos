@@ -5,6 +5,7 @@ import com.google.devtools.ksp.symbol.FileLocation
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.writeTo
 import java.io.File
@@ -15,12 +16,30 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         sampleFileInfoList = resolver.getAllFiles().filter { file ->
-//            logger.warn("sample file:${file.filePath}")
+            logger.warn("sample file:${file.filePath}")
             file.declarations.any(::isSampledComposable)
         }.toList().map { file ->
-            val sampleDeclarations = file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }
-            val sampleInfoList = sampleDeclarations.map {
-                SampleInfo(it.simpleName.asString(), readDeclarationSourceCode(it), it.docString, file.packageName.asString())
+            val sampleDeclarations =
+                file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }
+            val sampleInfoList = sampleDeclarations.map { func ->
+                val annotationSet = buildList {
+                    func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "Sampled" && it.shortName.asString() != "Suppress" }
+                        .forEach {
+                            add(
+                                ClassName(
+                                    it.annotationType.resolve().declaration.packageName.asString(),
+                                    it.shortName.asString()
+                                )
+                            )
+                        }
+                }
+                SampleInfo(
+                    func.simpleName.asString(),
+                    readDeclarationSourceCode(func),
+                    func.docString,
+                    file.packageName.asString(),
+                    annotationSet
+                )
             }.toList()
             SampleFile(file.fileName, sampleInfoList)
         }

@@ -2,6 +2,7 @@ package home.saied.processor
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 
 const val PACKAGE_NAME = "home.saied.samples"
 
@@ -40,8 +41,13 @@ private fun samplesInitBlock(sampleList: List<SampleInfo>): CodeBlock {
     return builder.add("}").build()
 }
 
+@OptIn(KotlinPoetKspPreview::class)
 fun samplesPropertySpec(sampleFile: SampleFile) =
-    PropertySpec.builder("${sampleFile.fileName.substringBefore('.')}List", sampleListTypeSpec).initializer(samplesInitBlock(sampleFile.sampleList))
+    PropertySpec.builder("${sampleFile.fileName.substringBefore('.')}List", sampleListTypeSpec)
+        .initializer(samplesInitBlock(sampleFile.sampleList))
+        .apply {
+            sampleFile.sampleList.flatMap { it.optInAnnotations }.toSet().forEach(::addAnnotation)
+        }
         .build()
 
 fun buildSamplesFileSpec(sampleFileList: List<SampleFile>): FileSpec {
