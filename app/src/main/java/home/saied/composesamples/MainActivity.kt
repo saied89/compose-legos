@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import home.saied.composesamples.ui.Home
 import home.saied.composesamples.ui.SampleItem
 import home.saied.composesamples.ui.SampleView
 import home.saied.samples.*
@@ -27,12 +28,8 @@ class MainActivity : ComponentActivity() {
 //            ComposeSamplesTheme {
             NavHost(navController = navController, startDestination = "home") {
                 composable("home") {
-                    LazyColumn {
-                        itemsIndexed(sampleList, itemContent = { index, item ->
-                            SampleItem(example = item) {
-                                navController.navigate("sample?index=$index")
-                            }
-                        })
+                    Home(sampleList = sampleList) { index ->
+                        navController.navigate("sample?index=$index")
                     }
                 }
                 composable(

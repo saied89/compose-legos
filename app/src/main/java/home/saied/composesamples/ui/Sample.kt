@@ -1,12 +1,16 @@
 package home.saied.composesamples.ui
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import home.saied.samples.Sample
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +48,7 @@ fun SampleView(sample: Sample) {
         Crossfade(targetState = sampleViewSwitchState) {
             when (it) {
                 SampleViewSwitch.SOURCE -> {
-                    Text(text = sample.body)
+                    Code(code = sample.body)
                 }
                 SampleViewSwitch.COMPOSABLE -> {
                     sample.block()
@@ -53,6 +57,11 @@ fun SampleView(sample: Sample) {
         }
 
     }
+}
+
+@Composable
+fun Code(code: String) {
+    Text(text = code, modifier = Modifier.padding(16.dp))
 }
 
 enum class SampleViewSwitch {

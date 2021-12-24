@@ -18,31 +18,26 @@ import home.saied.samples.Sample
 @Composable
 fun SampleItem(
     example: Sample,
+    modifier: Modifier = Modifier,
     onClick: (example: Sample) -> Unit
 ) {
     // TODO: Replace with M3 Card when available
     Surface(
         onClick = { onClick(example) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(
             width = ExampleItemBorderWidth,
             color = MaterialTheme.colorScheme.outline
         )
     ) {
-        Row(modifier = androidx.compose.ui.Modifier.padding(ExampleItemPadding)) {
-            Column(modifier = Modifier.weight(1f, fill = true)) {
-                Text(
-                    text = example.name,
-                    style = MaterialTheme.typography.titleSmall
-                )
-                Spacer(modifier = androidx.compose.ui.Modifier.height(ExampleItemTextPadding))
-                Text(
-                    text = example.name,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-            Spacer(modifier = androidx.compose.ui.Modifier.width(ExampleItemPadding))
+        Row(modifier = Modifier.padding(ExampleItemPadding)) {
+            Text(
+                text = example.name,
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(ExampleItemPadding))
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = null,
