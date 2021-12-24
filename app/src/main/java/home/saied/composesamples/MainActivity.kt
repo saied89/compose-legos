@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import home.saied.composesamples.ui.SampleItem
+import home.saied.composesamples.ui.SampleView
 import home.saied.samples.*
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     })
                 ) {
                     val index: Int = it.arguments!!.getInt("index")
-                    sampleList[index].block()
+                    SampleView(sampleList[index])
                 }
             }
         }
