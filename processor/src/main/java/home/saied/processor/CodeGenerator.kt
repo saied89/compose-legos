@@ -14,7 +14,6 @@ val composableSlotLambdaName = LambdaTypeName.get(returnType = Unit::class.asTyp
 )
 
 val sampleClassSpec = run {
-
     val flux = FunSpec.constructorBuilder()
         .addParameter("name", String::class)
         .addParameter("body", String::class)
@@ -46,8 +45,26 @@ val sampleFileClassSpec = run {
         .build()
 }
 
+val sampleFileListTypeSpec =
+    List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "SampleFile"))
+
+val sampleModuleClassSpec = run {
+    val flux = FunSpec.constructorBuilder()
+        .addParameter("name", String::class)
+        .addParameter("sampleFileList", sampleFileListTypeSpec)
+        .build()
+    TypeSpec.classBuilder("SampleModule").primaryConstructor(flux)
+        .addProperty(PropertySpec.builder("name", String::class).initializer("name").build())
+        .addProperty(
+            PropertySpec.builder("sampleFileList", sampleFileListTypeSpec)
+                .initializer("sampleFileList").build()
+        )
+        .build()
+}
+
 private fun samplesInitBlock(fileName: String, sampleList: List<SampleInfo>): CodeBlock {
-    val builder = CodeBlock.builder().addStatement("%N(%S, buildList {", sampleFileClassSpec, fileName)
+    val builder =
+        CodeBlock.builder().addStatement("%N(%S, buildList {", sampleFileClassSpec, fileName)
     sampleList.forEach { sampleInf ->
         builder.addStatement(
             "    add(%N(%S,%S,{ %M() }))",
@@ -60,9 +77,24 @@ private fun samplesInitBlock(fileName: String, sampleList: List<SampleInfo>): Co
     return builder.add("})").build()
 }
 
-//private fun sampleModulePropertySpec(moduleName: String, sampleFileList: List<SampleFile>): PropertySpec =
-//    PropertySpec.builder(moduleName,)
-//        .build()
+private fun moduleInitBlock(moduleName: String, fileList: List<SampleFile>): CodeBlock {
+    val builder =
+        CodeBlock.builder().addStatement("%N(%S, buildList {", sampleModuleClassSpec, moduleName)
+    fileList.forEach { fileInf ->
+        builder.addStatement(
+            "    add(%M)", MemberName(PACKAGE_NAME, fileInf.fileName.substringBefore('.'))
+        )
+    }
+    return builder.add("})").build()
+}
+
+private fun sampleModulePropertySpec(moduleName: String, sampleFileList: List<SampleFile>): PropertySpec =
+    PropertySpec.builder(moduleName, ClassName(PACKAGE_NAME, "SampleModule"))
+        .initializer(moduleInitBlock(moduleName, sampleFileList))
+        .apply {
+            sampleFileList.flatMap { it.sampleList }.flatMap { it.optInAnnotations }.toSet().forEach(::addAnnotation)
+        }.addModifiers(KModifier.INTERNAL)
+        .build()
 
 @OptIn(KotlinPoetKspPreview::class)
 private fun samplesPropertySpec(sampleFile: SampleFile) =
@@ -73,18 +105,22 @@ private fun samplesPropertySpec(sampleFile: SampleFile) =
         }
         .build()
 
-fun sampleModelFileSpec(): FileSpec {
+fun samplesFileSpec(): FileSpec {
     return FileSpec.builder(PACKAGE_NAME, "Samples")
         .addType(sampleClassSpec)
         .addType(sampleFileClassSpec)
+        .addType(sampleModuleClassSpec)
         .build()
 }
 
 fun moduleSamplesFileSpec(moduleName: String, sampleFileList: List<SampleFile>): FileSpec {
     return FileSpec.builder(PACKAGE_NAME, "${moduleName}Samples")
+        .addProperty(sampleModulePropertySpec(moduleName, sampleFileList))
         .apply {
             sampleFileList.forEach {
-                addProperty(samplesPropertySpec(it))
+                addProperty(
+                    samplesPropertySpec(it).toBuilder().addModifiers(KModifier.PRIVATE).build()
+                )
             }
         }
         .build()
