@@ -2,6 +2,8 @@ package home.saied.processor
 
 import com.squareup.kotlinpoet.ClassName
 
+data class SampleModule(val moduleName: String, val list: List<SampleFile>)
+
 data class SampleFile(val fileName: String, val sampleList: List<SampleInfo>)
 
 data class SampleInfo(

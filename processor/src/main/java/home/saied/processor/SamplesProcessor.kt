@@ -75,7 +75,8 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
 
     @OptIn(KotlinPoetKspPreview::class)
     override fun finish() {
-        buildSamplesFileSpec(sampleFileInfoList).writeTo(codeGenerator, true)
+        sampleModelFileSpec().writeTo(codeGenerator, true)
+        moduleSamplesFileSpec("ui", sampleFileInfoList).writeTo(codeGenerator, true)
     }
 }
 
