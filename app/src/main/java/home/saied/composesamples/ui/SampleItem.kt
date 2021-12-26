@@ -16,14 +16,14 @@ import androidx.compose.ui.unit.dp
 import home.saied.samples.Sample
 
 @Composable
-fun SampleItem(
-    example: Sample,
+fun ListItem(
+    title: String,
     modifier: Modifier = Modifier,
-    onClick: (example: Sample) -> Unit
+    onClick: () -> Unit
 ) {
     // TODO: Replace with M3 Card when available
     Surface(
-        onClick = { onClick(example) },
+        onClick = { onClick() },
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(
@@ -33,7 +33,7 @@ fun SampleItem(
     ) {
         Row(modifier = Modifier.padding(ExampleItemPadding)) {
             Text(
-                text = example.name,
+                text = title,
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.weight(1f)
             )
@@ -48,5 +48,4 @@ fun SampleItem(
 }
 
 private val ExampleItemPadding = 16.dp
-private val ExampleItemTextPadding = 8.dp
 private val ExampleItemBorderWidth = 1.dp

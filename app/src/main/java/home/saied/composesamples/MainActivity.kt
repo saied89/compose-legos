@@ -3,46 +3,17 @@ package home.saied.composesamples
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import home.saied.composesamples.ui.Home
-import home.saied.composesamples.ui.SampleItem
-import home.saied.composesamples.ui.SampleView
-import home.saied.samples.*
+import home.saied.composesamples.ui.MainScreen
 
 class MainActivity : ComponentActivity() {
-
-    val sampleList: List<Sample> = sampleListList.flatten()
 
     @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
+            MainScreen()
 //            ComposeSamplesTheme {
-            NavHost(navController = navController, startDestination = "home") {
-                composable("home") {
-                    Home(sampleList = sampleList) { index ->
-                        navController.navigate("sample?index=$index")
-                    }
-                }
-                composable(
-                    "sample?index={index}",
-                    arguments = listOf(navArgument("index") {
-                        nullable = false
-                        type = NavType.IntType
-                    })
-                ) {
-                    val index: Int = it.arguments!!.getInt("index")
-                    SampleView(sampleList[index])
-                }
-            }
         }
 //            ComposeSamplesTheme {
 //                // A surface container using the 'background' color from the theme
@@ -56,34 +27,3 @@ class MainActivity : ComponentActivity() {
 //        }
     }
 }
-
-@OptIn(ExperimentalComposeUiApi::class)
-val sampleListList = listOf(
-    AlignmentLineSampleList,
-    AlphaSampleList,
-    AndroidViewSampleList,
-    BlurSampleList,
-    DialogSampleList,
-    DrawModifierSampleList,
-    FocusSamplesList,
-    InspectableModifierSampleList,
-    InspectorInfoInComposedModifierSamplesList,
-    KeyInputSamplesList,
-    LayerModifierSamplesList,
-    LayoutSampleList,
-    ModifierLocalSamplesList,
-    ModifierSamplesList,
-    NestedScrollSamplesList,
-    OnGloballyPositionedSamplesList,
-    OnPlacedSamplesList,
-    OnSizeChangedSamplesList,
-    PainterSampleList,
-    PointerIconSampleList,
-    PopupSampleList,
-    RotateSampleList,
-    ScaleSampleList,
-    ShadowSampleList,
-    SoftwareKeyboardControllerSampleList,
-    SubcomposeLayoutSampleList,
-    ZIndexModifierSampleList
-)

@@ -15,7 +15,7 @@ import home.saied.samples.Sample
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SampleView(sample: Sample) {
+fun SampleScreen(sample: Sample) {
     var sampleViewSwitchState: SampleViewSwitch by remember {
         mutableStateOf(SampleViewSwitch.SOURCE)
     }

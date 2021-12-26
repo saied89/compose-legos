@@ -143,7 +143,6 @@ fun samplesFileSpec(moduleList: List<SampleModuleInfo>): FileSpec {
 fun moduleSamplesFileSpec(moduleName: String, sampleFileList: List<SampleFileInfo>): FileSpec {
     val cleanedModuleName = moduleName.replace("-", "")
     return FileSpec.builder(PACKAGE_NAME, "${cleanedModuleName}Samples")
-        .addProperty(sampleModulePropertySpec(cleanedModuleName, sampleFileList))
         .apply {
             sampleFileList.forEach {
                 addProperty(
@@ -151,5 +150,6 @@ fun moduleSamplesFileSpec(moduleName: String, sampleFileList: List<SampleFileInf
                 )
             }
         }
+        .addProperty(sampleModulePropertySpec(cleanedModuleName, sampleFileList))
         .build()
 }
