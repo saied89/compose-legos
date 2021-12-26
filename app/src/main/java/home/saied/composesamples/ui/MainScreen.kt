@@ -47,9 +47,27 @@ fun MainScreen() {
             ) {
                 val moduleIndex: Int = it.arguments!!.getInt("moduleIndex")
                 val fileIndex: Int = it.arguments!!.getInt("fileIndex")
-                FileScreen(sampleFile = sampleModules[moduleIndex].sampleFileList[fileIndex]) {
-
+                FileScreen(sampleFile = sampleModules[moduleIndex].sampleFileList[fileIndex]) { sampleIndex ->
+                    navController.navigate("sample/$moduleIndex/$fileIndex/$sampleIndex")
                 }
+            }
+            composable(
+                "sample/{moduleIndex}/{fileIndex}/{sampleIndex}",
+                arguments = listOf(navArgument("moduleIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                }, navArgument("fileIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                }, navArgument("sampleIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                })
+            ) {
+                val moduleIndex: Int = it.arguments!!.getInt("moduleIndex")
+                val fileIndex: Int = it.arguments!!.getInt("fileIndex")
+                val sampleIndex: Int = it.arguments!!.getInt("sampleIndex")
+                SampleScreen(sampleModules[moduleIndex].sampleFileList[fileIndex].sampleList[sampleIndex])
             }
         }
     }
