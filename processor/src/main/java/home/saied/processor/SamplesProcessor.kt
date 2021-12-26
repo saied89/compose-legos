@@ -12,15 +12,16 @@ import java.io.File
 
 class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) : SymbolProcessor {
 
-    lateinit var sampleFileInfoList: List<SampleFile>
+    lateinit var moduleInfoList: List<SampleModuleInfo>
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        sampleFileInfoList = resolver.getAllFiles().filter { file ->
+        moduleInfoList = resolver.getAllFiles().filter { file ->
             logger.warn("sample file:${file.filePath}")
             file.declarations.any(::isSampledComposable)
         }.toList().map { file ->
             val sampleDeclarations =
-                file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }.filter { it.parameters.isEmpty() }
+                file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }
+                    .filter { it.parameters.isEmpty() }
             val sampleInfoList = sampleDeclarations.map { func ->
                 val annotationSet = buildList {
                     func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "Sampled" && it.shortName.asString() != "Suppress" }
@@ -41,7 +42,15 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
                     annotationSet
                 )
             }.toList()
-            SampleFile(file.fileName, sampleInfoList)
+            SampleFileInfo(
+                fileName = file.fileName,
+                moduleName = getModuleName(file.filePath),
+                sampleList = sampleInfoList
+            )
+        }.groupBy {
+            it.moduleName
+        }.map { (k, list) ->
+            SampleModuleInfo(k, list)
         }
         return emptyList()
     }
@@ -75,9 +84,24 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
 
     @OptIn(KotlinPoetKspPreview::class)
     override fun finish() {
-        samplesFileSpec().writeTo(codeGenerator, true)
-        moduleSamplesFileSpec("ui", sampleFileInfoList).writeTo(codeGenerator, true)
+        samplesFileSpec(moduleInfoList).writeTo(
+            codeGenerator,
+            true
+        )
+        moduleInfoList.forEach { (k, list) ->
+            val moduleName = getModuleName(k)
+            logger.warn("writing module file:$k")
+            moduleSamplesFileSpec(moduleName, list).writeTo(codeGenerator, true)
+        }
     }
+
+
+    /**
+     * support/compose/ui/ui/samples/src/main/java/androidx/compose/ui/samples -> ui
+     * support/compose/ui/ui-graphics/samples/src/main/java/androidx/compose/ui/graphics/samples -> ui-graphics
+     */
+    private fun getModuleName(modulePath: String): String =
+        modulePath.split("/samples")[0].split('/').last()
 }
 
 class SamplesProcessorProvider : SymbolProcessorProvider {

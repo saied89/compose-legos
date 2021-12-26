@@ -29,10 +29,9 @@ val sampleClassSpec = run {
         .build()
 }
 
-val sampleListTypeSpec =
-    List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "Sample"))
-
 val sampleFileClassSpec = run {
+    val sampleListTypeSpec =
+        List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "Sample"))
     val flux = FunSpec.constructorBuilder()
         .addParameter("name", String::class)
         .addParameter("sampleList", sampleListTypeSpec)
@@ -45,10 +44,9 @@ val sampleFileClassSpec = run {
         .build()
 }
 
-val sampleFileListTypeSpec =
-    List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "SampleFile"))
-
 val sampleModuleClassSpec = run {
+    val sampleFileListTypeSpec =
+        List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "SampleFile"))
     val flux = FunSpec.constructorBuilder()
         .addParameter("name", String::class)
         .addParameter("sampleFileList", sampleFileListTypeSpec)
@@ -62,22 +60,7 @@ val sampleModuleClassSpec = run {
         .build()
 }
 
-private fun samplesInitBlock(fileName: String, sampleList: List<SampleInfo>): CodeBlock {
-    val builder =
-        CodeBlock.builder().addStatement("%N(%S, buildList {", sampleFileClassSpec, fileName)
-    sampleList.forEach { sampleInf ->
-        builder.addStatement(
-            "    add(%N(%S,%S,{ %M() }))",
-            sampleClassSpec,
-            sampleInf.name,
-            sampleInf.body,
-            MemberName(sampleInf.packageName, sampleInf.name)
-        )
-    }
-    return builder.add("})").build()
-}
-
-private fun moduleInitBlock(moduleName: String, fileList: List<SampleFile>): CodeBlock {
+private fun moduleInitBlock(moduleName: String, fileList: List<SampleFileInfo>): CodeBlock {
     val builder =
         CodeBlock.builder().addStatement("%N(%S, buildList {", sampleModuleClassSpec, moduleName)
     fileList.forEach { fileInf ->
@@ -88,7 +71,7 @@ private fun moduleInitBlock(moduleName: String, fileList: List<SampleFile>): Cod
     return builder.add("})").build()
 }
 
-private fun sampleModulePropertySpec(moduleName: String, sampleFileList: List<SampleFile>): PropertySpec =
+private fun sampleModulePropertySpec(moduleName: String, sampleFileList: List<SampleFileInfo>): PropertySpec =
     PropertySpec.builder(moduleName, ClassName(PACKAGE_NAME, "SampleModule"))
         .initializer(moduleInitBlock(moduleName, sampleFileList))
         .apply {
@@ -97,25 +80,70 @@ private fun sampleModulePropertySpec(moduleName: String, sampleFileList: List<Sa
         .build()
 
 @OptIn(KotlinPoetKspPreview::class)
-private fun samplesPropertySpec(sampleFile: SampleFile) =
-    PropertySpec.builder(sampleFile.fileName.substringBefore('.'), ClassName(PACKAGE_NAME, "SampleFile"))
+private fun samplesPropertySpec(sampleFile: SampleFileInfo): PropertySpec {
+
+    fun samplesInitBlock(fileName: String, sampleList: List<SampleInfo>): CodeBlock {
+        val builder =
+            CodeBlock.builder().addStatement("%N(%S, buildList {", sampleFileClassSpec, fileName)
+        sampleList.forEach { sampleInf ->
+            builder.addStatement(
+                "    add(%N(%S,%S,{ %M() }))",
+                sampleClassSpec,
+                sampleInf.name,
+                sampleInf.body,
+                MemberName(sampleInf.packageName, sampleInf.name)
+            )
+        }
+        return builder.add("})").build()
+    }
+
+    return PropertySpec.builder(
+        sampleFile.fileName.substringBefore('.'),
+        ClassName(PACKAGE_NAME, "SampleFile")
+    )
         .initializer(samplesInitBlock(sampleFile.fileName, sampleFile.sampleList))
         .apply {
             sampleFile.sampleList.flatMap { it.optInAnnotations }.toSet().forEach(::addAnnotation)
         }
         .build()
+}
 
-fun samplesFileSpec(): FileSpec {
+private fun moduleListPropertySpec(moduleList: List<SampleModuleInfo>): PropertySpec {
+    val sampleModuleListTypeSpec =
+        List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "SampleModule"))
+
+    fun modulesInitBlock(moduleList: List<SampleModuleInfo>): CodeBlock =
+        CodeBlock.builder().addStatement("buildList {")
+            .apply {
+                moduleList.forEach { module ->
+                    val cleanedModulePropertyName = module.moduleName.replace("-", "")
+                    addStatement("  add($cleanedModulePropertyName)")
+                }
+            }
+            .addStatement("}")
+            .build()
+    return PropertySpec.builder("sampleModules", sampleModuleListTypeSpec)
+        .initializer(modulesInitBlock(moduleList))
+        .apply {
+            moduleList.flatMap { it.list }.flatMap { it.sampleList }.flatMap { it.optInAnnotations }.toSet().forEach(::addAnnotation)
+        }
+        .build()
+}
+
+
+fun samplesFileSpec(moduleList: List<SampleModuleInfo>): FileSpec {
     return FileSpec.builder(PACKAGE_NAME, "Samples")
         .addType(sampleClassSpec)
         .addType(sampleFileClassSpec)
         .addType(sampleModuleClassSpec)
+        .addProperty(moduleListPropertySpec(moduleList))
         .build()
 }
 
-fun moduleSamplesFileSpec(moduleName: String, sampleFileList: List<SampleFile>): FileSpec {
-    return FileSpec.builder(PACKAGE_NAME, "${moduleName}Samples")
-        .addProperty(sampleModulePropertySpec(moduleName, sampleFileList))
+fun moduleSamplesFileSpec(moduleName: String, sampleFileList: List<SampleFileInfo>): FileSpec {
+    val cleanedModuleName = moduleName.replace("-", "")
+    return FileSpec.builder(PACKAGE_NAME, "${cleanedModuleName}Samples")
+        .addProperty(sampleModulePropertySpec(cleanedModuleName, sampleFileList))
         .apply {
             sampleFileList.forEach {
                 addProperty(
