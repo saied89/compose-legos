@@ -44,6 +44,7 @@ android {
             main {
                 kotlin.srcDir("build/generated/ksp/debug/kotlin")
                 kotlin.srcDir("../support/compose/ui/ui/samples/src/main/java/androidx/compose/ui/samples")
+                kotlin.srcDir("../support/compose/animation/animation/samples/src/main/java/androidx/compose/animation/samples")
             }
         }
     }

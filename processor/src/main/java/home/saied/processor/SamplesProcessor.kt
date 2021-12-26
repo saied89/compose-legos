@@ -22,6 +22,7 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
             val sampleDeclarations =
                 file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }
                     .filter { it.parameters.isEmpty() }
+                    .filter { it.extensionReceiver == null }
             val sampleInfoList = sampleDeclarations.map { func ->
                 val annotationSet = buildList {
                     func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "Sampled" && it.shortName.asString() != "Suppress" }
