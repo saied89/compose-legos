@@ -90,7 +90,7 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
             annotation.shortName.asString() == "Composable"
         }
         val isSampled = declaration.annotations.any { annotation ->
-            annotation.shortName.asString() == "Composable"
+            annotation.shortName.asString() == "Sampled"
         }
         return isComposable && isSampled
     }

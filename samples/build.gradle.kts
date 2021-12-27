@@ -58,6 +58,9 @@ android {
                 kotlin.srcDir("../support/compose/animation/animation-core/samples/src/main/java/androidx/compose/animation/core/samples")
                 kotlin.srcDir("../support/compose/runtime/runtime-rxjava3/samples/src/main/java/androidx/compose/runtime/rxjava3/samples")
                 kotlin.srcDir("../support/compose/runtime/runtime-rxjava2/samples/src/main/java/androidx/compose/runtime/rxjava2/samples")
+                kotlin.srcDir("../support/compose/runtime/runtime-saveable/samples/src/main/java/androidx/compose/runtime/saveable/samples")
+                kotlin.srcDir("../support/compose/runtime/runtime-livedata/samples/src/main/java/androidx/compose/runtime/livedata/samples")
+                kotlin.srcDir("../support/compose/runtime/runtime/samples/src/main/java/androidx/compose/runtime/samples")
             }
         }
     }
@@ -74,6 +77,7 @@ dependencies {
     implementation("androidx.compose.animation:animation-graphics:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava3:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
+    implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
     implementation("androidx.compose.material3:material3:1.0.0-alpha02")
     ksp(project(":processor"))
 
