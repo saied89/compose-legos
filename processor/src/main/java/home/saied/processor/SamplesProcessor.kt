@@ -13,6 +13,7 @@ import java.io.File
 class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) : SymbolProcessor {
 
     lateinit var moduleInfoList: List<SampleModuleInfo>
+    private val skippedReportItemList: MutableList<String> = mutableListOf()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         moduleInfoList = resolver.getAllFiles().filter { file ->
@@ -38,7 +39,11 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
                         func.parameters.isNotEmpty() -> SKIP_BLOCK_GENERATION_REASON.PARAMETERIZED
                         func.extensionReceiver != null -> SKIP_BLOCK_GENERATION_REASON.EXTENSION_RECEIVER
                         else -> null
+                    }.also {
+                        if (it != null)
+                            skippedReportItemList.add("${func.qualifiedName!!.asString()}:$it")
                     }
+
                 SampleInfo(
                     func.simpleName.asString(),
                     readDeclarationSourceCode(func),
@@ -98,6 +103,18 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
             val moduleName = getModuleName(k)
             logger.warn("writing module file:$k")
             moduleSamplesFileSpec(moduleName, list).writeTo(codeGenerator, true)
+        }
+        codeGenerator.createNewFile(
+            Dependencies(false),
+            "",
+            "skiped_report",
+            "txt"
+        ).use {
+            it.bufferedWriter().use { writer ->
+                skippedReportItemList.forEach { item ->
+                    writer.write(item + "\n")
+                }
+            }
         }
     }
 
