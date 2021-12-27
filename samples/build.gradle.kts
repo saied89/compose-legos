@@ -45,6 +45,7 @@ android {
                 kotlin.srcDir("build/generated/ksp/debug/kotlin")
                 kotlin.srcDir("../support/compose/ui/ui/samples/src/main/java/androidx/compose/ui/samples")
                 kotlin.srcDir("../support/compose/animation/animation/samples/src/main/java/androidx/compose/animation/samples")
+                kotlin.srcDir("../support/compose/material3/material3/samples/src/main/java/androidx/compose/material3/samples")
             }
         }
     }
@@ -58,6 +59,7 @@ dependencies {
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation("androidx.compose.runtime:runtime:$compose_version")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha02")
 
     ksp(project(":processor"))
 

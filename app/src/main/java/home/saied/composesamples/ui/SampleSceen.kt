@@ -51,7 +51,7 @@ fun SampleScreen(sample: Sample) {
                     Code(code = sample.body)
                 }
                 SampleViewSwitch.COMPOSABLE -> {
-                    sample.block()
+                    sample.block?.invoke()
                 }
             }
         }
