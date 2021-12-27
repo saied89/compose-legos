@@ -10,22 +10,26 @@ const val PACKAGE_NAME = "home.saied.samples"
 val composableSlotLambdaName = LambdaTypeName.get(returnType = Unit::class.asTypeName()).copy(
     annotations = listOf(
         AnnotationSpec.builder(ClassName("androidx.compose.runtime", "Composable")).build()
-    )
+    ),
+    nullable = true
 )
 
 val sampleClassSpec = run {
     val flux = FunSpec.constructorBuilder()
         .addParameter("name", String::class)
         .addParameter("body", String::class)
-        .addParameter("block", composableSlotLambdaName)
+        .addParameter(ParameterSpec.builder("skipBlockgenerationReason", String::class.asTypeName().copy(nullable = true)).defaultValue("null").build())
+        .addParameter(ParameterSpec.builder("block", composableSlotLambdaName).defaultValue("null").build())
         .build()
 
     TypeSpec.classBuilder("Sample").primaryConstructor(flux)
         .addProperty(PropertySpec.builder("name", String::class).initializer("name").build())
         .addProperty(PropertySpec.builder("body", String::class).initializer("body").build())
+        .addProperty(PropertySpec.builder("skipBlockgenerationReason", String::class.asTypeName().copy(nullable = true)).initializer("skipBlockgenerationReason").build())
         .addProperty(
             PropertySpec.builder("block", composableSlotLambdaName).initializer("block").build()
         )
+        .addModifiers(KModifier.DATA)
         .build()
 }
 
@@ -41,6 +45,7 @@ val sampleFileClassSpec = run {
         .addProperty(
             PropertySpec.builder("sampleList", sampleListTypeSpec).initializer("sampleList").build()
         )
+        .addModifiers(KModifier.DATA)
         .build()
 }
 
@@ -57,6 +62,7 @@ val sampleModuleClassSpec = run {
             PropertySpec.builder("sampleFileList", sampleFileListTypeSpec)
                 .initializer("sampleFileList").build()
         )
+        .addModifiers(KModifier.DATA)
         .build()
 }
 
@@ -87,7 +93,7 @@ private fun samplesPropertySpec(sampleFile: SampleFileInfo): PropertySpec {
             CodeBlock.builder().addStatement("%N(%S, buildList {", sampleFileClassSpec, fileName)
         sampleList.forEach { sampleInf ->
             builder.addStatement(
-                "    add(%N(%S,%S,{ %M() }))",
+                "    add(%N(%S, %S, block = { %M() }))",
                 sampleClassSpec,
                 sampleInf.name,
                 sampleInf.body,
@@ -122,11 +128,12 @@ private fun moduleListPropertySpec(moduleList: List<SampleModuleInfo>): Property
             }
             .addStatement("}")
             .build()
-    return PropertySpec.builder("sampleModules", sampleModuleListTypeSpec)
+    return PropertySpec.builder("generatedSampleModules", sampleModuleListTypeSpec)
         .initializer(modulesInitBlock(moduleList))
         .apply {
             moduleList.flatMap { it.list }.flatMap { it.sampleList }.flatMap { it.optInAnnotations }.toSet().forEach(::addAnnotation)
         }
+        .addModifiers(KModifier.INTERNAL)
         .build()
 }
 

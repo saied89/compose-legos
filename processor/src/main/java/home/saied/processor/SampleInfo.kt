@@ -11,5 +11,12 @@ data class SampleInfo(
     val body: String,
     val docStr: String?,
     val packageName: String,
-    val optInAnnotations: List<ClassName>
+    val optInAnnotations: List<ClassName>,
+    val skipBlockGeneration: SKIP_BLOCK_GENERATION_REASON? = null
 )
+
+enum class SKIP_BLOCK_GENERATION_REASON {
+    PARAMETERIZED,
+    EXTENSION_RECEIVER,
+    RESOURCES
+}
