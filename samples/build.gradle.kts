@@ -52,7 +52,10 @@ android {
                 kotlin.srcDir("../support/compose/ui/ui-graphics/samples/src/main/java/androidx/compose/ui/graphics/samples")
 //                kotlin.srcDir("../support/compose/ui/ui-viewbinding/samples/src/main/java/androidx/compose/ui/samples")
                 kotlin.srcDir("../support/compose/ui/ui-text/samples/src/main/java/androidx/compose/ui/text/samples")
-
+                kotlin.srcDir("../support/compose/material/material-icons-core/samples/src/main/java/androidx/compose/material/icons/samples")
+                kotlin.srcDir("../support/compose/material/material/samples/src/main/java/androidx/compose/material/samples")
+                kotlin.srcDir("../support/compose/animation/animation-graphics/samples/src/main/java/androidx/compose/animation/graphics/samples")
+                kotlin.srcDir("../support/compose/animation/animation-core/samples/src/main/java/androidx/compose/animation/core/samples")
             }
         }
     }
@@ -66,6 +69,7 @@ dependencies {
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation("androidx.compose.runtime:runtime:$compose_version")
+    implementation("androidx.compose.animation:animation-graphics:$compose_version")
     implementation("androidx.compose.material3:material3:1.0.0-alpha02")
 
     ksp(project(":processor"))
