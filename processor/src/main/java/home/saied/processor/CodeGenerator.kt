@@ -92,13 +92,22 @@ private fun samplesPropertySpec(sampleFile: SampleFileInfo): PropertySpec {
         val builder =
             CodeBlock.builder().addStatement("%N(%S, buildList {", sampleFileClassSpec, fileName)
         sampleList.forEach { sampleInf ->
-            builder.addStatement(
-                "    add(%N(%S, %S, block = { %M() }))",
-                sampleClassSpec,
-                sampleInf.name,
-                sampleInf.body,
-                MemberName(sampleInf.packageName, sampleInf.name)
-            )
+            if (sampleInf.skipBlockGeneration == null)
+                builder.addStatement(
+                    "    add(%N(%S, %S, block = { %M() }))",
+                    sampleClassSpec,
+                    sampleInf.name,
+                    sampleInf.body,
+                    MemberName(sampleInf.packageName, sampleInf.name)
+                )
+            else
+                builder.addStatement(
+                    "    add(%N(%S, %S, skipBlockgenerationReason = %S))",
+                    sampleClassSpec,
+                    sampleInf.name,
+                    sampleInf.body,
+                    sampleInf.skipBlockGeneration.name
+                )
         }
         return builder.add("})").build()
     }

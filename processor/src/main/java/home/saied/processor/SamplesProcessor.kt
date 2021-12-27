@@ -21,8 +21,6 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
         }.toList().map { file ->
             val sampleDeclarations =
                 file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }
-                    .filter { it.parameters.isEmpty() }
-                    .filter { it.extensionReceiver == null }
             val sampleInfoList = sampleDeclarations.map { func ->
                 val annotationSet = buildList {
                     func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "Sampled" && it.shortName.asString() != "Suppress" }
@@ -35,12 +33,19 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
                             )
                         }
                 }
+                val skipBlockGenerationReason: SKIP_BLOCK_GENERATION_REASON? =
+                    when {
+                        func.parameters.isNotEmpty() -> SKIP_BLOCK_GENERATION_REASON.PARAMETERIZED
+                        func.extensionReceiver != null -> SKIP_BLOCK_GENERATION_REASON.EXTENSION_RECEIVER
+                        else -> null
+                    }
                 SampleInfo(
                     func.simpleName.asString(),
                     readDeclarationSourceCode(func),
                     func.docString,
                     file.packageName.asString(),
-                    annotationSet
+                    annotationSet,
+                    skipBlockGeneration = skipBlockGenerationReason
                 )
             }.toList()
             SampleFileInfo(
