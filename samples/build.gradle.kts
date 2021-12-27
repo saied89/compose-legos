@@ -46,6 +46,8 @@ android {
                 kotlin.srcDir("../support/compose/ui/ui/samples/src/main/java/androidx/compose/ui/samples")
                 kotlin.srcDir("../support/compose/animation/animation/samples/src/main/java/androidx/compose/animation/samples")
                 kotlin.srcDir("../support/compose/material3/material3/samples/src/main/java/androidx/compose/material3/samples")
+                kotlin.srcDir("../support/compose/foundation/foundation-layout/samples/src/main/java/androidx/compose/foundation/layout/samples")
+                kotlin.srcDir("../support/compose/foundation/foundation/samples/src/main/java/androidx/compose/foundation/samples")
             }
         }
     }

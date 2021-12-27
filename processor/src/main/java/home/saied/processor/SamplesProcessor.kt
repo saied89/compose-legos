@@ -75,7 +75,7 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
                 val lineList = lines.toList()
                 buildString {
                     var i = declarationLineNumber - 1 // Include function signature
-                    while (lineList[i] != "}") {
+                    while (i < lineList.size && lineList[i] != "}") {
                         appendLine(lineList[i])
                         i++
                     }
