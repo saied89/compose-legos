@@ -48,6 +48,11 @@ android {
                 kotlin.srcDir("../support/compose/material3/material3/samples/src/main/java/androidx/compose/material3/samples")
                 kotlin.srcDir("../support/compose/foundation/foundation-layout/samples/src/main/java/androidx/compose/foundation/layout/samples")
                 kotlin.srcDir("../support/compose/foundation/foundation/samples/src/main/java/androidx/compose/foundation/samples")
+                kotlin.srcDir("../support/compose/ui/ui-unit/samples/src/main/java/androidx/compose/ui/unit/samples")
+                kotlin.srcDir("../support/compose/ui/ui-graphics/samples/src/main/java/androidx/compose/ui/graphics/samples")
+//                kotlin.srcDir("../support/compose/ui/ui-viewbinding/samples/src/main/java/androidx/compose/ui/samples")
+                kotlin.srcDir("../support/compose/ui/ui-text/samples/src/main/java/androidx/compose/ui/text/samples")
+
             }
         }
     }
