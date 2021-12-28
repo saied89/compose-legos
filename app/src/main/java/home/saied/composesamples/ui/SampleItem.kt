@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import home.saied.samples.Sample
 
 @Composable
 fun ListItem(
@@ -27,17 +26,17 @@ fun ListItem(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(
-            width = ExampleItemBorderWidth,
+            width = 1.dp,
             color = MaterialTheme.colorScheme.outline
         )
     ) {
-        Row(modifier = Modifier.padding(ExampleItemPadding)) {
+        Row(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.weight(1f)
             )
-            Spacer(modifier = Modifier.width(ExampleItemPadding))
+            Spacer(modifier = Modifier.width(16.dp))
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = null,
@@ -46,6 +45,3 @@ fun ListItem(
         }
     }
 }
-
-private val ExampleItemPadding = 16.dp
-private val ExampleItemBorderWidth = 1.dp
