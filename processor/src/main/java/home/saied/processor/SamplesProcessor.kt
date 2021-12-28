@@ -18,10 +18,10 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         moduleInfoList = resolver.getAllFiles().filter { file ->
             logger.warn("sample file:${file.filePath}")
-            file.declarations.any(::isSampledComposable)
+            file.declarations.any(::isSampled)
         }.toList().map { file ->
             val sampleDeclarations =
-                file.declarations.filter(::isSampledComposable).map { it as KSFunctionDeclaration }
+                file.declarations.filter(::isSampled).map { it as KSFunctionDeclaration }
             val sampleInfoList = sampleDeclarations.map { func ->
                 val annotationSet = buildList {
                     func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "Sampled" && it.shortName.asString() != "Suppress" }
@@ -85,14 +85,11 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
         }
     }
 
-    private fun isSampledComposable(declaration: KSDeclaration): Boolean {
-        val isComposable = declaration.annotations.any { annotation ->
-            annotation.shortName.asString() == "Composable"
-        }
+    private fun isSampled(declaration: KSDeclaration): Boolean {
         val isSampled = declaration.annotations.any { annotation ->
             annotation.shortName.asString() == "Sampled"
         }
-        return isComposable && isSampled
+        return isSampled
     }
 
     @OptIn(KotlinPoetKspPreview::class)
