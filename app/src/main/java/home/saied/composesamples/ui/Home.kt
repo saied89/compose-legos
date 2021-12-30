@@ -1,9 +1,9 @@
 package home.saied.composesamples.ui
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -14,12 +14,15 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
@@ -55,18 +58,37 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 
     val focusManager = LocalFocusManager.current
     Column {
+        val searchFocusRequester = remember { FocusRequester() }
         OutlinedTextField(
             value = "",
             onValueChange = {},
             interactionSource = searchBoxInteractionSource,
             placeholder = { Text(text = "Search Samples") },
             leadingIcon = {
-                Icon(
-                    Icons.Filled.Search,
-                    contentDescription = null,
-                    modifier = Modifier.clickable {
+                IconButton(onClick = {
+                    if (homeState == HomeState.SEARCH)
                         focusManager.clearFocus()
-                    })
+                    else
+                        searchFocusRequester.requestFocus()
+                }) {
+                    searchTransition.Crossfade {
+                        when (it) {
+                            HomeState.SEARCH -> {
+                                Icon(
+                                    Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                            HomeState.MODULES -> {
+                                Icon(
+                                    Icons.Filled.Search,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+
+                }
             },
             textStyle = MaterialTheme.typography.titleSmall,
             shape = RoundedCornerShape(searchCornerDp),
@@ -77,6 +99,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
             modifier = Modifier
                 .padding(seachPaddingDp)
                 .fillMaxWidth()
+                .focusRequester(searchFocusRequester)
         )
         ModuleList(moduleList = moduleList, onModuleClick = onModuleClick)
     }
