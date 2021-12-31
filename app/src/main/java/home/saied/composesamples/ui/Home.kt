@@ -33,6 +33,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.systemBarsPadding
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.samples.SampleModule
 import kotlin.math.roundToInt
 
@@ -67,10 +69,16 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
         }
     }
 
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setStatusBarColor(Color.Transparent, darkIcons = true)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(nestedScrollConnection)
+            .systemBarsPadding()
     ) {
         searchTransition.AnimatedContent {
             when (it) {
@@ -115,48 +123,49 @@ fun Transition<HomeState>.SearchBox(
     }
 
     val focusManager = LocalFocusManager.current
-    OutlinedTextField(
-        value = "",
-        onValueChange = {},
-        interactionSource = interactionSource,
-        placeholder = { Text(text = "Search Samples") },
-        leadingIcon = {
-            IconButton(onClick = {
-                if (homeState == HomeState.SEARCH)
-                    focusManager.clearFocus()
-                else
-                    searchFocusRequester.requestFocus()
-            }) {
-                Crossfade(animationSpec = snap()) {
-                    when (it) {
-                        HomeState.SEARCH -> {
-                            Icon(
-                                Icons.Filled.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-                        HomeState.MODULES -> {
-                            Icon(
-                                Icons.Filled.Search,
-                                contentDescription = null
-                            )
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            interactionSource = interactionSource,
+            placeholder = { Text(text = "Search Samples", style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)) },
+            leadingIcon = {
+                IconButton(onClick = {
+                    if (homeState == HomeState.SEARCH)
+                        focusManager.clearFocus()
+                    else
+                        searchFocusRequester.requestFocus()
+                }) {
+                    Crossfade(animationSpec = snap()) {
+                        when (it) {
+                            HomeState.SEARCH -> {
+                                Icon(
+                                    Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                            HomeState.MODULES -> {
+                                Icon(
+                                    Icons.Filled.Search,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
-                }
 
-            }
-        },
-        textStyle = MaterialTheme.typography.titleSmall,
-        shape = RoundedCornerShape(searchCornerDp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            backgroundColor = Color.LightGray,
-            focusedBorderColor = Color.Transparent
-        ),
-        modifier = modifier
-            .padding(seachPaddingDp)
-            .fillMaxWidth()
-            .focusRequester(searchFocusRequester)
-    )
+                }
+            },
+            textStyle = MaterialTheme.typography.headlineSmall.copy(Color.LightGray),
+            shape = RoundedCornerShape(searchCornerDp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Gray
+            ),
+            modifier = modifier
+                .padding(seachPaddingDp)
+                .fillMaxWidth()
+                .focusRequester(searchFocusRequester)
+        )
 }
 
 @Composable

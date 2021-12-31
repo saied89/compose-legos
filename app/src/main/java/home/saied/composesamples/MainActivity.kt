@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.ExperimentalComposeUiApi
 import home.saied.composesamples.ui.MainScreen
+import home.saied.composesamples.ui.theme.ComposeSamplesTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -12,8 +13,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
-//            ComposeSamplesTheme {
+            ComposeSamplesTheme {
+                MainScreen()
+            }
         }
 //            ComposeSamplesTheme {
 //                // A surface container using the 'background' color from the theme
