@@ -70,8 +70,10 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
     }
 
     val systemUiController = rememberSystemUiController()
+    val statusBarColor =
+        if (homeState == HomeState.SEARCH) MaterialTheme.colorScheme.surfaceVariant else Color.White
     SideEffect {
-        systemUiController.setStatusBarColor(Color.Transparent, darkIcons = true)
+        systemUiController.setStatusBarColor(statusBarColor, darkIcons = true)
     }
 
     Box(
