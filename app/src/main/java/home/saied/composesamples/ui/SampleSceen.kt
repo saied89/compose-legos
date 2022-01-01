@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.magnifier
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -48,9 +50,19 @@ fun SampleScreen(sample: Sample) {
                     contentDescription = null
                 )
             }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        bottomBar = {
+            Surface(modifier = Modifier.fillMaxWidth()) {
+                Row(horizontalArrangement = Arrangement.End) {
+                    IconButton(onClick = { /*TODO*/ }, Modifier) {
+                        Icon(Icons.Default.MoreVert, contentDescription = null)
+                    }
+                }
+            }
         }
     ) {
-        Crossfade(targetState = sampleViewSwitchState) {
+        Crossfade(targetState = sampleViewSwitchState, modifier = Modifier.padding(it)) {
             when (it) {
                 SampleViewSwitch.SOURCE -> {
                     Code(code = sample.body)
@@ -70,7 +82,10 @@ private fun Code(code: String) {
         code.trim().lines()
     }
     val gutterWidth = lines.size.toString().length
-    LazyColumn {
+    LazyColumn() {
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
         itemsIndexed(lines) { index, line ->
             CodeLine(index = index, codeLine = line, gutterWidth = gutterWidth)
             Box(
@@ -79,6 +94,9 @@ private fun Code(code: String) {
                     .fillMaxWidth()
                     .background(Color.LightGray)
             )
+        }
+        item {
+            Spacer(modifier = Modifier.height(56.dp))
         }
     }
 }
