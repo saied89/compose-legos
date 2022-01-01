@@ -26,12 +26,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.core.view.ViewCompat
+import home.saied.composesamples.R
 
 @Composable
 fun ComposeSamplesTheme(content: @Composable () -> Unit) {
     val darkTheme = isSystemInDarkTheme()
     val colorScheme = if (!darkTheme) lightColorScheme() else darkColorScheme()
+    val typography = MaterialTheme.typography.copy(
+        displayMedium = TextStyle(
+            fontFamily = FontFamily(
+                Font(R.font.mono_regular)
+            )
+        )
+    )
     val view = LocalView.current
     SideEffect {
         ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !darkTheme
@@ -40,6 +51,7 @@ fun ComposeSamplesTheme(content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalIndication provides rememberRipple()) {
         MaterialTheme(
             colorScheme = colorScheme,
+            typography = typography,
             content = content
         )
     }
