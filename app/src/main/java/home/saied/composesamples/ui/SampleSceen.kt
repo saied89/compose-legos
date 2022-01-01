@@ -3,12 +3,15 @@ package home.saied.composesamples.ui
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,12 +67,18 @@ fun SampleScreen(sample: Sample) {
 @Composable
 private fun Code(code: String) {
     val lines = remember {
-        code.lines()
+        code.trim().lines()
     }
     val gutterWidth = lines.size.toString().length
-    Column {
-        lines.forEachIndexed { index, line ->
+    LazyColumn {
+        itemsIndexed(lines) { index, line ->
             CodeLine(index = index, codeLine = line, gutterWidth = gutterWidth)
+            Box(
+                modifier = Modifier
+                    .height(1.dp)
+                    .fillMaxWidth()
+                    .background(Color.LightGray)
+            )
         }
     }
 }
@@ -81,19 +90,21 @@ private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
             text = index.toString().padStart(gutterWidth, '0'),
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier
-                .padding(2.dp)
-                .align(CenterVertically)
+                .padding(horizontal = 2.dp)
+                .align(Top)
         )
         Box(
             modifier = Modifier
                 .width(1.dp)
                 .fillMaxHeight()
-                .background(Color.DarkGray)
+                .background(Color.LightGray)
         )
         Text(
             text = codeLine,
             style = MaterialTheme.typography.displayMedium,
-            modifier = Modifier.align(CenterVertically)
+            modifier = Modifier
+                .align(CenterVertically)
+                .padding(horizontal = 4.dp)
         )
     }
 }
