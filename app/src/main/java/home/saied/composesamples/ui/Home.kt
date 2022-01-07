@@ -173,7 +173,12 @@ fun Transition<HomeState>.SearchBox(
 @Composable
 fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
     LazyColumn(contentPadding = PaddingValues(top = toolbarHeight + 16.dp)) {
-        item { 
+        item {
+            Text(
+                text = "List of Jetpack Compose Modules",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(16.dp)
+            )
             Spacer(modifier = Modifier.height(16.dp))
         }
         itemsIndexed(moduleList, itemContent = { index, item ->
