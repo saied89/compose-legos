@@ -131,8 +131,7 @@ private fun moduleListPropertySpec(moduleList: List<SampleModuleInfo>): Property
         CodeBlock.builder().addStatement("buildList {")
             .apply {
                 moduleList.forEach { module ->
-                    val cleanedModulePropertyName = module.moduleName.replace("-", "")
-                    addStatement("  add($cleanedModulePropertyName)")
+                    addStatement("  add(`${module.moduleName}`)")
                 }
             }
             .addStatement("}")
@@ -157,7 +156,7 @@ fun samplesFileSpec(moduleList: List<SampleModuleInfo>): FileSpec {
 }
 
 fun moduleSamplesFileSpec(moduleName: String, sampleFileList: List<SampleFileInfo>): FileSpec {
-    val cleanedModuleName = moduleName.replace("-", "")
+    val cleanedModuleName = moduleName
     return FileSpec.builder(PACKAGE_NAME, "${cleanedModuleName}Samples")
         .apply {
             sampleFileList.forEach {
