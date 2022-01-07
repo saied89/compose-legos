@@ -58,6 +58,7 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
             SampleFileInfo(
                 fileName = file.fileName,
                 moduleName = getModuleName(file.filePath),
+                packageName = file.packageName.asString(),
                 sampleList = sampleInfoList
             )
         }.groupBy {

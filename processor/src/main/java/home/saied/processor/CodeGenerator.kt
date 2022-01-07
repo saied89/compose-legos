@@ -54,10 +54,14 @@ val sampleModuleClassSpec = run {
         List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "SampleFile"))
     val flux = FunSpec.constructorBuilder()
         .addParameter("name", String::class)
+        .addParameter("packageName", String::class)
         .addParameter("sampleFileList", sampleFileListTypeSpec)
         .build()
     TypeSpec.classBuilder("SampleModule").primaryConstructor(flux)
         .addProperty(PropertySpec.builder("name", String::class).initializer("name").build())
+        .addProperty(
+            PropertySpec.builder("packageName", String::class).initializer("packageName").build()
+        )
         .addProperty(
             PropertySpec.builder("sampleFileList", sampleFileListTypeSpec)
                 .initializer("sampleFileList").build()
@@ -68,7 +72,12 @@ val sampleModuleClassSpec = run {
 
 private fun moduleInitBlock(moduleName: String, fileList: List<SampleFileInfo>): CodeBlock {
     val builder =
-        CodeBlock.builder().addStatement("%N(%S, buildList {", sampleModuleClassSpec, moduleName)
+        CodeBlock.builder().addStatement(
+            "%N(%S, %S, buildList {",
+            sampleModuleClassSpec,
+            moduleName,
+            fileList.first().packageName
+        )
     fileList.forEach { fileInf ->
         builder.addStatement(
             "    add(%M)", MemberName(PACKAGE_NAME, fileInf.fileName.substringBefore('.'))
