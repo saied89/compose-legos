@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.magnifier
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import home.saied.samples.Sample
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SampleScreen(sample: Sample) {
     var sampleViewSwitchState: SampleViewSwitch by remember {
@@ -106,7 +105,7 @@ private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Text(
             text = index.toString().padStart(gutterWidth, '0'),
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.overline,
             modifier = Modifier
                 .padding(horizontal = 2.dp)
                 .align(Top)
@@ -119,7 +118,7 @@ private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
         )
         Text(
             text = codeLine,
-            style = MaterialTheme.typography.displayMedium,
+            style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .align(CenterVertically)
                 .padding(horizontal = 4.dp)
