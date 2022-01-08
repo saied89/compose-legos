@@ -14,14 +14,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -33,15 +29,18 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import home.saied.composesamples.R
 import home.saied.samples.SampleModule
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 
@@ -74,7 +73,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 
     val systemUiController = rememberSystemUiController()
     val statusBarColor =
-        if (homeState == HomeState.SEARCH) MaterialTheme.colorScheme.surfaceVariant else Color.White
+        if (homeState == HomeState.SEARCH) MaterialTheme.colors.primaryVariant else Color.White
     SideEffect {
         systemUiController.setStatusBarColor(statusBarColor, darkIcons = true)
     }
@@ -132,7 +131,12 @@ fun Transition<HomeState>.SearchBox(
             value = "",
             onValueChange = {},
             interactionSource = interactionSource,
-            placeholder = { Text(text = "Search Samples", style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)) },
+            placeholder = {
+                Text(
+                    text = "Search Samples",
+                    style = MaterialTheme.typography.body1.copy(color = Color.Gray)
+                )
+            },
             leadingIcon = {
                 IconButton(onClick = {
                     if (homeState == HomeState.SEARCH)
@@ -159,10 +163,10 @@ fun Transition<HomeState>.SearchBox(
 
                 }
             },
-            textStyle = MaterialTheme.typography.headlineSmall.copy(Color.LightGray),
+            textStyle = MaterialTheme.typography.body1.copy(Color.LightGray),
             shape = RoundedCornerShape(searchCornerDp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                backgroundColor = MaterialTheme.colors.primaryVariant,
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Gray
             ),
@@ -180,7 +184,7 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
         item {
             Text(
                 text = "List of Jetpack Compose Modules",
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.h3,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -188,6 +192,14 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
             ListItem(
                 text = { Text(text = item.name) },
                 secondaryText = { Text(text = item.packageName) },
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_compose_module_2),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(48.dp)
+                    )
+                },
                 modifier = Modifier.clickable {
                     onModuleClick(index)
                 })
@@ -198,4 +210,15 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
 
 enum class HomeState {
     MODULES, SEARCH
+}
+
+@Preview
+@Composable
+fun Prev() {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_compose_module_2),
+        contentDescription = null,
+        tint = Color.Unspecified,
+        modifier = Modifier.size(56.dp)
+    )
 }
