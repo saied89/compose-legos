@@ -7,12 +7,15 @@ import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ListItem
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
@@ -170,21 +173,24 @@ fun Transition<HomeState>.SearchBox(
         )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
     LazyColumn(contentPadding = PaddingValues(top = toolbarHeight + 16.dp)) {
         item {
             Text(
                 text = "List of Jetpack Compose Modules",
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(16.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
         }
         itemsIndexed(moduleList, itemContent = { index, item ->
-            ListItem(title = item.name, Modifier.padding(horizontal = 16.dp)) {
-                onModuleClick(index)
-            }
+            ListItem(
+                text = { Text(text = item.name) },
+                secondaryText = { Text(text = item.packageName) },
+                modifier = Modifier.clickable {
+                    onModuleClick(index)
+                })
             Spacer(modifier = Modifier.height(8.dp))
         })
     }
