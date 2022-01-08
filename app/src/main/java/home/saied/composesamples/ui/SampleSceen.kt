@@ -117,7 +117,7 @@ private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
         )
         Text(
             text = codeLine,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.h6,
             modifier = Modifier
                 .align(CenterVertically)
                 .padding(horizontal = 4.dp)
