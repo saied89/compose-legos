@@ -3,10 +3,7 @@ package home.saied.composesamples.ui
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.Transition
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -53,7 +50,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 
     }
     val searchTransition = updateTransition(homeState, "SearchTransition")
-    val toolbarHeight = if (homeState == HomeState.SEARCH) 56.dp else 84.dp
+    val toolbarHeight = if (homeState == HomeState.SEARCH) 56.dp else 76.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
 
@@ -73,7 +70,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 
     val systemUiController = rememberSystemUiController()
     val statusBarColor =
-        if (homeState == HomeState.SEARCH) MaterialTheme.colors.primaryVariant else Color.White
+        if (homeState == HomeState.SEARCH) MaterialTheme.colors.secondary else Color.White
     SideEffect {
         systemUiController.setStatusBarColor(statusBarColor, darkIcons = true)
     }
@@ -112,16 +109,16 @@ fun Transition<HomeState>.SearchBox(
 ) {
     val homeState = this.currentState
     val searchFocusRequester = remember { FocusRequester() }
-    val searchCornerDp by animateDp(label = "searchCornerDp") {
+    val searchCornerPercent by animateInt(label = "searchCornerDp") {
         when (it) {
-            HomeState.MODULES -> 24.dp
-            HomeState.SEARCH -> 0.dp
+            HomeState.MODULES -> 25
+            HomeState.SEARCH -> 0
         }
     }
 
     val seachPaddingDp by animateDp(label = "searchCornerDp") {
         when (it) {
-            HomeState.MODULES -> 16.dp
+            HomeState.MODULES -> 12.dp
             HomeState.SEARCH -> 0.dp
         }
     }
@@ -134,7 +131,7 @@ fun Transition<HomeState>.SearchBox(
             placeholder = {
                 Text(
                     text = "Search Samples",
-                    style = MaterialTheme.typography.body1.copy(color = Color.Gray)
+                    style = MaterialTheme.typography.body2.copy(color = Color.Gray)
                 )
             },
             leadingIcon = {
@@ -164,9 +161,9 @@ fun Transition<HomeState>.SearchBox(
                 }
             },
             textStyle = MaterialTheme.typography.body1.copy(Color.LightGray),
-            shape = RoundedCornerShape(searchCornerDp),
+            shape = RoundedCornerShape(searchCornerPercent),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                backgroundColor = MaterialTheme.colors.primaryVariant,
+                backgroundColor = MaterialTheme.colors.secondary,
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Gray
             ),
