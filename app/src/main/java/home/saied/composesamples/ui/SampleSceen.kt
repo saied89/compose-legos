@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.magnifier
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
@@ -36,7 +35,7 @@ fun SampleScreen(sample: Sample) {
                         SampleViewSwitch.SOURCE
                     }
                 }
-            }) {
+            }, shape = MaterialTheme.shapes.small) {
                 Icon(
                     imageVector = when (sampleViewSwitchState) {
                         SampleViewSwitch.SOURCE -> {
