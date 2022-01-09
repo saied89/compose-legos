@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import home.saied.composesamples.R
+import home.saied.samples.SampleFile
 import home.saied.samples.SampleModule
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -27,7 +28,7 @@ fun ModuleScreen(sampleModule: SampleModule, onFileClick: (Int) -> Unit) {
     LazyColumn {
         item {
             val titleAnnotatedString = with(AnnotatedString.Builder()) {
-                append("List of ")
+
                 pushStyle(SpanStyle(fontWeight = FontWeight.Medium, fontStyle = FontStyle.Italic))
                 append(sampleModule.name)
                 pop()
@@ -65,5 +66,5 @@ fun ModuleScreen(sampleModule: SampleModule, onFileClick: (Int) -> Unit) {
 @Preview
 @Composable
 fun Preview() {
-    ModuleScreen(sampleModule = SampleModule("animation-core", "", listOf()), onFileClick = {})
+    ModuleScreen(sampleModule = SampleModule("animation-core", "", listOf(SampleFile("First File", listOf()))), onFileClick = {})
 }
