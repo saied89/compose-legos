@@ -45,12 +45,12 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
     val searchIsPressed by searchBoxInteractionSource.collectIsFocusedAsState()
     val homeState: HomeState by derivedStateOf {
         if (searchIsPressed)
-            HomeState.SEARCH
+            HomeState.SEARCH()
         else HomeState.MODULES
 
     }
     val searchTransition = updateTransition(homeState, "SearchTransition")
-    val toolbarHeight = if (homeState == HomeState.SEARCH) 56.dp else 76.dp
+    val toolbarHeight = if (homeState is HomeState.SEARCH) 56.dp else 76.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
 
@@ -70,7 +70,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 
     val systemUiController = rememberSystemUiController()
     val statusBarColor =
-        if (homeState == HomeState.SEARCH) MaterialTheme.colors.secondary else Color.White
+        if (homeState is HomeState.SEARCH) MaterialTheme.colors.secondary else Color.White
     SideEffect {
         systemUiController.setStatusBarColor(statusBarColor, darkIcons = true)
     }
@@ -83,10 +83,10 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
     ) {
         searchTransition.AnimatedContent {
             when (it) {
-                HomeState.SEARCH -> {
+                is HomeState.SEARCH -> {
                     ModuleList(moduleList = moduleList, onModuleClick = onModuleClick, toolbarHeight = 56.dp)
                 }
-                HomeState.MODULES -> {
+                is HomeState.MODULES -> {
                     ModuleList(moduleList = moduleList, onModuleClick = onModuleClick, toolbarHeight = 48.dp)
                 }
             }
@@ -111,15 +111,15 @@ fun Transition<HomeState>.SearchBox(
     val searchFocusRequester = remember { FocusRequester() }
     val searchCornerPercent by animateInt(label = "searchCornerDp") {
         when (it) {
-            HomeState.MODULES -> 25
-            HomeState.SEARCH -> 0
+            is HomeState.MODULES -> 25
+            is HomeState.SEARCH -> 0
         }
     }
 
     val seachPaddingDp by animateDp(label = "searchCornerDp") {
         when (it) {
-            HomeState.MODULES -> 12.dp
-            HomeState.SEARCH -> 0.dp
+            is HomeState.MODULES -> 12.dp
+            is HomeState.SEARCH -> 0.dp
         }
     }
 
@@ -136,20 +136,20 @@ fun Transition<HomeState>.SearchBox(
             },
             leadingIcon = {
                 IconButton(onClick = {
-                    if (homeState == HomeState.SEARCH)
+                    if (homeState is HomeState.SEARCH)
                         focusManager.clearFocus()
                     else
                         searchFocusRequester.requestFocus()
                 }) {
                     Crossfade(animationSpec = snap()) {
                         when (it) {
-                            HomeState.SEARCH -> {
+                            is HomeState.SEARCH -> {
                                 Icon(
                                     Icons.Filled.ArrowBack,
                                     contentDescription = null
                                 )
                             }
-                            HomeState.MODULES -> {
+                            is HomeState.MODULES -> {
                                 Icon(
                                     Icons.Filled.Search,
                                     contentDescription = null
@@ -205,8 +205,9 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
     }
 }
 
-enum class HomeState {
-    MODULES, SEARCH
+sealed class HomeState {
+    object MODULES : HomeState()
+    data class SEARCH(val searchStr: String? = null) : HomeState()
 }
 
 @Preview
