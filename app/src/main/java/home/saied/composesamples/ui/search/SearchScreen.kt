@@ -15,16 +15,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import home.saied.composesamples.R
+import home.saied.composesamples.ui.SampleWithPath
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
-    searchState: SearchScreenState = rememberSearchState(),
+    searchStr: String? = null,
+    searchRes: List<SampleWithPath>? = null,
+    onSearch: (String) -> Unit,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
     LazyColumn {
-        items(searchState.searchResult ?: listOf()) { item ->
+        items(searchRes ?: listOf()) { item ->
             ListItem(
                 text = { Text(text = item.sample.name) },
                 icon = {

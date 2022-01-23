@@ -31,13 +31,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.R
-import home.saied.composesamples.ui.search.SampleWithPath
 import home.saied.composesamples.ui.search.SearchScreen
-import home.saied.composesamples.ui.search.SearchScreenState
-import home.saied.composesamples.ui.search.rememberSearchState
 import home.saied.samples.SampleModule
 import kotlin.math.roundToInt
 
@@ -48,18 +46,10 @@ fun HomeScreen(
     onModuleClick: (Int) -> Unit,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
-
-    val searchState = rememberSearchState()
-    val searchBoxInteractionSource = remember { MutableInteractionSource() }
-    val searchIsPressed by searchBoxInteractionSource.collectIsFocusedAsState()
-    val homeState: HomeState by derivedStateOf {
-        if (searchIsPressed)
-            HomeState.SEARCH()
-        else HomeState.MODULES
-
-    }
+    val homeViewModel: HomeViewModel = viewModel()
+    val homeState by homeViewModel.homeState
     val searchTransition = updateTransition(homeState, "SearchTransition")
-    val toolbarHeight = if (homeState is HomeState.SEARCH) 56.dp else 76.dp
+    val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 76.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
 
@@ -69,7 +59,7 @@ fun HomeScreen(
                 val delta = available.y
                 val newOffset = toolbarOffsetHeightPx.value + delta
                 toolbarOffsetHeightPx.value =
-                    if (homeState == HomeState.MODULES)
+                    if (homeState == HomeViewModel.HomeState.MODULES)
                         newOffset.coerceIn(-toolbarHeightPx, 0f)
                     else 0f
                 return Offset.Zero
@@ -79,7 +69,7 @@ fun HomeScreen(
 
     val systemUiController = rememberSystemUiController()
     val statusBarColor =
-        if (homeState is HomeState.SEARCH) MaterialTheme.colors.secondary else Color.White
+        if (homeState is HomeViewModel.HomeState.SearchState) MaterialTheme.colors.secondary else Color.White
     SideEffect {
         systemUiController.setStatusBarColor(statusBarColor, darkIcons = true)
     }
@@ -92,17 +82,31 @@ fun HomeScreen(
     ) {
         searchTransition.AnimatedContent {
             when (it) {
-                is HomeState.SEARCH -> {
-                    SearchScreen(searchState = searchState, onSearchSampleClick)
+                is HomeViewModel.HomeState.SearchState -> {
+                    SearchScreen(
+                        searchStr = it.searchString,
+                        it.searchResult,
+                        onSearch = { homeViewModel.searchStr = it }) {
+
+                    }
                 }
-                is HomeState.MODULES -> {
-                    ModuleList(moduleList = moduleList, onModuleClick = onModuleClick, toolbarHeight = 48.dp)
+                is HomeViewModel.HomeState.MODULES -> {
+                    ModuleList(
+                        moduleList = moduleList,
+                        onModuleClick = onModuleClick,
+                        toolbarHeight = 48.dp
+                    )
                 }
             }
         }
         searchTransition.SearchBox(
-            interactionSource = searchBoxInteractionSource,
-            searchState = searchState,
+            searchStr = homeViewModel.searchStr,
+            onSearchStr = {
+              homeViewModel.searchStr = it
+            },
+            onLeadingClick = {
+              homeViewModel.searchStr = null
+            },
             modifier = Modifier
                 .height(toolbarHeight)
                 .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
@@ -113,31 +117,38 @@ fun HomeScreen(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun Transition<HomeState>.SearchBox(
-    interactionSource: MutableInteractionSource,
-    searchState: SearchScreenState,
+fun Transition<HomeViewModel.HomeState>.SearchBox(
+    searchStr: String?,
+    onLeadingClick: () -> Unit,
+    onSearchStr: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val searchIsPressed by interactionSource.collectIsFocusedAsState()
+    LaunchedEffect(key1 = searchIsPressed) {
+        if (searchIsPressed)
+            onSearchStr("")
+    }
     val homeState = this.currentState
     val searchFocusRequester = remember { FocusRequester() }
     val searchCornerPercent by animateInt(label = "searchCornerDp") {
         when (it) {
-            is HomeState.MODULES -> 25
-            is HomeState.SEARCH -> 0
+            is HomeViewModel.HomeState.MODULES -> 25
+            is HomeViewModel.HomeState.SearchState -> 0
         }
     }
 
     val seachPaddingDp by animateDp(label = "searchCornerDp") {
         when (it) {
-            is HomeState.MODULES -> 12.dp
-            is HomeState.SEARCH -> 0.dp
+            is HomeViewModel.HomeState.MODULES -> 12.dp
+            is HomeViewModel.HomeState.SearchState -> 0.dp
         }
     }
 
     val focusManager = LocalFocusManager.current
         OutlinedTextField(
-            value = searchState.searchString ?: "",
-            onValueChange = { searchState.searchString = it },
+            value = searchStr ?: "",
+            onValueChange = onSearchStr,
             interactionSource = interactionSource,
             placeholder = {
                 Text(
@@ -147,20 +158,21 @@ fun Transition<HomeState>.SearchBox(
             },
             leadingIcon = {
                 IconButton(onClick = {
-                    if (homeState is HomeState.SEARCH)
+                    if (homeState is HomeViewModel.HomeState.SearchState)
                         focusManager.clearFocus()
                     else
                         searchFocusRequester.requestFocus()
+                    onLeadingClick()
                 }) {
                     Crossfade(animationSpec = snap()) {
                         when (it) {
-                            is HomeState.SEARCH -> {
+                            is HomeViewModel.HomeState.SearchState -> {
                                 Icon(
                                     Icons.Filled.ArrowBack,
                                     contentDescription = null
                                 )
                             }
-                            is HomeState.MODULES -> {
+                            is HomeViewModel.HomeState.MODULES -> {
                                 Icon(
                                     Icons.Filled.Search,
                                     contentDescription = null
@@ -214,11 +226,6 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
             Spacer(modifier = Modifier.height(8.dp))
         })
     }
-}
-
-sealed class HomeState {
-    object MODULES : HomeState()
-    data class SEARCH(val searchStr: String? = null) : HomeState()
 }
 
 @Preview
