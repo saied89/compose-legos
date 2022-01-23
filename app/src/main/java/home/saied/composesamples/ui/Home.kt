@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.R
+import home.saied.composesamples.ui.search.SampleWithPath
 import home.saied.composesamples.ui.search.SearchScreen
 import home.saied.composesamples.ui.search.SearchScreenState
 import home.saied.composesamples.ui.search.rememberSearchState
@@ -42,7 +43,11 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
+fun HomeScreen(
+    moduleList: List<SampleModule>,
+    onModuleClick: (Int) -> Unit,
+    onSearchSampleClick: (SampleWithPath) -> Unit
+) {
 
     val searchState = rememberSearchState()
     val searchBoxInteractionSource = remember { MutableInteractionSource() }
@@ -88,7 +93,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
         searchTransition.AnimatedContent {
             when (it) {
                 is HomeState.SEARCH -> {
-                    SearchScreen(searchState = searchState)
+                    SearchScreen(searchState = searchState, onSearchSampleClick)
                 }
                 is HomeState.MODULES -> {
                     ModuleList(moduleList = moduleList, onModuleClick = onModuleClick, toolbarHeight = 48.dp)

@@ -20,7 +20,8 @@ import home.saied.composesamples.R
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
-    searchState: SearchScreenState = rememberSearchState()
+    searchState: SearchScreenState = rememberSearchState(),
+    onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
     LazyColumn {
         items(searchState.searchResult ?: listOf()) { item ->
@@ -37,7 +38,7 @@ fun SearchScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .clickable {
-
+                        onSearchSampleClick(item)
                     }
             )
         }

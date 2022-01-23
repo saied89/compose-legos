@@ -19,9 +19,17 @@ fun MainScreen() {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = "home") {
             composable("home") {
-                HomeScreen(moduleList = sampleModules) {
-                    navController.navigate("module/$it")
-                }
+                HomeScreen(
+                    moduleList = sampleModules,
+                    onModuleClick = {
+                        navController.navigate("module/$it")
+                    },
+                    onSearchSampleClick = {
+                        navController.navigate(
+                            "sample/${it.moduleIndex}/${it.fileIndex}/${it.sampleIndex}"
+                        )
+                    }
+                )
             }
             composable(
                 "module/{index}",
