@@ -1,4 +1,4 @@
-package home.saied.composesamples.ui
+package home.saied.composesamples.ui.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
@@ -15,39 +15,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import home.saied.composesamples.R
-import home.saied.samples.Sample
-import home.saied.samples.sampleModules
 
-//data class SampleWithPath(
-//    val sample: Sample,
-//    val sampleModuleIndex: Int,
-//    val sampleFileIndex: Int
-//)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SearchScreen(searchStr: String) {
-    val searchRes = run {
-        data class SampleWithPath(
-            val sample: Sample,
-            val moduleIndex: Int,
-            val fileIndex: Int,
-            val sampleIndex: Int
-        )
-        sampleModules.asSequence()
-            .flatMapIndexed { moduleIndex, module ->
-                module.sampleFileList.asSequence().flatMapIndexed { fileIndex, file ->
-                    file.sampleList.asSequence().mapIndexed { sampleIndex, sample ->
-                        SampleWithPath(sample, moduleIndex, fileIndex, sampleIndex)
-                    }
-                }
-            }
-            .filter {
-                it.sample.name.contains(searchStr)
-            }.toList()
-    }
+fun SearchScreen(
+    searchState: SearchScreenState = rememberSearchState()
+) {
     LazyColumn {
-        items(searchRes) { item ->
+        items(searchState.searchResult ?: listOf()) { item ->
             ListItem(
                 text = { Text(text = item.sample.name) },
                 icon = {

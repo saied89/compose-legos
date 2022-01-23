@@ -34,6 +34,9 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.R
+import home.saied.composesamples.ui.search.SearchScreen
+import home.saied.composesamples.ui.search.SearchScreenState
+import home.saied.composesamples.ui.search.rememberSearchState
 import home.saied.samples.SampleModule
 import kotlin.math.roundToInt
 
@@ -41,6 +44,7 @@ import kotlin.math.roundToInt
 @Composable
 fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 
+    val searchState = rememberSearchState()
     val searchBoxInteractionSource = remember { MutableInteractionSource() }
     val searchIsPressed by searchBoxInteractionSource.collectIsFocusedAsState()
     val homeState: HomeState by derivedStateOf {
@@ -84,7 +88,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
         searchTransition.AnimatedContent {
             when (it) {
                 is HomeState.SEARCH -> {
-                    ModuleList(moduleList = moduleList, onModuleClick = onModuleClick, toolbarHeight = 56.dp)
+                    SearchScreen(searchState = searchState)
                 }
                 is HomeState.MODULES -> {
                     ModuleList(moduleList = moduleList, onModuleClick = onModuleClick, toolbarHeight = 48.dp)
@@ -93,6 +97,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
         }
         searchTransition.SearchBox(
             interactionSource = searchBoxInteractionSource,
+            searchState = searchState,
             modifier = Modifier
                 .height(toolbarHeight)
                 .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
@@ -105,6 +110,7 @@ fun HomeScreen(moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
 @Composable
 fun Transition<HomeState>.SearchBox(
     interactionSource: MutableInteractionSource,
+    searchState: SearchScreenState,
     modifier: Modifier = Modifier
 ) {
     val homeState = this.currentState
@@ -125,8 +131,8 @@ fun Transition<HomeState>.SearchBox(
 
     val focusManager = LocalFocusManager.current
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = searchState.searchString ?: "",
+            onValueChange = { searchState.searchString = it },
             interactionSource = interactionSource,
             placeholder = {
                 Text(
