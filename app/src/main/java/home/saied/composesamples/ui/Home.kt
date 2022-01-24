@@ -212,7 +212,10 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
         itemsIndexed(moduleList, itemContent = { index, item ->
             ListItem(
                 text = { Text(text = item.name) },
-                secondaryText = { Text(text = item.packageName) },
+                secondaryText = {
+                    // Drop .sample from package names
+                    Text(text = item.packageName.dropLast(8))
+                },
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_compose_module_2),
