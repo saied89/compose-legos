@@ -11,11 +11,13 @@ import home.saied.composesamples.R
 // Set of Material typography styles to start with
 val Typography = Typography(
     body1 = TextStyle(
-        fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 14.sp,
+        letterSpacing = 0.25.sp
     ),
-    h6 = TextStyle(fontFamily = FontFamily(listOf(Font(R.font.mono_regular))))
+    body2 = TextStyle(),
+    h6 = TextStyle(fontFamily = FontFamily(listOf(Font(R.font.mono_regular)))
+    )
     /* Other default text styles to override
     button = TextStyle(
         fontFamily = FontFamily.Default,

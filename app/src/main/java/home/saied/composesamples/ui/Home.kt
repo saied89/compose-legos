@@ -86,9 +86,9 @@ fun HomeScreen(
                     SearchScreen(
                         searchStr = it.searchString,
                         it.searchResult,
-                        onSearch = { homeViewModel.searchStr = it }) {
-
-                    }
+                        onSearch = { homeViewModel.searchStr = it },
+                        onSearchSampleClick = onSearchSampleClick
+                    )
                 }
                 is HomeViewModel.HomeState.MODULES -> {
                     ModuleList(
@@ -125,12 +125,13 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
 ) {
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     val searchIsPressed by interactionSource.collectIsFocusedAsState()
+    val searchFocusRequester = remember { FocusRequester() }
     LaunchedEffect(key1 = searchIsPressed) {
-        if (searchIsPressed)
+        if (searchIsPressed) {
             onSearchStr("")
+        }
     }
     val homeState = this.currentState
-    val searchFocusRequester = remember { FocusRequester() }
     val searchCornerPercent by animateInt(label = "searchCornerDp") {
         when (it) {
             is HomeViewModel.HomeState.MODULES -> 25
@@ -188,7 +189,7 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 backgroundColor = MaterialTheme.colors.secondary,
                 focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Gray
+                unfocusedBorderColor = if (currentState is HomeViewModel.HomeState.SearchState) Color.Transparent else Color.Gray
             ),
             modifier = modifier
                 .padding(seachPaddingDp)
