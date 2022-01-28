@@ -65,9 +65,3 @@ fun FileScreen(sampleFile: SampleFile, onSampleClicked: (Int) -> Unit) {
         })
     }
 }
-
-@Preview
-@Composable
-fun FilePreview() {
-    FileScreen(sampleFile = SampleFile("animation-core", listOf(Sample("First Sample",""))), onSampleClicked = {})
-}

@@ -8,6 +8,7 @@ data class SampleFileInfo(
     val fileName: String,
     val moduleName: String,
     val packageName: String,
+    val path: String,
     val sampleList: List<SampleInfo>
 )
 

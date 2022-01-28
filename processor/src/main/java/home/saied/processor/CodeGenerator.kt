@@ -38,10 +38,12 @@ val sampleFileClassSpec = run {
         List::class.asClassName().parameterizedBy(ClassName(PACKAGE_NAME, "Sample"))
     val flux = FunSpec.constructorBuilder()
         .addParameter("name", String::class)
+        .addParameter("path", String::class)
         .addParameter("sampleList", sampleListTypeSpec)
         .build()
     TypeSpec.classBuilder("SampleFile").primaryConstructor(flux)
         .addProperty(PropertySpec.builder("name", String::class).initializer("name").build())
+        .addProperty(PropertySpec.builder("path", String::class).initializer("path").build())
         .addProperty(
             PropertySpec.builder("sampleList", sampleListTypeSpec).initializer("sampleList").build()
         )
@@ -97,9 +99,14 @@ private fun sampleModulePropertySpec(moduleName: String, sampleFileList: List<Sa
 @OptIn(KotlinPoetKspPreview::class)
 private fun samplesPropertySpec(sampleFile: SampleFileInfo): PropertySpec {
 
-    fun samplesInitBlock(fileName: String, sampleList: List<SampleInfo>): CodeBlock {
+    fun samplesInitBlock(
+        fileName: String,
+        filePath: String,
+        sampleList: List<SampleInfo>
+    ): CodeBlock {
         val builder =
-            CodeBlock.builder().addStatement("%N(%S, buildList {", sampleFileClassSpec, fileName)
+            CodeBlock.builder()
+                .addStatement("%N(%S, %S, buildList {", sampleFileClassSpec, fileName, filePath)
         sampleList.forEach { sampleInf ->
             if (sampleInf.skipBlockGeneration == null)
                 builder.addStatement(
@@ -125,7 +132,7 @@ private fun samplesPropertySpec(sampleFile: SampleFileInfo): PropertySpec {
         sampleFile.fileName.substringBefore('.'),
         ClassName(PACKAGE_NAME, "SampleFile")
     )
-        .initializer(samplesInitBlock(sampleFile.fileName, sampleFile.sampleList))
+        .initializer(samplesInitBlock(sampleFile.fileName, sampleFile.path, sampleFile.sampleList))
         .apply {
             sampleFile.sampleList.flatMap { it.optInAnnotations }.toSet().forEach(::addAnnotation)
         }

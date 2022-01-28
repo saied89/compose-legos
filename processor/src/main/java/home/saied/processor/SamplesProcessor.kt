@@ -55,8 +55,10 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
                     skipBlockGeneration = skipBlockGenerationReason
                 )
             }.toList()
+
             SampleFileInfo(
                 fileName = file.fileName,
+                path = calcRelativePath(file.filePath),
                 moduleName = getModuleName(file.filePath),
                 packageName = file.packageName.asString(),
                 sampleList = sampleInfoList
@@ -91,6 +93,11 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
             annotation.shortName.asString() == "Sampled"
         }
         return isSampled
+    }
+
+    private fun calcRelativePath(absolutePath: String): String {
+        val supportStrIndex = absolutePath.indexOf("support")
+        return absolutePath.drop(supportStrIndex)
     }
 
     @OptIn(KotlinPoetKspPreview::class)
