@@ -134,7 +134,7 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
     val homeState = this.currentState
     val searchCornerPercent by animateInt(label = "searchCornerDp") {
         when (it) {
-            is HomeViewModel.HomeState.MODULES -> 25
+            is HomeViewModel.HomeState.MODULES -> 24
             is HomeViewModel.HomeState.SearchState -> 0
         }
     }
