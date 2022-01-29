@@ -10,11 +10,13 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.samples.EnterAlwaysSmallTopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
@@ -33,7 +35,9 @@ fun SampleScreen(
     var sampleViewSwitchState: SampleViewSwitch by remember {
         mutableStateOf(SampleViewSwitch.SOURCE)
     }
+    val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SmallTopAppBar(
                 title = {},
@@ -60,7 +64,8 @@ fun SampleScreen(
                     ) {
                         Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = null)
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
