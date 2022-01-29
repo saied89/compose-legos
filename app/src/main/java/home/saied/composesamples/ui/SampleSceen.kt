@@ -1,30 +1,68 @@
 package home.saied.composesamples.ui
 
+import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import home.saied.samples.Sample
 
+@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterial3Api
 @Composable
-fun SampleScreen(sample: Sample) {
+fun SampleScreen(
+    sample: Sample,
+    onSourceLaunch: () -> Unit,
+    onBackClick: () -> Unit
+) {
     var sampleViewSwitchState: SampleViewSwitch by remember {
         mutableStateOf(SampleViewSwitch.SOURCE)
     }
     Scaffold(
+        topBar = {
+            SmallTopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                actions = {
+                    val context = LocalContext.current
+                    val localClipboardManager = LocalClipboardManager.current
+                    IconButton(
+                        onClick = onSourceLaunch
+                    ) {
+                        Icon(imageVector = Icons.Filled.Launch, contentDescription = null)
+                    }
+                    IconButton(
+                        onClick = {
+                            localClipboardManager.setText(AnnotatedString(sample.body))
+                            Toast
+                                .makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = null)
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 sampleViewSwitchState = when (sampleViewSwitchState) {
@@ -35,7 +73,7 @@ fun SampleScreen(sample: Sample) {
                         SampleViewSwitch.SOURCE
                     }
                 }
-            }, shape = MaterialTheme.shapes.small) {
+            }, shape = androidx.compose.material.MaterialTheme.shapes.small) {
                 Icon(
                     imageVector = when (sampleViewSwitchState) {
                         SampleViewSwitch.SOURCE -> {
@@ -49,16 +87,7 @@ fun SampleScreen(sample: Sample) {
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End,
-        bottomBar = {
-            Surface(modifier = Modifier.fillMaxWidth()) {
-                Row(horizontalArrangement = Arrangement.End) {
-                    IconButton(onClick = { /*TODO*/ }, Modifier) {
-                        Icon(Icons.Default.MoreVert, contentDescription = null)
-                    }
-                }
-            }
-        }
+        floatingActionButtonPosition = FabPosition.End
     ) {
         Crossfade(targetState = sampleViewSwitchState, modifier = Modifier.padding(it)) {
             when (it) {
@@ -104,7 +133,7 @@ private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Text(
             text = index.toString().padStart(gutterWidth, '0'),
-            style = MaterialTheme.typography.overline,
+            style = androidx.compose.material.MaterialTheme.typography.overline,
             modifier = Modifier
                 .padding(horizontal = 2.dp)
                 .align(Top)
@@ -117,7 +146,7 @@ private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
         )
         Text(
             text = codeLine,
-            style = MaterialTheme.typography.h6,
+            style = androidx.compose.material.MaterialTheme.typography.h6,
             modifier = Modifier
                 .align(CenterVertically)
                 .padding(horizontal = 4.dp)

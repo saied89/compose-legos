@@ -62,9 +62,3 @@ fun ModuleScreen(sampleModule: SampleModule, onFileClick: (Int) -> Unit) {
         })
     }
 }
-
-@Preview
-@Composable
-fun Preview() {
-    ModuleScreen(sampleModule = SampleModule("animation-core", "", listOf(SampleFile("First File", listOf()))), onFileClick = {})
-}

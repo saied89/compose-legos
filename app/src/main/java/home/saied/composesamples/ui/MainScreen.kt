@@ -4,11 +4,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import home.saied.composesamples.openUrl
+import home.saied.composesamples.sampleSourceUrl
 import home.saied.samples.sampleModules
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +78,17 @@ fun MainScreen() {
                 val moduleIndex: Int = it.arguments!!.getInt("moduleIndex")
                 val fileIndex: Int = it.arguments!!.getInt("fileIndex")
                 val sampleIndex: Int = it.arguments!!.getInt("sampleIndex")
-                SampleScreen(sampleModules[moduleIndex].sampleFileList[fileIndex].sampleList[sampleIndex])
+                val context = LocalContext.current
+                SampleScreen(
+                    sampleModules[moduleIndex].sampleFileList[fileIndex].sampleList[sampleIndex],
+                    onSourceLaunch = {
+                        val sampleSourceUrl = sampleSourceUrl(
+                            sampleModules[moduleIndex].sampleFileList[fileIndex].path
+                        )
+                        context.openUrl(sampleSourceUrl)
+                    },
+                    onBackClick = navController::popBackStack
+                )
             }
         }
     }
