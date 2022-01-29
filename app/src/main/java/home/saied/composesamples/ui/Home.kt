@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.R
@@ -52,7 +53,7 @@ fun HomeScreen(
     val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 76.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
-
+    val statusBarInset = LocalWindowInsets.current.statusBars.layoutInsets.top
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -60,7 +61,7 @@ fun HomeScreen(
                 val newOffset = toolbarOffsetHeightPx.value + delta
                 toolbarOffsetHeightPx.value =
                     if (homeState == HomeViewModel.HomeState.MODULES)
-                        newOffset.coerceIn(-toolbarHeightPx, 0f)
+                        newOffset.coerceIn(-toolbarHeightPx - statusBarInset, 0f)
                     else 0f
                 return Offset.Zero
             }
@@ -69,7 +70,7 @@ fun HomeScreen(
 
     val systemUiController = rememberSystemUiController()
     val statusBarColor =
-        if (homeState is HomeViewModel.HomeState.SearchState) MaterialTheme.colors.secondary else Color.White
+        if (homeState is HomeViewModel.HomeState.SearchState) MaterialTheme.colors.secondary else Color.Transparent
     SideEffect {
         systemUiController.setStatusBarColor(statusBarColor, darkIcons = true)
     }

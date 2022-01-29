@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.systemBarsPadding
 import home.saied.composesamples.R
 import home.saied.samples.SampleModule
 
@@ -31,7 +32,7 @@ import home.saied.samples.SampleModule
 fun ModuleScreen(sampleModule: SampleModule, onBackClick: () -> Unit, onFileClick: (Int) -> Unit) {
     val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
     androidx.compose.material3.Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).systemBarsPadding(),
         topBar = {
             SmallTopAppBar(
                 title = {
