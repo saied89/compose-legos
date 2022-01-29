@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import home.saied.samples.Sample
 
-@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun SampleScreen(
@@ -151,7 +150,7 @@ private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
         )
         Text(
             text = codeLine,
-            style = androidx.compose.material.MaterialTheme.typography.h6,
+            style = androidx.compose.material.MaterialTheme.typography.h5,
             modifier = Modifier
                 .align(CenterVertically)
                 .padding(horizontal = 4.dp)

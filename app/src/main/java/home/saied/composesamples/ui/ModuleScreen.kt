@@ -8,57 +8,71 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Launch
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import home.saied.composesamples.R
-import home.saied.samples.SampleFile
 import home.saied.samples.SampleModule
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun ModuleScreen(sampleModule: SampleModule, onFileClick: (Int) -> Unit) {
-    LazyColumn {
-        item {
-            val titleAnnotatedString = with(AnnotatedString.Builder()) {
 
-                pushStyle(SpanStyle(fontWeight = FontWeight.Medium, fontStyle = FontStyle.Italic))
-                append(sampleModule.name)
-                pop()
-                append(" sample files")
-                toAnnotatedString()
-            }
-            Text(
-                text = titleAnnotatedString,
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-        itemsIndexed(sampleModule.sampleFileList, itemContent = { index, item ->
-            ListItem(
-                text = { Text(text = item.name) },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_compose_file_concept),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(48.dp)
+@ExperimentalMaterialApi
+@ExperimentalMaterial3Api
+@Composable
+fun ModuleScreen(sampleModule: SampleModule, onBackClick: () -> Unit, onFileClick: (Int) -> Unit) {
+    val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
+    androidx.compose.material3.Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            SmallTopAppBar(
+                title = {
+                    Text(
+                        text = sampleModule.name,
+                        style = MaterialTheme.typography.h6,
+                        modifier = Modifier.padding(16.dp)
                     )
                 },
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clickable {
-                        onFileClick(index)
+                navigationIcon = {
+                    androidx.compose.material3.IconButton(onClick = onBackClick) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = null
+                        )
                     }
+                },
+                scrollBehavior = scrollBehavior
             )
-            Spacer(modifier = Modifier.height(8.dp))
-        })
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(it)) {
+            itemsIndexed(sampleModule.sampleFileList, itemContent = { index, item ->
+                ListItem(
+                    text = { Text(text = item.name) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_compose_file_concept),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            onFileClick(index)
+                        }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            })
+        }
     }
 }

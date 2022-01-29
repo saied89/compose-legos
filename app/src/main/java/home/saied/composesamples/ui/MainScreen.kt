@@ -14,7 +14,7 @@ import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
 import home.saied.samples.sampleModules
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @ExperimentalComposeUiApi
 @Composable
 fun MainScreen() {
@@ -42,7 +42,10 @@ fun MainScreen() {
                 })
             ) {
                 val index: Int = it.arguments!!.getInt("index")
-                ModuleScreen(sampleModule = sampleModules[index]) { fileIndex ->
+                ModuleScreen(
+                    sampleModule = sampleModules[index],
+                    onBackClick = navController::popBackStack
+                ) { fileIndex ->
                     navController.navigate("file/$index/$fileIndex")
                 }
             }
@@ -58,9 +61,13 @@ fun MainScreen() {
             ) {
                 val moduleIndex: Int = it.arguments!!.getInt("moduleIndex")
                 val fileIndex: Int = it.arguments!!.getInt("fileIndex")
-                FileScreen(sampleFile = sampleModules[moduleIndex].sampleFileList[fileIndex]) { sampleIndex ->
-                    navController.navigate("sample/$moduleIndex/$fileIndex/$sampleIndex")
-                }
+                FileScreen(
+                    sampleFile = sampleModules[moduleIndex].sampleFileList[fileIndex],
+                    onSampleClicked = { sampleIndex ->
+                        navController.navigate("sample/$moduleIndex/$fileIndex/$sampleIndex")
+                    },
+                    onBackClick = navController::popBackStack
+                )
             }
             composable(
                 "sample/{moduleIndex}/{fileIndex}/{sampleIndex}",

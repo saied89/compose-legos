@@ -16,7 +16,7 @@ val Typography = Typography(
         letterSpacing = 0.25.sp
     ),
     body2 = TextStyle(),
-    h6 = TextStyle(fontFamily = FontFamily(listOf(Font(R.font.mono_regular)))
+    h5 = TextStyle(fontFamily = FontFamily(listOf(Font(R.font.mono_regular)))
     )
     /* Other default text styles to override
     button = TextStyle(
