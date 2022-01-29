@@ -34,6 +34,7 @@ import home.saied.samples.SampleFile
 fun FileScreen(
     sampleFile: SampleFile,
     onSampleClicked: (Int) -> Unit,
+    onSourceLaunch: () -> Unit,
     onBackClick: () -> Unit
 ) {
     val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
@@ -59,11 +60,8 @@ fun FileScreen(
                     }
                 },
                 actions = {
-                    val context = LocalContext.current
                     IconButton(
-                        onClick = {
-                            context.openUrl(sampleFile.path)
-                        }
+                        onClick = onSourceLaunch
                     ) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Launch,

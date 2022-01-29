@@ -69,10 +69,17 @@ fun MainScreen() {
             ) {
                 val moduleIndex: Int = it.arguments!!.getInt("moduleIndex")
                 val fileIndex: Int = it.arguments!!.getInt("fileIndex")
+                val context = LocalContext.current
                 FileScreen(
                     sampleFile = sampleModules[moduleIndex].sampleFileList[fileIndex],
                     onSampleClicked = { sampleIndex ->
                         navController.navigate("sample/$moduleIndex/$fileIndex/$sampleIndex")
+                    },
+                    onSourceLaunch = {
+                        val sampleSourceUrl = sampleSourceUrl(
+                            sampleModules[moduleIndex].sampleFileList[fileIndex].path
+                        )
+                        context.openUrl(sampleSourceUrl)
                     },
                     onBackClick = navController::popBackStack
                 )
