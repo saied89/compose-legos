@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -58,6 +59,7 @@ fun HomeScreen(
     val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 76.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
+    val toolBarNotScrolled = toolbarOffsetHeightPx.value == 0f
     val statusBarInset = LocalWindowInsets.current.statusBars.layoutInsets.top
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -90,9 +92,7 @@ fun HomeScreen(
             when (it) {
                 is HomeViewModel.HomeState.SearchState -> {
                     SearchScreen(
-                        searchStr = it.searchString,
                         it.searchResult,
-                        onSearch = { homeViewModel.searchStr = it },
                         onSearchSampleClick = onSearchSampleClick
                     )
                 }
@@ -108,8 +108,9 @@ fun HomeScreen(
         searchTransition.SearchBox(
             searchStr = homeViewModel.searchStr,
             onSearchStr = {
-              homeViewModel.searchStr = it
+                homeViewModel.searchStr = it
             },
+            enabled = toolBarNotScrolled,
             onLeadingClick = {
               homeViewModel.searchStr = null
             },
@@ -125,6 +126,7 @@ fun HomeScreen(
 @Composable
 fun Transition<HomeViewModel.HomeState>.SearchBox(
     searchStr: String?,
+    enabled: Boolean,
     onLeadingClick: () -> Unit,
     onSearchStr: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -157,6 +159,7 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
         OutlinedTextField(
             value = searchStr ?: "",
             onValueChange = onSearchStr,
+            enabled = enabled,
             interactionSource = interactionSource,
             placeholder = {
                 Text(

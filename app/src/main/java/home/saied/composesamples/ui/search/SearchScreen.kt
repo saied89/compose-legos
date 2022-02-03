@@ -21,9 +21,7 @@ import home.saied.composesamples.ui.SampleWithPath
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
-    searchStr: String? = null,
     searchRes: List<SampleWithPath>? = null,
-    onSearch: (String) -> Unit,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
     LazyColumn {
