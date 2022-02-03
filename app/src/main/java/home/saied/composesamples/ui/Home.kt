@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -36,9 +38,12 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.R
+import home.saied.composesamples.openUrl
 import home.saied.composesamples.ui.search.SearchScreen
 import home.saied.samples.SampleModule
 import kotlin.math.roundToInt
+
+private const val GITHUB_URL = "https://github.com/saied89/compose-samples"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -127,6 +132,7 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     val searchIsPressed by interactionSource.collectIsFocusedAsState()
     val searchFocusRequester = remember { FocusRequester() }
+    var moreMenuExpanded by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = searchIsPressed) {
         if (searchIsPressed) {
             onSearchStr("")
@@ -185,6 +191,22 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
 
                 }
             },
+            trailingIcon = {
+                Box() {
+                    IconButton(onClick = { moreMenuExpanded = true }) {
+                        Icon(Icons.Filled.MoreVert, contentDescription = null)
+                    }
+                    val context = LocalContext.current
+                    DropdownMenu(
+                        expanded = moreMenuExpanded,
+                        onDismissRequest = { moreMenuExpanded = false }) {
+                        DropDownMenuContent {
+                            context.openUrl(GITHUB_URL)
+                            moreMenuExpanded = false
+                        }
+                    }
+                }
+            },
             textStyle = MaterialTheme.typography.body1.copy(Color.LightGray),
             shape = RoundedCornerShape(searchCornerPercent),
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -205,7 +227,7 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
     LazyColumn(contentPadding = PaddingValues(top = toolbarHeight + 16.dp)) {
         item {
             Text(
-                text = "List of Jetpack Compose Modules",
+                text = "Jetpack Compose Modules",
                 style = MaterialTheme.typography.h3,
                 modifier = Modifier.padding(16.dp)
             )
@@ -230,6 +252,13 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
                 })
             Spacer(modifier = Modifier.height(8.dp))
         })
+    }
+}
+
+@Composable
+fun ColumnScope.DropDownMenuContent(onGithubClick: () -> Unit) {
+    DropdownMenuItem(onClick = onGithubClick) {
+        Text(text = "☆ on Github")
     }
 }
 
