@@ -34,6 +34,7 @@ fun SampleScreen(
         mutableStateOf(SampleViewSwitch.SOURCE)
     }
     val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
+    var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -69,7 +70,8 @@ fun SampleScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
+            FloatingActionButton(
+                onClick = {
                 sampleViewSwitchState = when (sampleViewSwitchState) {
                     SampleViewSwitch.SOURCE -> {
                         SampleViewSwitch.COMPOSABLE
@@ -78,6 +80,7 @@ fun SampleScreen(
                         SampleViewSwitch.SOURCE
                     }
                 }
+                    showSkipBlockgenerationReason = true
             }, shape = androidx.compose.material.MaterialTheme.shapes.small) {
                 Icon(
                     imageVector = when (sampleViewSwitchState) {
@@ -100,13 +103,45 @@ fun SampleScreen(
                     Code(code = sample.body)
                 }
                 SampleViewSwitch.COMPOSABLE -> {
-                    sample.block?.invoke()
+                    if (sample.block != null)
+                        sample.block!!.invoke()
+                    else {
+                        if (showSkipBlockgenerationReason)
+                            NotGeneratedAlertDialog(reason = sample.skipBlockgenerationReason) {
+                                sampleViewSwitchState = SampleViewSwitch.SOURCE
+                                showSkipBlockgenerationReason = false
+                            }
+                    }
                 }
             }
         }
 
     }
 }
+
+@Composable
+fun NotGeneratedAlertDialog(reason: String?, onDismissRequest: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text("Confirm")
+            }
+        }, text = {
+            Text(text = notGeneratedReasonExplanation(reason))
+        }
+    )
+}
+
+private fun notGeneratedReasonExplanation(reason: String?): String =
+    when (reason) {
+        "PARAMETERIZED" -> "This sample is parameterized. Generating runnable parameterized samples is comming soon"
+        "RESOURCES" -> "This sample contains usage of resources. Generating runnable samples that use resources is comming soon"
+        "EXTENSION_RECEIVER" -> "This sample is an extension method. Generating runnable extension samples comming soon"
+        else -> "This sample is not currently supported"
+    }
 
 @Composable
 private fun Code(code: String) {
