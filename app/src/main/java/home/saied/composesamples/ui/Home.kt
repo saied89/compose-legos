@@ -5,7 +5,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -42,6 +41,7 @@ import home.saied.composesamples.R
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.ui.search.SearchScreen
 import home.saied.samples.SampleModule
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private const val GITHUB_URL = "https://github.com/saied89/compose-samples"
@@ -51,6 +51,7 @@ private const val GITHUB_URL = "https://github.com/saied89/compose-samples"
 fun HomeScreen(
     moduleList: List<SampleModule>,
     onModuleClick: (Int) -> Unit,
+    onAboutClick: () -> Unit,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
     val homeViewModel: HomeViewModel = viewModel()
@@ -59,7 +60,7 @@ fun HomeScreen(
     val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 76.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
-    val toolBarNotScrolled = toolbarOffsetHeightPx.value == 0f
+    val toolBarNotScrolled = abs(toolbarOffsetHeightPx.value) < 0.1
     val statusBarInset = LocalWindowInsets.current.statusBars.layoutInsets.top
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -112,8 +113,9 @@ fun HomeScreen(
             },
             enabled = toolBarNotScrolled,
             onLeadingClick = {
-              homeViewModel.searchStr = null
+                homeViewModel.searchStr = null
             },
+            onAboutClick = onAboutClick,
             modifier = Modifier
                 .height(toolbarHeight)
                 .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
@@ -129,6 +131,7 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
     enabled: Boolean,
     onLeadingClick: () -> Unit,
     onSearchStr: (String) -> Unit,
+    onAboutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
@@ -203,10 +206,16 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
                     DropdownMenu(
                         expanded = moreMenuExpanded,
                         onDismissRequest = { moreMenuExpanded = false }) {
-                        DropDownMenuContent {
-                            context.openUrl(GITHUB_URL)
-                            moreMenuExpanded = false
-                        }
+                        DropDownMenuContent(
+                            onGithubClick = {
+                                moreMenuExpanded = false
+                                context.openUrl(GITHUB_URL)
+                                            },
+                            onAboutClick = {
+                                moreMenuExpanded = false
+                                onAboutClick()
+                            }
+                        )
                     }
                 }
             },
@@ -259,9 +268,12 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
 }
 
 @Composable
-fun ColumnScope.DropDownMenuContent(onGithubClick: () -> Unit) {
+fun ColumnScope.DropDownMenuContent(onGithubClick: () -> Unit, onAboutClick: () -> Unit) {
     DropdownMenuItem(onClick = onGithubClick) {
         Text(text = "☆ on Github")
+    }
+    DropdownMenuItem(onClick = onAboutClick) {
+        Text(text = "About")
     }
 }
 

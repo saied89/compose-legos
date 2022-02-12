@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -39,6 +40,9 @@ fun MainScreen() {
                         navController.navigate(
                             "sample/${it.moduleIndex}/${it.fileIndex}/${it.sampleIndex}"
                         )
+                    },
+                    onAboutClick = {
+                        navController.navigate("about")
                     }
                 )
             }
@@ -111,6 +115,9 @@ fun MainScreen() {
                     },
                     onBackClick = navController::popBackStack
                 )
+            }
+            dialog("about") {
+                About()
             }
         }
     }
