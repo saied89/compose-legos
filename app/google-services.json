@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "765352775468",
+    "project_id": "compose-legos",
+    "storage_bucket": "compose-legos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765352775468:android:78785d39f0557344042689",
+        "android_client_info": {
+          "package_name": "home.saied.composesamples"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "765352775468-34jia94j4nj44t4q54k4d16dmvtb7p5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5-4YRY9aa7H22e-hKx2crKqJFrTi3sMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "765352775468-34jia94j4nj44t4q54k4d16dmvtb7p5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

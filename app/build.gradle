@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -54,6 +56,10 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     implementation 'androidx.compose.material3:material3:1.0.0-alpha02'
     implementation("androidx.compose.animation:animation:$compose_version")
+
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
     def accompanist_version = "0.22.0-rc"
     implementation("com.google.accompanist:accompanist-insets:$accompanist_version")
