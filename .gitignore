@@ -9,3 +9,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/variables.bash
+/release.keystore
