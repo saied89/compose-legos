@@ -12,7 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "ComposeSamples"
+rootProject.name = "ComposeLegos"
 include ':app'
 //include ':support'
 //include 'samples'
