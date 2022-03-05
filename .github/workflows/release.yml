@@ -1,0 +1,31 @@
+name: Release
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    env:
+     RELEASE_KEY_STORE: ${{ secrets.RELEAE_KEY_STORE }}
+     KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+     KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Setup support submodule
+        run: |
+          git submodule init
+          git submodule update
+      - name: Setup signing key
+        run: echo $RELEASE_KEY_STORE | base64 --decode > release.keystore
+      - name: assemble
+        run: ./gradlew app:assembleRelease
+      - name: release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: app/build/outputs/apk/release/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
