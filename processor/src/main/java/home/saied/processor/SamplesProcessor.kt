@@ -114,7 +114,7 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
         codeGenerator.createNewFile(
             Dependencies(false),
             "",
-            "skiped_report",
+            "skipped_report",
             "txt"
         ).use {
             it.bufferedWriter().use { writer ->
