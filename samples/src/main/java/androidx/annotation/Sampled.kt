@@ -1,3 +1,5 @@
 package androidx.annotation
 
-annotation class Sampled()
+import androidx.compose.runtime.NonRestartableComposable
+
+typealias Sampled = NonRestartableComposable

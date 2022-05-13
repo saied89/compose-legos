@@ -6,8 +6,9 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 
 const val PACKAGE_NAME = "home.saied.samples"
 
+val scopeRecorderClassName = ClassName("home.saied.samples", "ScopeRecorder")
 
-val composableSlotLambdaName = LambdaTypeName.get(returnType = Unit::class.asTypeName()).copy(
+val composableSlotLambdaName = LambdaTypeName.get(returnType = Unit::class.asTypeName(), receiver = scopeRecorderClassName).copy(
     annotations = listOf(
         AnnotationSpec.builder(ClassName("androidx.compose.runtime", "Composable")).build()
     ),
@@ -110,7 +111,10 @@ private fun samplesPropertySpec(sampleFile: SampleFileInfo): PropertySpec {
         sampleList.forEach { sampleInf ->
             if (sampleInf.skipBlockGeneration == null)
                 builder.addStatement(
-                    "    add(%N(%S, %S, block = { %M() }))",
+                    """    add(%N(%S, %S, block = {
+                        | recomposeScope = currentRecomposeScope
+                        | %M()
+                        | }))""".trimMargin(),
                     sampleClassSpec,
                     sampleInf.name,
                     sampleInf.body,
@@ -174,6 +178,7 @@ fun samplesFileSpec(moduleList: List<SampleModuleInfo>): FileSpec {
 fun moduleSamplesFileSpec(moduleName: String, sampleFileList: List<SampleFileInfo>): FileSpec {
     val cleanedModuleName = moduleName
     return FileSpec.builder(PACKAGE_NAME, "${cleanedModuleName}Samples")
+        .addImport("androidx.compose.runtime", "currentRecomposeScope")
         .apply {
             sampleFileList.forEach {
                 addProperty(

@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import home.saied.samples.Sample
+import home.saied.samples.StateObserver
 
 @ExperimentalMaterial3Api
 @Composable
@@ -72,16 +73,17 @@ fun SampleScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                sampleViewSwitchState = when (sampleViewSwitchState) {
-                    SampleViewSwitch.SOURCE -> {
-                        SampleViewSwitch.COMPOSABLE
+                    sampleViewSwitchState = when (sampleViewSwitchState) {
+                        SampleViewSwitch.SOURCE -> {
+                            SampleViewSwitch.COMPOSABLE
+                        }
+                        SampleViewSwitch.COMPOSABLE -> {
+                            SampleViewSwitch.SOURCE
+                        }
                     }
-                    SampleViewSwitch.COMPOSABLE -> {
-                        SampleViewSwitch.SOURCE
-                    }
-                }
                     showSkipBlockgenerationReason = true
-            }, shape = androidx.compose.material.MaterialTheme.shapes.small) {
+                }, shape = androidx.compose.material.MaterialTheme.shapes.small
+            ) {
                 Icon(
                     imageVector = when (sampleViewSwitchState) {
                         SampleViewSwitch.SOURCE -> {
@@ -104,7 +106,12 @@ fun SampleScreen(
                 }
                 SampleViewSwitch.COMPOSABLE -> {
                     if (sample.block != null)
-                        sample.block!!.invoke()
+                        StateObserver(
+                            onUpdate = {
+
+                            },
+                            sample.block!!
+                        )
                     else {
                         if (showSkipBlockgenerationReason)
                             NotGeneratedAlertDialog(reason = sample.skipBlockgenerationReason) {
