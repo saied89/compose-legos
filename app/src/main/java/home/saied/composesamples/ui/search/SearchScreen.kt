@@ -1,6 +1,7 @@
 package home.saied.composesamples.ui.search
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +25,7 @@ fun SearchScreen(
     searchRes: List<SampleWithPath>? = null,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(contentPadding = PaddingValues(top = 60.dp)) {
         items(searchRes ?: listOf()) { item ->
             ListItem(
                 text = { Text(text = item.sample.name) },
