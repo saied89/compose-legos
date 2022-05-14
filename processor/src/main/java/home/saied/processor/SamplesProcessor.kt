@@ -40,6 +40,7 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
                         func.parameters.isNotEmpty() -> SKIP_BLOCK_GENERATION_REASON.PARAMETERIZED
                         func.extensionReceiver != null -> SKIP_BLOCK_GENERATION_REASON.EXTENSION_RECEIVER
                         funcBody.contains("R.") -> SKIP_BLOCK_GENERATION_REASON.RESOURCES
+                        func.simpleName.asString() == "snapshotFlowSample" -> SKIP_BLOCK_GENERATION_REASON.RUNTIME_EXCEPTION
                         else -> null
                     }.also {
                         if (it != null)
