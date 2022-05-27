@@ -124,6 +124,28 @@ class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) 
                 }
             }
         }
+        codeGenerator.createNewFile(
+            Dependencies(false),
+            "",
+            "samples_report",
+            "txt"
+        ).use {
+            it.bufferedWriter().use { writer ->
+                var count = 0
+                writer.write("${moduleInfoList.count()} Modules Processed" + "\n")
+                moduleInfoList.forEach { sampleModule ->
+                    writer.write("  ${sampleModule.moduleName} Module:" + "\n")
+                    sampleModule.list.forEach { sampleFileInfo ->
+                        writer.write("    ${sampleFileInfo.fileName} File:" + "\n")
+                        sampleFileInfo.sampleList.forEach { sample ->
+                            writer.write("      ${sample.name} Processed" + "\n")
+                            count++
+                        }
+                    }
+                }
+                writer.write("\n\n$count Samples Processed")
+            }
+        }
     }
 
 
