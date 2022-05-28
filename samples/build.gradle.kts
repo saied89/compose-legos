@@ -74,6 +74,7 @@ dependencies {
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation("androidx.compose.runtime:runtime:$compose_version")
+    implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.compose.animation:animation-graphics:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava3:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
