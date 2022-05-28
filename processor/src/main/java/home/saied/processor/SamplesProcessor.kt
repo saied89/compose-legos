@@ -10,7 +10,10 @@ import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.writeTo
 import java.io.File
 
-class SamplesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) : SymbolProcessor {
+class SamplesProcessor(
+    private val codeGenerator: CodeGenerator,
+    private val logger: KSPLogger
+) : SymbolProcessor {
 
     lateinit var moduleInfoList: List<SampleModuleInfo>
     private val skippedReportItemList: MutableList<String> = mutableListOf()
