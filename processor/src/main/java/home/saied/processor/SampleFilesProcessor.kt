@@ -2,43 +2,25 @@ package home.saied.processor
 
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.visitor.KSDefaultVisitor
+import com.google.devtools.ksp.visitor.KSEmptyVisitor
 import java.io.File
 
 class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) :
     SymbolProcessor {
-    lateinit var sampleFiles: List<KSFile>
+
+    private val processedSet = mutableSetOf<String>()
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        sampleFiles = resolver.getAllFiles().filter { file ->
-            file.declarations.any(::isSampled)
-        }.toList()
+        val allFiles = resolver.getAllFiles()
+        logger.warn("process called with ${allFiles.count()} files.")
+        allFiles.filter { file ->
+            file.declarations.any(::isSampled) && !processedSet.contains(file.uniqueId())
+        }.forEach {
+            processedSet.add(it.accept(SampleFileVisitor(), Unit))
+        }
 
         return emptyList()
-    }
-
-    override fun finish() {
-        sampleFiles.forEach {
-            logger.warn(generatedFilename(it.fileName))
-            val res = readDeclarationLines(it) { line ->
-                when  {
-                    line.startsWith("package") -> "package home.saied.samples.GenSampled.${it.packageName.asString()}"
-                    line == "import androidx.compose.runtime.remember" -> "import home.saied.samples.remember"
-                    line == "import androidx.annotation.Sampled" -> "import home.saied.samples.gensampled.GenSampled\n" +
-                            "import home.saied.samples.R"
-                    line.trim() == "@Sampled" -> "@GenSampled"
-                    else -> line
-                }
-            }
-            codeGenerator.createNewFile(
-                Dependencies(false),
-                "home.saied.samples.GenSampled.${it.packageName.asString()}",
-                generatedFilename(it.fileName)
-            ).bufferedWriter().use { writer ->
-                res.forEach {
-                    writer.write(it)
-                    writer.newLine()
-                }
-            }
-        }
     }
 
     private fun generatedFilename(filename: String): String {
@@ -46,22 +28,65 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
         return "${fn}Gen"
     }
 
-    private fun readDeclarationLines(
-        file: KSFile,
-        lineTransform: (String) -> String
-    ): List<String> {
-        return file.let {
-            File(it.filePath).useLines { lines ->
-                lines.toList().map(lineTransform)
-            }
-        }
-    }
-
     private fun isSampled(declaration: KSDeclaration): Boolean {
         val isSampled = declaration.annotations.any { annotation ->
             annotation.shortName.asString() == "Sampled"
         }
         return isSampled
+    }
+
+    private fun KSFile.uniqueId() = packageName.asString() + fileName
+
+    inner class SampleFileVisitor : KSDefaultVisitor<Unit, String>() {
+        override fun visitFile(file: KSFile, data: Unit): String {
+            val res = readDeclarationLines(file) { line ->
+                when {
+                    line.startsWith("package") -> "package home.saied.samples.GenSampled.${file.packageName.asString()}"
+                    line == "import androidx.compose.runtime.remember" -> "import home.saied.samples.remember"
+                    line == "import androidx.annotation.Sampled" -> "import home.saied.samples.gensampled.GenSampled\n" +
+                            "import home.saied.samples.R"
+                    line.trim() == "@Sampled" -> "@GenSampled"
+                    else -> line
+                }
+            }
+            val message = "home.saied.samples.GenSampled.${file.packageName.asString()}/${
+                generatedFilename(file.fileName)
+            }"
+            logger.warn(message)
+            codeGenerator.createNewFile(
+                Dependencies(false),
+                "home.saied.samples.GenSampled.${file.packageName.asString()}",
+                generatedFilename(file.fileName)
+            ).bufferedWriter().use { writer ->
+                res.forEach {
+                    writer.write(it)
+                    writer.newLine()
+                }
+            }
+            return file.uniqueId()
+        }
+
+        override fun defaultHandler(node: KSNode, data: Unit): String {
+            TODO("Not yet implemented")
+        }
+
+        private fun readDeclarationLines(
+            file: KSFile,
+            lineTransform: (String) -> String
+        ): List<String> {
+            return file.let {
+                File(it.filePath).useLines { lines ->
+                    lines.toList().map(lineTransform)
+                }
+            }
+        }
+
+        private fun isSampled(declaration: KSDeclaration): Boolean {
+            val isSampled = declaration.annotations.any { annotation ->
+                annotation.shortName.asString() == "Sampled"
+            }
+            return isSampled
+        }
     }
 }
 
