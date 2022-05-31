@@ -62,7 +62,7 @@ class SamplesProcessor(
 
             SampleFileInfo(
                 fileName = file.fileName,
-                path = calcRelativePath(file.filePath),
+                path = file.filePath,
                 moduleName = getModuleName(file.filePath),
                 packageName = file.packageName.asString(),
                 sampleList = sampleInfoList
@@ -94,7 +94,7 @@ class SamplesProcessor(
 
     private fun isSampled(declaration: KSDeclaration): Boolean {
         val isSampled = declaration.annotations.any { annotation ->
-            annotation.shortName.asString() == "Sampled"
+            annotation.shortName.asString() == "GenSampled"
         }
         return isSampled
     }
@@ -153,11 +153,13 @@ class SamplesProcessor(
 
 
     /**
-     * support/compose/ui/ui/samples/src/main/java/androidx/compose/ui/samples -> ui
+     * samples/GenSampled/androidx/compose/runtime/livedata/samples/SamplesGen.kt -> ui
      * support/compose/ui/ui-graphics/samples/src/main/java/androidx/compose/ui/graphics/samples -> ui-graphics
      */
-    private fun getModuleName(modulePath: String): String =
-        modulePath.split("/samples")[0].split('/').last()
+    private fun getModuleName(modulePath: String): String {
+        return modulePath.substringAfter("samples/GenSampled/androidx/compose/")
+            .substringBefore("/samples").replace('/', '-')
+    }
 }
 
 class SamplesProcessorProvider : SymbolProcessorProvider {
