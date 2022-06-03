@@ -1,26 +1,24 @@
 package home.saied.samples
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisallowComposableCalls
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 
 @SuppressLint("CompositionLocalNaming")
 val rememberRecorderProvider = compositionLocalOf<SnapshotStateMap<Any, Any>> { error("No active user found!") }
 
 @Composable
-fun SampleWrapper(content: @Composable () -> Unit, set: SnapshotStateMap<Any, Any>) {
-    CompositionLocalProvider(rememberRecorderProvider provides set) {
+fun SampleWrapper(content: @Composable () -> Unit, snapshotStateMap: SnapshotStateMap<Any, Any>) {
+    CompositionLocalProvider(rememberRecorderProvider provides snapshotStateMap) {
         content()
     }
 }
 
 @Composable
-inline fun <T> remember(calculation: @DisallowComposableCalls () -> T): T {
+inline fun <T> remember(noinline calculation: @DisallowComposableCalls () -> T): T {
     return androidx.compose.runtime.remember(calculation).also {
-        rememberRecorderProvider.current[Unit] = it as Any
+        currentComposer.recomposeScopeIdentity
+        rememberRecorderProvider.current[calculation] = it as Any
     }
 }
 
