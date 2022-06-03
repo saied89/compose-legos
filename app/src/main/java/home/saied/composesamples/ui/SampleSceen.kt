@@ -3,17 +3,25 @@ package home.saied.composesamples.ui
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FabPosition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import home.saied.samples.Sample
+import home.saied.samples.SampleWrapper
 
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun SampleScreen(
@@ -35,7 +45,8 @@ fun SampleScreen(
     }
     val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
     var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
-    Scaffold(
+    val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
+    BottomSheetScaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .systemBarsPadding(),
@@ -72,16 +83,17 @@ fun SampleScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                sampleViewSwitchState = when (sampleViewSwitchState) {
-                    SampleViewSwitch.SOURCE -> {
-                        SampleViewSwitch.COMPOSABLE
+                    sampleViewSwitchState = when (sampleViewSwitchState) {
+                        SampleViewSwitch.SOURCE -> {
+                            SampleViewSwitch.COMPOSABLE
+                        }
+                        SampleViewSwitch.COMPOSABLE -> {
+                            SampleViewSwitch.SOURCE
+                        }
                     }
-                    SampleViewSwitch.COMPOSABLE -> {
-                        SampleViewSwitch.SOURCE
-                    }
-                }
                     showSkipBlockgenerationReason = true
-            }, shape = androidx.compose.material.MaterialTheme.shapes.small) {
+                }, shape = androidx.compose.material.MaterialTheme.shapes.small
+            ) {
                 Icon(
                     imageVector = when (sampleViewSwitchState) {
                         SampleViewSwitch.SOURCE -> {
@@ -95,7 +107,25 @@ fun SampleScreen(
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End
+        floatingActionButtonPosition = FabPosition.End,
+        sheetContent = {
+            Surface(shape = RectangleShape) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scrollable(
+                            orientation = Orientation.Vertical,
+                            state = rememberScrollState()
+                        )
+                        .padding(start = 16.dp, end = 100.dp, top = 16.dp, bottom = 16.dp)
+                ) {
+                    observeStateMap.forEach { (k, v) ->
+                        if (v is State<*>)
+                            Text(text = v.value.toString())
+                    }
+                }
+            }
+        }
     ) {
         Crossfade(targetState = sampleViewSwitchState, modifier = Modifier.padding(it)) {
             when (it) {
@@ -104,7 +134,11 @@ fun SampleScreen(
                 }
                 SampleViewSwitch.COMPOSABLE -> {
                     if (sample.block != null)
-                        sample.block!!.invoke()
+                        SampleWrapper(
+                            content = {
+                                sample.block!!.invoke()
+                            }, snapshotStateMap = observeStateMap
+                        )
                     else {
                         if (showSkipBlockgenerationReason)
                             NotGeneratedAlertDialog(reason = sample.skipBlockgenerationReason) {
