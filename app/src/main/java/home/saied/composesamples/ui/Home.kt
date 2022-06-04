@@ -249,7 +249,7 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
                 text = { Text(text = item.name) },
                 secondaryText = {
                     // Drop .sample from package names
-                    Text(text = item.packageName.dropLast(8))
+                    Text(text = item.packageName.substringAfter("GenSampled.").dropLast(8))
                 },
                 icon = {
                     Icon(

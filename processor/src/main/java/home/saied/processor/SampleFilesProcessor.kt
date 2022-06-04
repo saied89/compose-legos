@@ -3,7 +3,6 @@ package home.saied.processor
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.visitor.KSDefaultVisitor
-import com.google.devtools.ksp.visitor.KSEmptyVisitor
 import java.io.File
 
 class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) :
@@ -24,8 +23,7 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
     }
 
     private fun generatedFilename(filename: String): String {
-        val fn = filename.substringBefore('.')
-        return "${fn}Gen"
+        return filename.substringBefore('.')
     }
 
     private fun isSampled(declaration: KSDeclaration): Boolean {

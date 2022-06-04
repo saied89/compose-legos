@@ -62,7 +62,7 @@ class SamplesProcessor(
 
             SampleFileInfo(
                 fileName = file.fileName,
-                path = file.filePath,
+                path = file.filePath.substringAfter("GenSampled."),
                 moduleName = getModuleName(file.filePath),
                 packageName = file.packageName.asString(),
                 sampleList = sampleInfoList
