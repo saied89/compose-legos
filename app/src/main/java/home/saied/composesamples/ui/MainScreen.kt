@@ -21,6 +21,8 @@ import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
 import home.saied.samples.sampleModules
 
+private val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-legos-0/privacy.html"
+
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @ExperimentalComposeUiApi
 @Composable
@@ -123,7 +125,10 @@ fun MainScreen() {
                 )
             }
             dialog("about") {
-                About()
+                val context = LocalContext.current
+                About {
+                    context.openUrl(PRIVACY_POLICY_URL)
+                }
             }
         }
     }

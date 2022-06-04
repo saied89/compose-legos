@@ -10,7 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://androidx.dev/snapshots/builds/8564595/artifacts/repository' }
+        maven { url 'https://androidx.dev/snapshots/builds/8683091/artifacts/repository' }
     }
 }
 rootProject.name = "ComposeLegos"

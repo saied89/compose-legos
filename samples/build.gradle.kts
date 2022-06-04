@@ -5,11 +5,11 @@ plugins {
 }
 val compose_version: String by project
 android {
-    compileSdk = 31
+    compileSdk = 32
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        consumerProguardFiles = "consumer-rules.pro"
@@ -80,7 +80,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
     implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
     implementation ("androidx.activity:activity-compose:1.4.0")
-    implementation("androidx.compose.material3:material3:1.0.0-SNAPSHOT")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha11")
     ksp(project(":processor"))
 
     testImplementation("junit:junit:4.13.2")

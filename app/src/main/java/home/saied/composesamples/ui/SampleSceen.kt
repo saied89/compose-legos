@@ -43,7 +43,8 @@ fun SampleScreen(
     var sampleViewSwitchState: SampleViewSwitch by remember {
         mutableStateOf(SampleViewSwitch.SOURCE)
     }
-    val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
+    val topAppBarScrollState = rememberTopAppBarScrollState()
+    val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarScrollState) }
     var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
     val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
     BottomSheetScaffold(
