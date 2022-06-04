@@ -44,7 +44,7 @@ import home.saied.samples.SampleModule
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-private const val GITHUB_URL = "https://github.com/saied89/compose-samples"
+private const val GITHUB_URL = "https://github.com/saied89/compose-legos"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
