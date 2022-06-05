@@ -33,7 +33,7 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
         return isSampled
     }
 
-    private fun KSFile.uniqueId() = packageName.asString() + fileName
+    private fun KSFile.uniqueId() = filePath
 
     inner class SampleFileVisitor : KSDefaultVisitor<Unit, String>() {
         override fun visitFile(file: KSFile, data: Unit): String {
@@ -43,6 +43,7 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
                     line == "import androidx.compose.runtime.remember" -> "import home.saied.samples.remember"
                     line == "import androidx.annotation.Sampled" -> "import home.saied.samples.gensampled.GenSampled\n" +
                             "import home.saied.samples.R"
+                    line.contains("R.") && !line.contains("android.R.") -> line.replace("R.", "home.saied.samples.R.")
                     line.trim() == "@Sampled" -> "@GenSampled"
                     else -> line
                 }
@@ -78,12 +79,11 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
                 }
             }
         }
+    }
 
-        private fun isSampled(declaration: KSDeclaration): Boolean {
-            val isSampled = declaration.annotations.any { annotation ->
-                annotation.shortName.asString() == "Sampled"
-            }
-            return isSampled
+    override fun finish() {
+        processedSet.forEach {
+            File(it).delete()
         }
     }
 }
