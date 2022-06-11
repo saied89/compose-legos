@@ -108,7 +108,7 @@ fun SampleScreen(
         },
         floatingActionButtonPosition = FabPosition.End,
         sheetContent = {
-            Surface(shape = RectangleShape) {
+            Surface(shape = RectangleShape, modifier = Modifier.heightIn(min = 56.dp)) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
