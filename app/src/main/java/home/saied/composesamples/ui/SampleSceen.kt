@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotMutableState
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
@@ -43,8 +42,7 @@ fun SampleScreen(
     var sampleViewSwitchState: SampleViewSwitch by remember {
         mutableStateOf(SampleViewSwitch.SOURCE)
     }
-    val topAppBarScrollState = rememberTopAppBarScrollState()
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(topAppBarScrollState) }
+    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
     val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
     BottomSheetScaffold(
