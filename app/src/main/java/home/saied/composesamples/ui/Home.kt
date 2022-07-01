@@ -34,8 +34,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.R
 import home.saied.composesamples.openUrl
@@ -61,7 +59,8 @@ fun HomeScreen(
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
     val toolBarNotScrolled = abs(toolbarOffsetHeightPx.value) < 0.1
-    val statusBarInset = LocalWindowInsets.current.statusBars.layoutInsets.top
+//    val statusBarInset = LocalWindowInsets.current.statusBars.layoutInsets.top
+    val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -159,78 +158,79 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
     }
 
     val focusManager = LocalFocusManager.current
-        OutlinedTextField(
-            value = searchStr ?: "",
-            onValueChange = onSearchStr,
-            enabled = enabled,
-            interactionSource = interactionSource,
-            placeholder = {
-                Text(
-                    text = "Search Samples",
-                    style = MaterialTheme.typography.body2.copy(color = Color.Gray)
-                )
-            },
-            leadingIcon = {
-                IconButton(onClick = {
-                    if (homeState is HomeViewModel.HomeState.SearchState)
-                        focusManager.clearFocus()
-                    else
-                        searchFocusRequester.requestFocus()
-                    onLeadingClick()
-                }) {
-                    Crossfade(animationSpec = snap()) {
-                        when (it) {
-                            is HomeViewModel.HomeState.SearchState -> {
-                                Icon(
-                                    Icons.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                            is HomeViewModel.HomeState.MODULES -> {
-                                Icon(
-                                    Icons.Filled.Search,
-                                    contentDescription = null
-                                )
-                            }
+    OutlinedTextField(
+        value = searchStr ?: "",
+        onValueChange = onSearchStr,
+        enabled = enabled,
+        interactionSource = interactionSource,
+        placeholder = {
+            Text(
+                text = "Search Samples",
+                style = MaterialTheme.typography.body2.copy(color = Color.Gray)
+            )
+        },
+        leadingIcon = {
+            IconButton(onClick = {
+                if (homeState is HomeViewModel.HomeState.SearchState)
+                    focusManager.clearFocus()
+                else
+                    searchFocusRequester.requestFocus()
+                onLeadingClick()
+            }) {
+                Crossfade(animationSpec = snap()) {
+                    when (it) {
+                        is HomeViewModel.HomeState.SearchState -> {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                contentDescription = null
+                            )
+                        }
+                        is HomeViewModel.HomeState.MODULES -> {
+                            Icon(
+                                Icons.Filled.Search,
+                                contentDescription = null
+                            )
                         }
                     }
+                }
 
+            }
+        },
+        trailingIcon = {
+            Box() {
+                IconButton(onClick = { moreMenuExpanded = true }) {
+                    Icon(Icons.Filled.MoreVert, contentDescription = null)
                 }
-            },
-            trailingIcon = {
-                Box() {
-                    IconButton(onClick = { moreMenuExpanded = true }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = null)
-                    }
-                    val context = LocalContext.current
-                    DropdownMenu(
-                        expanded = moreMenuExpanded,
-                        onDismissRequest = { moreMenuExpanded = false }) {
-                        DropDownMenuContent(
-                            onGithubClick = {
-                                moreMenuExpanded = false
-                                context.openUrl(GITHUB_URL)
-                                            },
-                            onAboutClick = {
-                                moreMenuExpanded = false
-                                onAboutClick()
-                            }
-                        )
-                    }
+                val context = LocalContext.current
+                DropdownMenu(
+                    expanded = moreMenuExpanded,
+                    onDismissRequest = { moreMenuExpanded = false }) {
+                    DropDownMenuContent(
+                        onGithubClick = {
+                            moreMenuExpanded = false
+                            context.openUrl(GITHUB_URL)
+                        },
+                        onAboutClick = {
+                            moreMenuExpanded = false
+                            onAboutClick()
+                        }
+                    )
                 }
-            },
-            textStyle = MaterialTheme.typography.body1.copy(Color.LightGray),
-            shape = RoundedCornerShape(searchCornerPercent),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                backgroundColor = MaterialTheme.colors.secondary,
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = if (currentState is HomeViewModel.HomeState.SearchState) Color.Transparent else Color.Gray
-            ),
-            modifier = modifier
-                .padding(seachPaddingDp)
-                .fillMaxWidth()
-                .focusRequester(searchFocusRequester)
-        )
+            }
+        },
+        textStyle = MaterialTheme.typography.body1.copy(Color.LightGray),
+        shape = RoundedCornerShape(searchCornerPercent),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            backgroundColor = MaterialTheme.colors.secondary,
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = if (currentState is HomeViewModel.HomeState.SearchState) Color.Transparent else Color.Gray
+        ),
+        modifier = modifier
+            .padding(seachPaddingDp)
+            .fillMaxWidth()
+            .focusRequester(searchFocusRequester)
+            .systemBarsPadding()
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)

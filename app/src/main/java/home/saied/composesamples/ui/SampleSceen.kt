@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.systemBarsPadding
 import home.saied.samples.Sample
 import home.saied.samples.SampleWrapper
 
@@ -118,7 +117,7 @@ fun SampleScreen(
                         )
                         .padding(start = 16.dp, end = 100.dp, top = 16.dp, bottom = 16.dp)
                 ) {
-                    observeStateMap.forEach { (k, v) ->
+                    observeStateMap.forEach { (_, v) ->
                         if (v is State<*>)
                             Text(text = v.value.toString())
                     }
