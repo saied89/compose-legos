@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.R
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.ui.search.SearchScreen
@@ -58,14 +57,19 @@ fun HomeScreen(
     val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 76.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
-    val toolBarNotScrolled = abs(toolbarOffsetHeightPx.value) < 0.1
+    val toolBarNotScrolled by remember {
+        derivedStateOf {
+            abs(toolbarOffsetHeightPx.value) < 0.1
+        }
+    }
 //    val statusBarInset = LocalWindowInsets.current.statusBars.layoutInsets.top
     val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
+    var newOffset by remember { mutableStateOf(0f) }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 val delta = available.y
-                val newOffset = toolbarOffsetHeightPx.value + delta
+                newOffset = toolbarOffsetHeightPx.value + delta
                 toolbarOffsetHeightPx.value =
                     if (homeState == HomeViewModel.HomeState.MODULES)
                         newOffset.coerceIn(-toolbarHeightPx - statusBarInset, 0f)
@@ -75,18 +79,11 @@ fun HomeScreen(
         }
     }
 
-    val systemUiController = rememberSystemUiController()
-    val statusBarColor =
-        if (homeState is HomeViewModel.HomeState.SearchState) MaterialTheme.colors.secondary else Color.Transparent
-    SideEffect {
-        systemUiController.setStatusBarColor(statusBarColor, darkIcons = true)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(nestedScrollConnection)
             .systemBarsPadding()
+            .nestedScroll(nestedScrollConnection)
     ) {
         searchTransition.AnimatedContent {
             when (it) {

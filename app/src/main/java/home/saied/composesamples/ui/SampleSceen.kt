@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import home.saied.composesamples.ui.codeview.CodeLine
 import home.saied.samples.Sample
 import home.saied.samples.SampleWrapper
 
@@ -198,38 +199,6 @@ private fun Code(code: String) {
             Spacer(modifier = Modifier.height(56.dp))
         }
     }
-}
-
-@Composable
-private fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
-    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-        Text(
-            text = index.toString().padStart(gutterWidth, '0'),
-            style = androidx.compose.material.MaterialTheme.typography.overline,
-            modifier = Modifier
-                .padding(horizontal = 2.dp)
-                .align(Top)
-        )
-        Box(
-            modifier = Modifier
-                .width(1.dp)
-                .fillMaxHeight()
-                .background(Color.LightGray)
-        )
-        Text(
-            text = codeLine,
-            style = androidx.compose.material.MaterialTheme.typography.h5,
-            modifier = Modifier
-                .align(CenterVertically)
-                .padding(horizontal = 4.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun CodeLinePreview() {
-    CodeLine(index = 0, codeLine = "test", 1)
 }
 
 
