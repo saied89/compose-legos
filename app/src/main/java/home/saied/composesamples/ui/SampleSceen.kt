@@ -79,7 +79,6 @@ fun SampleScreen(
                     }
                     IconButton(
                         onClick = { codeScrollable = !codeScrollable },
-                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             imageVector = if (codeScrollable) Icons.Outlined.Dehaze else Icons.Outlined.TableRows,
