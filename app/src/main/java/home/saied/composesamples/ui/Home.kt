@@ -72,7 +72,7 @@ fun HomeScreen(
                 newOffset = toolbarOffsetHeightPx.value + delta
                 toolbarOffsetHeightPx.value =
                     if (homeState == HomeViewModel.HomeState.MODULES)
-                        newOffset.coerceIn(-toolbarHeightPx - statusBarInset, 0f)
+                        newOffset.coerceIn(- 2 * toolbarHeightPx - statusBarInset, 0f)
                     else 0f
                 return Offset.Zero
             }
