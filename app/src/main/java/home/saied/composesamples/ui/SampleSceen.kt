@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -14,10 +15,10 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FabPosition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Dehaze
+import androidx.compose.material.icons.outlined.TableRows
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -25,9 +26,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import home.saied.composesamples.ui.codeview.CodeLine
+import home.saied.composesamples.utils.compose.thenIf
 import home.saied.samples.Sample
 import home.saied.samples.SampleWrapper
 
@@ -45,6 +46,7 @@ fun SampleScreen(
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
     val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
+    var codeScrollable by remember { mutableStateOf(false) }
     BottomSheetScaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -74,6 +76,15 @@ fun SampleScreen(
                         }
                     ) {
                         Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = null)
+                    }
+                    IconButton(
+                        onClick = { codeScrollable = !codeScrollable },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (codeScrollable) Icons.Outlined.Dehaze else Icons.Outlined.TableRows,
+                            contentDescription = null
+                        )
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -108,28 +119,14 @@ fun SampleScreen(
         },
         floatingActionButtonPosition = FabPosition.End,
         sheetContent = {
-            Surface(shape = RectangleShape, modifier = Modifier.heightIn(min = 56.dp)) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .scrollable(
-                            orientation = Orientation.Vertical,
-                            state = rememberScrollState()
-                        )
-                        .padding(start = 16.dp, end = 100.dp, top = 16.dp, bottom = 16.dp)
-                ) {
-                    observeStateMap.forEach { (_, v) ->
-                        if (v is State<*>)
-                            Text(text = v.value.toString())
-                    }
-                }
-            }
+            if (sampleViewSwitchState == SampleViewSwitch.COMPOSABLE)
+                ObservedStateList(observeStateMap = observeStateMap)
         }
     ) {
         Crossfade(targetState = sampleViewSwitchState, modifier = Modifier.padding(it)) {
             when (it) {
                 SampleViewSwitch.SOURCE -> {
-                    Code(code = sample.body)
+                    Code(code = sample.body, scrollable = codeScrollable)
                 }
                 SampleViewSwitch.COMPOSABLE -> {
                     if (sample.block != null)
@@ -177,12 +174,13 @@ private fun notGeneratedReasonExplanation(reason: String?): String =
     }
 
 @Composable
-private fun Code(code: String) {
+private fun Code(code: String, scrollable: Boolean) {
     val lines = remember {
         code.trim().lines()
     }
     val gutterWidth = lines.size.toString().length
-    LazyColumn() {
+
+    LazyColumn(modifier = Modifier.thenIf(scrollable) { horizontalScroll(rememberScrollState()) }) {
         item {
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -201,26 +199,29 @@ private fun Code(code: String) {
     }
 }
 
-
-//@Composable
-//@Preview
-//fun Preview() {
-//    Code(code = """
-//    |fun BasicTextFieldSample() {
-//    |    var value by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-//    |        mutableStateOf(TextFieldValue())
-//    |    }
-//    |    BasicTextField(
-//    |        value = value,
-//    |        onValueChange = {
-//    |            // it is crucial that the update is fed back into BasicTextField in order to
-//    |            // see updates on the text
-//    |            value = it
-//    |        }
-//    |    )
-//    |}
-//    |""")
-//}
+@Composable
+private fun ObservedStateList(
+    observeStateMap: Map<Any, Any>
+) {
+    Surface(shape = RectangleShape, modifier = Modifier.heightIn(min = 56.dp)) {
+        Row {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .scrollable(
+                        orientation = Orientation.Vertical,
+                        state = rememberScrollState()
+                    )
+                    .padding(start = 16.dp, end = 100.dp, top = 16.dp, bottom = 16.dp)
+            ) {
+                observeStateMap.forEach { (_, v) ->
+                    if (v is State<*>)
+                        Text(text = v.value.toString())
+                }
+            }
+        }
+    }
+}
 
 enum class SampleViewSwitch {
     SOURCE, COMPOSABLE
