@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
 }
 val compose_version: String by project
+val material3_version: String by project
 android {
     compileSdk = 32
 
@@ -79,7 +80,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-rxjava3:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
     implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
+    implementation("androidx.compose.material3:material3:1.0.0-SNAPSHOT")
     ksp(project(":processor"))
 
     testImplementation("junit:junit:4.13.2")

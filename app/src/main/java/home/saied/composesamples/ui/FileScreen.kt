@@ -31,7 +31,8 @@ fun FileScreen(
     onSourceLaunch: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val scrollState = rememberTopAppBarScrollState()
+    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(scrollState) }
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,7 +26,8 @@ import home.saied.samples.SampleModule
 @ExperimentalMaterial3Api
 @Composable
 fun ModuleScreen(sampleModule: SampleModule, onBackClick: () -> Unit, onFileClick: (Int) -> Unit) {
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val scrollState = rememberTopAppBarScrollState()
+    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(scrollState) }
     androidx.compose.material3.Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).systemBarsPadding(),
         topBar = {
