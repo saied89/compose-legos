@@ -170,6 +170,7 @@ private fun notGeneratedReasonExplanation(reason: String?): String =
         "PARAMETERIZED" -> "This sample is parameterized. Generating runnable parameterized samples is comming soon"
         "RESOURCES" -> "This sample contains usage of resources. Generating runnable samples that use resources is comming soon"
         "EXTENSION_RECEIVER" -> "This sample is an extension method. Generating runnable extension samples comming soon"
+        "RUNTIME_EXCEPTION" -> "This sample throws in runtime"
         else -> "This sample is not currently supported"
     }
 

@@ -42,7 +42,7 @@ class SamplesProcessor(
                     when {
                         func.parameters.isNotEmpty() -> SKIP_BLOCK_GENERATION_REASON.PARAMETERIZED
                         func.extensionReceiver != null -> SKIP_BLOCK_GENERATION_REASON.EXTENSION_RECEIVER
-                        func.simpleName.asString() == "snapshotFlowSample" -> SKIP_BLOCK_GENERATION_REASON.RUNTIME_EXCEPTION
+                        func.simpleName.asString() in RuntimeErrorSamples  -> SKIP_BLOCK_GENERATION_REASON.RUNTIME_EXCEPTION
                         else -> null
                     }.also {
                         if (it != null)
@@ -61,7 +61,7 @@ class SamplesProcessor(
 
             SampleFileInfo(
                 fileName = file.fileName,
-                path = file.filePath.substringAfter("GenSampled."),
+                path = file.filePath.substringAfter("GenSampled/"),
                 moduleName = getModuleName(file.filePath),
                 packageName = file.packageName.asString(),
                 sampleList = sampleInfoList
@@ -96,11 +96,6 @@ class SamplesProcessor(
             annotation.shortName.asString() == "GenSampled"
         }
         return isSampled
-    }
-
-    private fun calcRelativePath(absolutePath: String): String {
-        val supportStrIndex = absolutePath.indexOf("support")
-        return absolutePath.drop(supportStrIndex)
     }
 
     @OptIn(KotlinPoetKspPreview::class)
@@ -158,6 +153,10 @@ class SamplesProcessor(
     private fun getModuleName(modulePath: String): String {
         return modulePath.substringAfter("samples/GenSampled/androidx/compose/")
             .substringBefore("/samples").replace('/', '-')
+    }
+
+    companion object {
+        val RuntimeErrorSamples = setOf("snapshotFlowSample", "DelegatedReadOnlyStateSample")
     }
 }
 
