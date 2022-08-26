@@ -26,6 +26,8 @@ class SamplesProcessor(
             val sampleDeclarations =
                 file.declarations.filter(::isSampled).map { it as KSFunctionDeclaration }
             val sampleInfoList = sampleDeclarations.map { func ->
+                val sourcePath =
+                    func.annotations.first { it.shortName.asString() == "GenSampled" }.arguments.first().value as String
                 val annotationSet = buildList {
                     func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "GenSampled" && it.shortName.asString() != "Suppress" }
                         .forEach {
@@ -42,7 +44,7 @@ class SamplesProcessor(
                     when {
                         func.parameters.isNotEmpty() -> SKIP_BLOCK_GENERATION_REASON.PARAMETERIZED
                         func.extensionReceiver != null -> SKIP_BLOCK_GENERATION_REASON.EXTENSION_RECEIVER
-                        func.simpleName.asString() in RuntimeErrorSamples  -> SKIP_BLOCK_GENERATION_REASON.RUNTIME_EXCEPTION
+                        func.simpleName.asString() in RuntimeErrorSamples -> SKIP_BLOCK_GENERATION_REASON.RUNTIME_EXCEPTION
                         else -> null
                     }.also {
                         if (it != null)
@@ -50,11 +52,12 @@ class SamplesProcessor(
                     }
 
                 SampleInfo(
-                    func.simpleName.asString(),
-                    funcBody,
-                    func.docString,
-                    file.packageName.asString(),
-                    annotationSet,
+                    name = func.simpleName.asString(),
+                    body = funcBody,
+                    sourcePath = sourcePath,
+                    docStr = func.docString,
+                    packageName = file.packageName.asString(),
+                    optInAnnotations = annotationSet,
                     skipBlockGeneration = skipBlockGenerationReason
                 )
             }.toList()

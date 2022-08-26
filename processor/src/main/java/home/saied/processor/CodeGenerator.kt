@@ -18,6 +18,7 @@ val sampleClassSpec = run {
     val flux = FunSpec.constructorBuilder()
         .addParameter("name", String::class)
         .addParameter("body", String::class)
+        .addParameter("sourcePath", String::class)
         .addParameter(ParameterSpec.builder("skipBlockgenerationReason", String::class.asTypeName().copy(nullable = true)).defaultValue("null").build())
         .addParameter(ParameterSpec.builder("block", composableSlotLambdaName).defaultValue("null").build())
         .build()
@@ -25,6 +26,7 @@ val sampleClassSpec = run {
     TypeSpec.classBuilder("Sample").primaryConstructor(flux)
         .addProperty(PropertySpec.builder("name", String::class).initializer("name").build())
         .addProperty(PropertySpec.builder("body", String::class).initializer("body").build())
+        .addProperty(PropertySpec.builder("sourcePath", String::class).initializer("sourcePath").build())
         .addProperty(PropertySpec.builder("skipBlockgenerationReason", String::class.asTypeName().copy(nullable = true)).initializer("skipBlockgenerationReason").build())
         .addProperty(
             PropertySpec.builder("block", composableSlotLambdaName).initializer("block").build()
@@ -110,18 +112,20 @@ private fun samplesPropertySpec(sampleFile: SampleFileInfo): PropertySpec {
         sampleList.forEach { sampleInf ->
             if (sampleInf.skipBlockGeneration == null)
                 builder.addStatement(
-                    "    add(%N(%S, %S, block = { %M() }))",
+                    "    add(%N(%S, %S, %S, block = { %M() }))",
                     sampleClassSpec,
                     sampleInf.name,
                     sampleInf.body,
+                    sampleInf.sourcePath,
                     MemberName(sampleInf.packageName, sampleInf.name)
                 )
             else
                 builder.addStatement(
-                    "    add(%N(%S, %S, skipBlockgenerationReason = %S))",
+                    "    add(%N(%S, %S, %S, skipBlockgenerationReason = %S))",
                     sampleClassSpec,
                     sampleInf.name,
                     sampleInf.body,
+                    sampleInf.sourcePath,
                     sampleInf.skipBlockGeneration.name
                 )
         }
