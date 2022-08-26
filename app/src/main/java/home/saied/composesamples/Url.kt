@@ -5,10 +5,10 @@ import android.content.Intent
 import android.net.Uri
 
 private const val sampleUrlPrefix =
-    "https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/material3/material3/samples/src/main/java/"
+    "https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:"
 
 fun sampleSourceUrl(filePath: String): String {
-    return sampleUrlPrefix + filePath.substringAfter("GenSampled/")
+    return sampleUrlPrefix + filePath
 }
 
 fun Context.openUrl(url: String) {

@@ -88,7 +88,7 @@ fun MainScreen() {
                     },
                     onSourceLaunch = {
                         val sampleSourceUrl = sampleSourceUrl(
-                            sampleModules[moduleIndex].sampleFileList[fileIndex].path
+                            sampleModules[moduleIndex].sampleFileList[fileIndex].sampleList.first().sourcePath
                         )
                         context.openUrl(sampleSourceUrl)
                     },
@@ -113,12 +113,11 @@ fun MainScreen() {
                 val sampleIndex: Int = it.arguments!!.getInt("sampleIndex")
                 val context = LocalContext.current
                 val sampleModule = sampleModules[moduleIndex]
+                val sample = sampleModule.sampleFileList[fileIndex].sampleList[sampleIndex]
                 SampleScreen(
-                    sampleModule.sampleFileList[fileIndex].sampleList[sampleIndex],
+                    sample,
                     onSourceLaunch = {
-                        val sampleSourceUrl = sampleSourceUrl(
-                            sampleModule.sampleFileList[fileIndex].path
-                        )
+                        val sampleSourceUrl = sampleSourceUrl(sample.sourcePath)
                         context.openUrl(sampleSourceUrl)
                     },
                     onBackClick = navController::popBackStack
