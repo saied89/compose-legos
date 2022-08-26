@@ -15,6 +15,7 @@ data class SampleFileInfo(
 data class SampleInfo(
     val name: String,
     val body: String,
+    val sourcePath: String,
     val docStr: String?,
     val packageName: String,
     val optInAnnotations: List<ClassName>,

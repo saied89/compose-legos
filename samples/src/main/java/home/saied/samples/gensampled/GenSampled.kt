@@ -1,3 +1,3 @@
 package home.saied.samples.gensampled
 
-annotation class GenSampled()
+annotation class GenSampled(val originalPath: String)

@@ -43,8 +43,15 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
                     line == "import androidx.compose.runtime.remember" -> "import home.saied.samples.remember"
                     line == "import androidx.annotation.Sampled" -> "import home.saied.samples.gensampled.GenSampled\n" +
                             "import home.saied.samples.R"
-                    line.contains("R.") && !line.contains("android.R.") -> line.replace("R.", "home.saied.samples.R.")
-                    line.trim() == "@Sampled" -> "@GenSampled"
+                    line.contains("R.") && !line.contains("android.R.") -> line.replace(
+                        "R.",
+                        "home.saied.samples.R."
+                    )
+                    line.trim() == "@Sampled" -> {
+                        val pathCleanIndex = file.filePath.indexOf("/support/")
+                        val filePath = file.filePath.drop(pathCleanIndex + 9)
+                        "@GenSampled(\"$filePath\")"
+                    }
                     else -> line
                 }
             }
