@@ -27,7 +27,7 @@ class SamplesProcessor(
                 file.declarations.filter(::isSampled).map { it as KSFunctionDeclaration }
             val sampleInfoList = sampleDeclarations.map { func ->
                 val annotationSet = buildList {
-                    func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "Sampled" && it.shortName.asString() != "Suppress" }
+                    func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "GenSampled" && it.shortName.asString() != "Suppress" }
                         .forEach {
                             add(
                                 ClassName(

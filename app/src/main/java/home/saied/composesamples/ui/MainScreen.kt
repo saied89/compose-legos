@@ -112,11 +112,12 @@ fun MainScreen() {
                 val fileIndex: Int = it.arguments!!.getInt("fileIndex")
                 val sampleIndex: Int = it.arguments!!.getInt("sampleIndex")
                 val context = LocalContext.current
+                val sampleModule = sampleModules[moduleIndex]
                 SampleScreen(
-                    sampleModules[moduleIndex].sampleFileList[fileIndex].sampleList[sampleIndex],
+                    sampleModule.sampleFileList[fileIndex].sampleList[sampleIndex],
                     onSourceLaunch = {
                         val sampleSourceUrl = sampleSourceUrl(
-                            sampleModules[moduleIndex].sampleFileList[fileIndex].path
+                            sampleModule.sampleFileList[fileIndex].path
                         )
                         context.openUrl(sampleSourceUrl)
                     },
