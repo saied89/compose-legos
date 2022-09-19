@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("UNUSED_PARAMETER", "unused")
+@file:Suppress("UNUSED_PARAMETER", "unused", "PackageName")
 
 package home.saied.samples.GenSampled.androidx.compose.runtime.samples
 
