@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10"
+    id ("kotlin-parcelize")
     id("com.google.devtools.ksp")
 }
 val compose_version: String by project
@@ -63,6 +65,10 @@ android {
                 kotlin.srcDir("../support/compose/runtime/runtime-saveable/samples/src/main/java/androidx/compose/runtime/saveable/samples")
                 kotlin.srcDir("../support/compose/runtime/runtime-livedata/samples/src/main/java/androidx/compose/runtime/livedata/samples")
                 kotlin.srcDir("../support/compose/runtime/runtime/samples/src/main/java/androidx/compose/runtime/samples")
+                kotlin.srcDir("../support/activity/activity-compose/samples/src/main/java/androidx/activity/compose/samples")
+                kotlin.srcDir("../support/lifecycle/lifecycle-viewmodel-compose/samples/src/main/java/androidx/lifecycle/viewmodel/compose/samples")
+                kotlin.srcDir("../support/navigation/navigation-compose/samples/src/main/java/androidx/navigation/compose/samples")
+                kotlin.srcDir("../support/paging/paging-compose/samples/src/main/java/androidx/paging/compose/samples/")
             }
         }
     }
@@ -80,6 +86,11 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-rxjava3:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
     implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("androidx.navigation:navigation-compose:2.5.2")
+    implementation("androidx.navigation:navigation-compose:2.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha16")
     implementation("androidx.compose.material3:material3:1.0.0-SNAPSHOT")
     ksp(project(":processor"))
 
