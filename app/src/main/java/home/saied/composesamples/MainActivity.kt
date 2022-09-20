@@ -19,15 +19,5 @@ class MainActivity : ComponentActivity() {
                 MainScreen()
             }
         }
-//            ComposeSamplesTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = Color.White
-//                ) {
-//                    samples[0].block()
-//                }
-//            }
-//        }
     }
 }
