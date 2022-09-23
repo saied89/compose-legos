@@ -149,12 +149,14 @@ class SamplesProcessor(
     }
 
 
-    /**
-     * samples/GenSampled/androidx/compose/runtime/livedata/samples/SamplesGen.kt -> ui
-     * support/compose/ui/ui-graphics/samples/src/main/java/androidx/compose/ui/graphics/samples -> ui-graphics
-     */
+//
+//  samples/GenSampled/androidx/compose/runtime/livedata/samples/SamplesGen.kt -> runtime-livedata
+//  support/compose/ui/ui-graphics/samples/src/main/java/androidx/compose/ui/graphics/samples -> ui-graphics
+
+//  samples/GenSampled/androidx/navigation/compose/samples/NavigationSamples.kt
     private fun getModuleName(modulePath: String): String {
-        return modulePath.substringAfter("samples/GenSampled/androidx/compose/")
+        return modulePath.substringAfter("samples/GenSampled/androidx/")
+            .removePrefix("compose/")
             .substringBefore("/samples").replace('/', '-')
     }
 
