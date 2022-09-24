@@ -4,7 +4,6 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.LogicalPosition
-import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.TextRange
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -13,8 +12,9 @@ import java.io.InputStreamReader
 class LaunchSampleAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val lineText = getSampleName(e)
-        executeBashCommand("echo '$lineText'")
-        Messages.showInfoMessage(lineText, "Caret Line")
+        if (lineText != null)
+            launchSample(lineText)
+//        Messages.showInfoMessage(lineText, "Caret Line")
     }
 
 
@@ -39,16 +39,13 @@ class LaunchSampleAction : AnAction() {
     }
 }
 
-private fun executeBashCommand(command: String): Boolean {
+private fun launchSample(sampleQualifiedName: String): Boolean {
+    val deeplinkCommand =
+        "adb shell am start -W -a android.intent.action.VIEW -d sample://composelegos/samples/$sampleQualifiedName"
     var success = false
-    println("Executing BASH command:\n   $command")
+    println("Executing BASH command:\n   $deeplinkCommand")
     val r = Runtime.getRuntime()
-    // Use bash -c so we can handle things like multi commands separated by ; and
-    // things like quotes, $, |, and \. My tests show that command comes as
-    // one argument to bash, so we do not need to quote it to make it one thing.
-    // Also, exec may object if it does not have an executable file as the first thing,
-    // so having bash here makes it happy provided bash is installed and in path.
-    val commands = arrayOf("bash", "-c", command)
+    val commands = arrayOf("bash", "-c", deeplinkCommand)
     try {
         val p = r.exec(commands)
         p.waitFor()
@@ -59,7 +56,7 @@ private fun executeBashCommand(command: String): Boolean {
         b.close()
         success = true
     } catch (e: Exception) {
-        System.err.println("Failed to execute bash with command: $command")
+        System.err.println("Failed to execute bash with command: $deeplinkCommand")
         e.printStackTrace()
     }
     return success
