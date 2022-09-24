@@ -9,18 +9,19 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
 import home.saied.samples.sampleModules
 
-private val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-legos-0/privacy.html"
+private const val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-legos-0/privacy.html"
+private const val DEEPLINK_SCHEMA = "sample://composelegos/samples"
+
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @ExperimentalComposeUiApi
@@ -30,12 +31,12 @@ fun MainScreen() {
     SideEffect {
         systemUiController.setStatusBarColor(Color.Transparent, darkIcons = true)
     }
-    Scaffold {
+    Scaffold { padding ->
         val navController = rememberNavController()
         NavHost(
             navController = navController,
             startDestination = "home",
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(padding)
         ) {
             composable("home") {
                 HomeScreen(
@@ -120,9 +121,42 @@ fun MainScreen() {
                         val sampleSourceUrl = sampleSourceUrl(sample.sourcePath)
                         context.openUrl(sampleSourceUrl)
                     },
-                    onBackClick = navController::popBackStack
+                    onBackClick = navController::navigateUp
                 )
             }
+
+            composable(
+                "sample/{sampleQualifiedName}",
+                arguments = listOf(
+                    navArgument("sampleQualifiedName") {
+                        nullable = false
+                        type = NavType.StringType
+                    }
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "$DEEPLINK_SCHEMA/{sampleQualifiedName}"
+                    }
+                )
+            ) { navBackStack ->
+                val sampleQualifiedName = navBackStack.arguments?.getString("sampleQualifiedName")
+                val sampleName = sampleQualifiedName?.substringAfterLast('.')
+                val modulePackage = sampleQualifiedName?.substringBefore(".samples.$sampleName")
+                val module = sampleModules.find { it.cleanPackageName == modulePackage }
+                val sample = module?.sampleFileList?.flatMap { it.sampleList }
+                    ?.find { it.name == sampleName }
+                val context = LocalContext.current
+                if (sample != null)
+                    SampleScreen(
+                        sample = sample,
+                        onSourceLaunch = {
+                            val sampleSourceUrl = sampleSourceUrl(sample.sourcePath)
+                            context.openUrl(sampleSourceUrl)
+                        },
+                        onBackClick = navController::navigateUp
+                    )
+            }
+
             dialog("about") {
                 val context = LocalContext.current
                 About {

@@ -206,12 +206,11 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
                         onGithubClick = {
                             moreMenuExpanded = false
                             context.openUrl(GITHUB_URL)
-                        },
-                        onAboutClick = {
-                            moreMenuExpanded = false
-                            onAboutClick()
                         }
-                    )
+                    ) {
+                        moreMenuExpanded = false
+                        onAboutClick()
+                    }
                 }
             }
         },
@@ -246,7 +245,7 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
                 text = { Text(text = item.name) },
                 secondaryText = {
                     // Drop .sample from package names
-                    Text(text = item.packageName.substringAfter("GenSampled.").dropLast(8))
+                    Text(text = item.cleanPackageName)
                 },
                 icon = {
                     Icon(
@@ -265,7 +264,7 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
 }
 
 @Composable
-fun ColumnScope.DropDownMenuContent(onGithubClick: () -> Unit, onAboutClick: () -> Unit) {
+fun DropDownMenuContent(onGithubClick: () -> Unit, onAboutClick: () -> Unit) {
     DropdownMenuItem(onClick = onGithubClick) {
         Text(text = "☆ on Github")
     }
