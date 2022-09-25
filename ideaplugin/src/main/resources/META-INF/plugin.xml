@@ -31,7 +31,8 @@
         <action id="ComposeLegos.LaunchSample"
             class="home.saied.composesamples.ideaplugin.LaunchSampleAction"
             text="Launch Sample"
-            description="Launch this Compose Sample on Device or Emulator.">
+            description="Launch this Compose Sample on Device or Emulator."
+            icon="SdkIcons.ActionIcon">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt G"/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
