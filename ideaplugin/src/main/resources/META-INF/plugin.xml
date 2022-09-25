@@ -1,21 +1,21 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>com.example.demo</id>
+    <id>home.saied.composesamples.ideaplugin</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Demo</name>
+    <name>Compose Legos</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="saiedmomen@gmail.com" url="https://www.yourcompany.com">github</vendor>
+    <vendor email="saiedmomen@gmail.com" url="https://github.com/saied89/compose-legos">github</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    Companion plugin to Compose Legos app. The runnable catalogue of compose samples.
+    Launch compose samples directly from the source code.
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
