@@ -7,10 +7,10 @@
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
     <name>Compose Legos</name>
 
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="saiedmomen@gmail.com" url="https://github.com/saied89/compose-legos">github</vendor>
+    <vendor email="saiedmomen@gmail.com" url="https://github.com/saied89">Saeed Momen</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
