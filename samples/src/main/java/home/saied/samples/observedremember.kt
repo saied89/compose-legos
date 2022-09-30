@@ -25,7 +25,7 @@ inline fun <T> remember(noinline calculation: @DisallowComposableCalls () -> T):
 @Composable
 inline fun <T> remember(
     key1: Any?,
-    calculation: @DisallowComposableCalls () -> T
+    crossinline calculation: @DisallowComposableCalls () -> T
 ): T {
     return androidx.compose.runtime.remember(key1, calculation).also {
         rememberRecorderProvider.current[Unit] = it as Any
@@ -40,7 +40,7 @@ inline fun <T> remember(
 inline fun <T> remember(
     key1: Any?,
     key2: Any?,
-    calculation: @DisallowComposableCalls () -> T
+    crossinline calculation: @DisallowComposableCalls () -> T
 ): T {
     return androidx.compose.runtime.remember(key1, key2, calculation).also {
         rememberRecorderProvider.current[Unit] = it as Any
@@ -56,7 +56,7 @@ inline fun <T> remember(
     key1: Any?,
     key2: Any?,
     key3: Any?,
-    calculation: @DisallowComposableCalls () -> T
+    crossinline calculation: @DisallowComposableCalls () -> T
 ): T {
     return androidx.compose.runtime.remember(key1, key2, key3, calculation).also {
         rememberRecorderProvider.current[Unit] = it as Any
@@ -70,7 +70,7 @@ inline fun <T> remember(
 @Composable
 inline fun <T> remember(
     vararg keys: Any?,
-    calculation: @DisallowComposableCalls () -> T
+    crossinline calculation: @DisallowComposableCalls () -> T
 ): T {
     return androidx.compose.runtime.remember(keys = keys, calculation).also {
         rememberRecorderProvider.current[Unit] = it as Any
