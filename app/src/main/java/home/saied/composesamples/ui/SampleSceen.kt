@@ -43,8 +43,7 @@ fun SampleScreen(
     var sampleViewSwitchState: SampleViewSwitch by remember {
         mutableStateOf(SampleViewSwitch.SOURCE)
     }
-    val scrollState = rememberTopAppBarScrollState()
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(scrollState) }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
     val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
     var codeScrollable by remember { mutableStateOf(false) }

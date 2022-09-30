@@ -35,7 +35,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = "1.3.1"
     }
     packagingOptions {
         resources {
@@ -86,12 +86,13 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-rxjava3:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
     implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
+    implementation("androidx.compose.foundation:foundation:1.3.0-beta02")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation("androidx.navigation:navigation-compose:2.5.2")
     implementation("androidx.navigation:navigation-compose:2.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     implementation("androidx.paging:paging-compose:1.0.0-alpha16")
-    implementation("androidx.compose.material3:material3:1.0.0-SNAPSHOT")
+    implementation("androidx.compose.material3:material3:1.0.0-beta03")
     ksp(project(":processor"))
 
     testImplementation("junit:junit:4.13.2")
