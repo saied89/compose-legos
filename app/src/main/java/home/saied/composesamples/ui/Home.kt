@@ -62,7 +62,6 @@ fun HomeScreen(
             abs(toolbarOffsetHeightPx.value) < 0.1
         }
     }
-//    val statusBarInset = LocalWindowInsets.current.statusBars.layoutInsets.top
     val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
     var newOffset by remember { mutableStateOf(0f) }
     val nestedScrollConnection = remember {
@@ -82,9 +81,14 @@ fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .systemBarsPadding()
             .nestedScroll(nestedScrollConnection)
     ) {
+        val seachPaddingDp by searchTransition.animateDp(label = "searchCornerDp") {
+            when (it) {
+                is HomeViewModel.HomeState.MODULES -> 12.dp
+                is HomeViewModel.HomeState.SearchState -> 0.dp
+            }
+        }
         searchTransition.AnimatedContent {
             when (it) {
                 is HomeViewModel.HomeState.SearchState -> {
@@ -113,8 +117,10 @@ fun HomeScreen(
             },
             onAboutClick = onAboutClick,
             modifier = Modifier
-                .height(toolbarHeight)
                 .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
+                .padding(seachPaddingDp)
+                .fillMaxWidth()
+                .requiredHeight(toolbarHeight)
         )
     }
 }
@@ -144,13 +150,6 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
         when (it) {
             is HomeViewModel.HomeState.MODULES -> 24
             is HomeViewModel.HomeState.SearchState -> 0
-        }
-    }
-
-    val seachPaddingDp by animateDp(label = "searchCornerDp") {
-        when (it) {
-            is HomeViewModel.HomeState.MODULES -> 12.dp
-            is HomeViewModel.HomeState.SearchState -> 0.dp
         }
     }
 
@@ -222,10 +221,7 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
             unfocusedBorderColor = if (currentState is HomeViewModel.HomeState.SearchState) Color.Transparent else Color.Gray
         ),
         modifier = modifier
-            .padding(seachPaddingDp)
-            .fillMaxWidth()
             .focusRequester(searchFocusRequester)
-            .systemBarsPadding()
     )
 }
 
