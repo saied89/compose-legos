@@ -8,7 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,11 +27,9 @@ fun ModuleScreen(sampleModule: SampleModule, onBackClick: () -> Unit, onFileClic
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     androidx.compose.material3.Scaffold(
         modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .systemBarsPadding(),
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            SmallTopAppBar(
-                modifier = Modifier.systemBarsPadding(),
+            TopAppBar(
                 title = {
                     Text(
                         text = sampleModule.name,

@@ -54,7 +54,7 @@ fun HomeScreen(
     val homeViewModel: HomeViewModel = viewModel()
     val homeState by homeViewModel.homeState
     val searchTransition = updateTransition(homeState, "SearchTransition")
-    val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 76.dp
+    val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 52.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
     val toolBarNotScrolled by remember {
