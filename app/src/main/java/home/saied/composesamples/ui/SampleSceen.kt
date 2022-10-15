@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FabPosition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Dehaze
@@ -32,7 +29,6 @@ import home.saied.composesamples.utils.compose.thenIf
 import home.saied.samples.Sample
 import home.saied.samples.SampleWrapper
 
-@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun SampleScreen(
@@ -47,12 +43,11 @@ fun SampleScreen(
     var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
     val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
     var codeScrollable by remember { mutableStateOf(false) }
-    BottomSheetScaffold(
+    Scaffold(
         modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .systemBarsPadding(),
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = {},
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
@@ -117,7 +112,7 @@ fun SampleScreen(
             }
         },
         floatingActionButtonPosition = FabPosition.End,
-        sheetContent = {
+        bottomBar = {
             if (sampleViewSwitchState == SampleViewSwitch.COMPOSABLE)
                 ObservedStateList(observeStateMap = observeStateMap)
         }

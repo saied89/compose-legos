@@ -82,6 +82,7 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(nestedScrollConnection)
+            .statusBarsPadding()
     ) {
         val seachPaddingDp by searchTransition.animateDp(label = "searchCornerDp") {
             when (it) {
