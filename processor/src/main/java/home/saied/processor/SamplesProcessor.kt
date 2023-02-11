@@ -29,7 +29,9 @@ class SamplesProcessor(
                 val sourcePath =
                     func.annotations.first { it.shortName.asString() == "GenSampled" }.arguments.first().value as String
                 val annotationSet = buildList {
-                    func.annotations.filter { it.shortName.asString() != "Composable" && it.shortName.asString() != "GenSampled" && it.shortName.asString() != "Suppress" }
+                    func.annotations.filter {
+                        it.shortName.asString() !in setOf("Composable", "GenSampled", "Suppress", "Preview")
+                    }
                         .forEach {
                             add(
                                 ClassName(

@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.0"
     id ("kotlin-parcelize")
     id("com.google.devtools.ksp")
 }
@@ -35,7 +35,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.1"
+        kotlinCompilerExtensionVersion = "1.4.2"
     }
     packagingOptions {
         resources {
@@ -76,26 +76,25 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation( "androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation("androidx.compose.runtime:runtime:$compose_version")
-    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.activity:activity-compose:1.7.0-beta01")
     implementation("androidx.compose.animation:animation-graphics:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava3:$compose_version")
     implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
     implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
-    implementation("androidx.compose.foundation:foundation:1.3.0-beta02")
+    implementation("androidx.compose.foundation:foundation:1.4.0-beta01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
-    implementation("androidx.navigation:navigation-compose:2.5.2")
-    implementation("androidx.navigation:navigation-compose:2.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha16")
-    implementation("androidx.compose.material3:material3:1.0.0-beta03")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha06")
     ksp(project(":processor"))
 
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
