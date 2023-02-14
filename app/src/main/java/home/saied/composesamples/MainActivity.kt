@@ -2,8 +2,6 @@ package home.saied.composesamples
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.ReportDrawnAfter
-import androidx.activity.compose.ReportDrawnWhen
 import androidx.activity.compose.setContent
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.view.WindowCompat
@@ -19,9 +17,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeSamplesTheme {
                 MainScreen()
-                ReportDrawnAfter {
-
-                }
             }
         }
     }
