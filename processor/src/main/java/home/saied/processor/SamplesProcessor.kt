@@ -135,11 +135,11 @@ class SamplesProcessor(
             it.bufferedWriter().use { writer ->
                 var count = 0
                 writer.write("${moduleInfoList.count()} Modules Processed" + "\n")
-                moduleInfoList.forEach { sampleModule ->
+                moduleInfoList.sortedBy(SampleModuleInfo::moduleName).forEach { sampleModule ->
                     writer.write("  ${sampleModule.moduleName} Module:" + "\n")
-                    sampleModule.list.forEach { sampleFileInfo ->
+                    sampleModule.list.sortedBy(SampleFileInfo::fileName).forEach { sampleFileInfo ->
                         writer.write("    ${sampleFileInfo.fileName} File:" + "\n")
-                        sampleFileInfo.sampleList.forEach { sample ->
+                        sampleFileInfo.sampleList.sortedBy(SampleInfo::name).forEach { sample ->
                             writer.write("      ${sample.name} Processed" + "\n")
                             count++
                         }
