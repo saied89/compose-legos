@@ -11,13 +11,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -179,125 +183,125 @@ fun HomeScreen(
 }
 
 
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun Transition<HomeViewModel.HomeState>.SearchBox(
-    searchStr: String?,
-    enabled: Boolean,
-    onLeadingClick: () -> Unit,
-    onSearchStr: (String) -> Unit,
-    onAboutClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
-    val searchIsPressed by interactionSource.collectIsFocusedAsState()
-    val searchFocusRequester = remember { FocusRequester() }
-    var moreMenuExpanded by remember { mutableStateOf(false) }
-    LaunchedEffect(key1 = searchIsPressed) {
-        if (searchIsPressed) {
-            onSearchStr("")
-        }
-    }
-    val homeState = this.currentState
-    val searchCornerPercent by animateInt(label = "searchCornerDp") {
-        when (it) {
-            is HomeViewModel.HomeState.MODULES -> 24
-            is HomeViewModel.HomeState.SearchState -> 0
-        }
-    }
+//@OptIn(ExperimentalAnimationApi::class)
+//@Composable
+//fun Transition<HomeViewModel.HomeState>.SearchBox(
+//    searchStr: String?,
+//    enabled: Boolean,
+//    onLeadingClick: () -> Unit,
+//    onSearchStr: (String) -> Unit,
+//    onAboutClick: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+//    val searchIsPressed by interactionSource.collectIsFocusedAsState()
+//    val searchFocusRequester = remember { FocusRequester() }
+//    var moreMenuExpanded by remember { mutableStateOf(false) }
+//    LaunchedEffect(key1 = searchIsPressed) {
+//        if (searchIsPressed) {
+//            onSearchStr("")
+//        }
+//    }
+//    val homeState = this.currentState
+//    val searchCornerPercent by animateInt(label = "searchCornerDp") {
+//        when (it) {
+//            is HomeViewModel.HomeState.MODULES -> 24
+//            is HomeViewModel.HomeState.SearchState -> 0
+//        }
+//    }
+//
+//    val focusManager = LocalFocusManager.current
+//    OutlinedTextField(
+//        value = searchStr ?: "",
+//        onValueChange = onSearchStr,
+//        enabled = enabled,
+//        interactionSource = interactionSource,
+//        placeholder = {
+//            Text(
+//                text = "Search Samples",
+//                style = MaterialTheme.typography.body2.copy(color = Color.Gray)
+//            )
+//        },
+//        leadingIcon = {
+//            IconButton(onClick = {
+//                if (homeState is HomeViewModel.HomeState.SearchState)
+//                    focusManager.clearFocus()
+//                else
+//                    searchFocusRequester.requestFocus()
+//                onLeadingClick()
+//            }) {
+//                Crossfade(animationSpec = snap()) {
+//                    when (it) {
+//                        is HomeViewModel.HomeState.SearchState -> {
+//                            Icon(
+//                                Icons.Filled.ArrowBack,
+//                                contentDescription = null
+//                            )
+//                        }
+//
+//                        is HomeViewModel.HomeState.MODULES -> {
+//                            Icon(
+//                                Icons.Filled.Search,
+//                                contentDescription = null
+//                            )
+//                        }
+//                    }
+//                }
+//
+//            }
+//        },
+//        trailingIcon = {
+//            Box() {
+//                IconButton(onClick = { moreMenuExpanded = true }) {
+//                    Icon(Icons.Filled.MoreVert, contentDescription = null)
+//                }
+//                val context = LocalContext.current
+//                DropdownMenu(
+//                    expanded = moreMenuExpanded,
+//                    onDismissRequest = { moreMenuExpanded = false }) {
+//                    DropDownMenuContent(
+//                        onGithubClick = {
+//                            moreMenuExpanded = false
+//                            context.openUrl(GITHUB_URL)
+//                        }
+//                    ) {
+//                        moreMenuExpanded = false
+//                        onAboutClick()
+//                    }
+//                }
+//            }
+//        },
+//        textStyle = MaterialTheme.typography.body1.copy(Color.LightGray),
+//        shape = RoundedCornerShape(searchCornerPercent),
+//        colors = TextFieldDefaults.outlinedTextFieldColors(
+//            backgroundColor = MaterialTheme.colors.secondary,
+//            focusedBorderColor = Color.Transparent,
+//            unfocusedBorderColor = if (currentState is HomeViewModel.HomeState.SearchState) Color.Transparent else Color.Gray
+//        ),
+//        modifier = modifier
+//            .focusRequester(searchFocusRequester)
+//    )
+//}
 
-    val focusManager = LocalFocusManager.current
-    OutlinedTextField(
-        value = searchStr ?: "",
-        onValueChange = onSearchStr,
-        enabled = enabled,
-        interactionSource = interactionSource,
-        placeholder = {
-            Text(
-                text = "Search Samples",
-                style = MaterialTheme.typography.body2.copy(color = Color.Gray)
-            )
-        },
-        leadingIcon = {
-            IconButton(onClick = {
-                if (homeState is HomeViewModel.HomeState.SearchState)
-                    focusManager.clearFocus()
-                else
-                    searchFocusRequester.requestFocus()
-                onLeadingClick()
-            }) {
-                Crossfade(animationSpec = snap()) {
-                    when (it) {
-                        is HomeViewModel.HomeState.SearchState -> {
-                            Icon(
-                                Icons.Filled.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-
-                        is HomeViewModel.HomeState.MODULES -> {
-                            Icon(
-                                Icons.Filled.Search,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-
-            }
-        },
-        trailingIcon = {
-            Box() {
-                IconButton(onClick = { moreMenuExpanded = true }) {
-                    Icon(Icons.Filled.MoreVert, contentDescription = null)
-                }
-                val context = LocalContext.current
-                DropdownMenu(
-                    expanded = moreMenuExpanded,
-                    onDismissRequest = { moreMenuExpanded = false }) {
-                    DropDownMenuContent(
-                        onGithubClick = {
-                            moreMenuExpanded = false
-                            context.openUrl(GITHUB_URL)
-                        }
-                    ) {
-                        moreMenuExpanded = false
-                        onAboutClick()
-                    }
-                }
-            }
-        },
-        textStyle = MaterialTheme.typography.body1.copy(Color.LightGray),
-        shape = RoundedCornerShape(searchCornerPercent),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            backgroundColor = MaterialTheme.colors.secondary,
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = if (currentState is HomeViewModel.HomeState.SearchState) Color.Transparent else Color.Gray
-        ),
-        modifier = modifier
-            .focusRequester(searchFocusRequester)
-    )
-}
-
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
     LazyColumn(contentPadding = PaddingValues(top = toolbarHeight + 16.dp)) {
         item {
             Text(
                 text = "Jetpack Compose Modules",
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(16.dp)
             )
         }
         itemsIndexed(moduleList, itemContent = { index, item ->
             ListItem(
-                text = { Text(text = item.name) },
-                secondaryText = {
+                headlineContent = { Text(text = item.name) },
+                supportingContent = {
                     // Drop .sample from package names
                     Text(text = item.cleanPackageName)
                 },
-                icon = {
+                leadingContent = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_compose_module_2),
                         contentDescription = null,
@@ -315,12 +319,18 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
 
 @Composable
 fun DropDownMenuContent(onGithubClick: () -> Unit, onAboutClick: () -> Unit) {
-    DropdownMenuItem(onClick = onGithubClick) {
-        Text(text = "☆ on Github")
-    }
-    DropdownMenuItem(onClick = onAboutClick) {
-        Text(text = "About")
-    }
+    DropdownMenuItem(
+        onClick = onGithubClick,
+        text = {
+            Text(text = "☆ on Github")
+        }
+    )
+    DropdownMenuItem(
+        onClick = onAboutClick,
+        text = {
+            Text(text = "About")
+        }
+    )
 }
 
 @Preview

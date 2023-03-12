@@ -1,6 +1,6 @@
 package home.saied.composesamples.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -10,18 +10,18 @@ import home.saied.composesamples.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    body1 = TextStyle(
+    bodySmall = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         letterSpacing = 0.25.sp
     ),
-    body2 = TextStyle(),
-    h6 = TextStyle(
+    bodyMedium = TextStyle(),
+    headlineMedium = TextStyle(
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         letterSpacing = 0.15.sp
     ),
-    h5 = TextStyle(fontFamily = FontFamily(listOf(Font(R.font.mono_regular)))
+    labelMedium = TextStyle(fontFamily = FontFamily(listOf(Font(R.font.mono_regular)))
     )
     /* Other default text styles to override
     button = TextStyle(

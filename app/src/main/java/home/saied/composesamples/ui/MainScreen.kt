@@ -22,7 +22,7 @@ private const val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-lego
 private const val DEEPLINK_SCHEMA = "sample://composelegos/samples"
 
 
-@OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalComposeUiApi
 @Composable
 fun MainScreen() {

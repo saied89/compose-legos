@@ -96,7 +96,7 @@ fun SampleScreen(
                         }
                     }
                     showSkipBlockgenerationReason = true
-                }, shape = androidx.compose.material.MaterialTheme.shapes.small
+                }, shape = MaterialTheme.shapes.small
             ) {
                 Icon(
                     imageVector = when (sampleViewSwitchState) {

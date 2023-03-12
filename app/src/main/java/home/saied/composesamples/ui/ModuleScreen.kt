@@ -4,8 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
@@ -26,7 +25,6 @@ import home.saied.composesamples.R
 import home.saied.samples.SampleModule
 
 
-@ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
 fun ModuleScreen(
@@ -43,7 +41,7 @@ fun ModuleScreen(
                 title = {
                     Text(
                         text = sampleModule.name,
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 },

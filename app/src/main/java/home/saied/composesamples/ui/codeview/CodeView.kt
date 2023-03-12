@@ -2,7 +2,7 @@ package home.saied.composesamples.ui.codeview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -68,7 +68,7 @@ fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Text(
             text = index.toString().padStart(gutterWidth, '0'),
-            style = MaterialTheme.typography.overline,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier
                 .padding(horizontal = 2.dp)
                 .align(Alignment.Top)
@@ -81,7 +81,7 @@ fun CodeLine(index: Int, codeLine: String, gutterWidth: Int) {
         )
         Text(
             text = codeString(codeLine),
-            style = MaterialTheme.typography.h5,
+            style = MaterialTheme.typography.labelMedium,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(horizontal = 4.dp)
