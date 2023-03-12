@@ -1,7 +1,9 @@
 package home.saied.composesamples.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 //import androidx.compose.material3.darkColors
 //import androidx.compose.material3.lightColors
 import androidx.compose.runtime.Composable
@@ -27,7 +29,11 @@ import androidx.compose.ui.graphics.Color
 //    onBackground = Color.Black,
 //    onSurface = Color.Black,
 //    */
-//)
+//
+
+private val colorScheme = lightColorScheme(
+    surface = Color.White
+)
 
 @Composable
 fun ComposeSamplesTheme(
@@ -36,6 +42,7 @@ fun ComposeSamplesTheme(
 ) {
 
     MaterialTheme(
+        colorScheme = colorScheme,
         typography = Typography,
 //        shapes = Shapes,
         content = content
