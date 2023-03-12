@@ -80,7 +80,7 @@ fun FileScreen(
                 sampleFile.sampleList,
                 itemContent = { index, item ->
                     ListItem(
-                        headlineText = { Text(text = item.name) },
+                        headlineContent = { Text(text = item.name) },
                         leadingContent = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_compose_sample_concept),

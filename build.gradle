@@ -9,8 +9,8 @@ buildscript {
     }
 
     ext {
-        compose_version = '1.4.0-beta01'
-        material3_version = '1.1.0-alpha06'
+        compose_version = '1.4.0-rc01'
+        material3_version = '1.1.0-alpha08'
         kspVersion = '1.8.0-1.0.8'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.

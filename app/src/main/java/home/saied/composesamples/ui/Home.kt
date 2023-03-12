@@ -16,7 +16,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -43,7 +47,10 @@ import kotlin.math.roundToInt
 
 private const val GITHUB_URL = "https://github.com/saied89/compose-legos"
 
-@OptIn(ExperimentalAnimationApi::class)
+private val sampleModuleList = List(20) {
+    SampleModule("test","", emptyList())
+}
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     moduleList: List<SampleModule>,
@@ -52,78 +59,123 @@ fun HomeScreen(
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
     val homeViewModel: HomeViewModel = viewModel()
-    val homeState by homeViewModel.homeState
-    val searchTransition = updateTransition(homeState, "SearchTransition")
-    val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 52.dp
-    val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
-    val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
-    val toolBarNotScrolled by remember {
-        derivedStateOf {
-            abs(toolbarOffsetHeightPx.value) < 0.1
-        }
-    }
-    val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
-    var newOffset by remember { mutableStateOf(0f) }
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val delta = available.y
-                newOffset = toolbarOffsetHeightPx.value + delta
-                toolbarOffsetHeightPx.value =
-                    if (homeState == HomeViewModel.HomeState.MODULES)
-                        newOffset.coerceIn(- 2 * toolbarHeightPx - statusBarInset, 0f)
-                    else 0f
-                return Offset.Zero
-            }
-        }
+//    val homeState by homeViewModel.homeState
+//    val searchTransition = updateTransition(homeState, "SearchTransition")
+//    val toolbarHeight = if (homeState is HomeViewModel.HomeState.SearchState) 56.dp else 52.dp
+//    val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
+//    val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
+//    val toolBarNotScrolled by remember {
+//        derivedStateOf {
+//            abs(toolbarOffsetHeightPx.value) < 0.1
+//        }
+//    }
+//    val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
+//    var newOffset by remember { mutableStateOf(0f) }
+//    val nestedScrollConnection = remember {
+//        object : NestedScrollConnection {
+//            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+//                val delta = available.y
+//                newOffset = toolbarOffsetHeightPx.value + delta
+//                toolbarOffsetHeightPx.value =
+//                    if (homeState == HomeViewModel.HomeState.MODULES)
+//                        newOffset.coerceIn(-2 * toolbarHeightPx - statusBarInset, 0f)
+//                    else 0f
+//                return Offset.Zero
+//            }
+//        }
+//    }
+
+    var active by rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    fun closeSearchBar() {
+        focusManager.clearFocus()
+        active = false
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(nestedScrollConnection)
-            .statusBarsPadding()
-    ) {
-        val seachPaddingDp by searchTransition.animateDp(label = "searchCornerDp") {
-            when (it) {
-                is HomeViewModel.HomeState.MODULES -> 12.dp
-                is HomeViewModel.HomeState.SearchState -> 0.dp
-            }
-        }
-        searchTransition.AnimatedContent {
-            when (it) {
-                is HomeViewModel.HomeState.SearchState -> {
-                    SearchScreen(
-                        it.searchResult,
-                        onSearchSampleClick = onSearchSampleClick
-                    )
-                }
-                is HomeViewModel.HomeState.MODULES -> {
-                    ModuleList(
-                        moduleList = moduleList,
-                        onModuleClick = onModuleClick,
-                        toolbarHeight = 48.dp
-                    )
-                }
-            }
-        }
-        searchTransition.SearchBox(
-            searchStr = homeViewModel.searchStr,
-            onSearchStr = {
-                homeViewModel.searchStr = it
+    Box(Modifier.fillMaxSize()) {
+        SearchBar(
+            modifier = Modifier.align(Alignment.TopCenter),
+            query = "",
+            onQueryChange = { },
+            onSearch = { closeSearchBar() },
+            active = active,
+            onActiveChange = {
+                active = it
+                if (!active) focusManager.clearFocus()
             },
-            enabled = toolBarNotScrolled,
-            onLeadingClick = {
-                homeViewModel.searchStr = null
+            placeholder = { Text("Search Samples") },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = null
+                )
             },
-            onAboutClick = onAboutClick,
-            modifier = Modifier
-                .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
-                .padding(seachPaddingDp)
-                .fillMaxWidth()
-                .requiredHeight(toolbarHeight)
+            trailingIcon = {
+                Icon(
+                    Icons.Default.MoreVert,
+                    contentDescription = null
+                )
+            },
+        ) {
+            SearchScreen(
+                emptyList(),
+                onSearchSampleClick = onSearchSampleClick
+            )
+        }
+        ModuleList(
+            moduleList = sampleModuleList,
+            onModuleClick = onModuleClick,
+            toolbarHeight = 48.dp
         )
     }
+
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .nestedScroll(nestedScrollConnection)
+//            .statusBarsPadding()
+//    ) {
+//        val seachPaddingDp by searchTransition.animateDp(label = "searchCornerDp") {
+//            when (it) {
+//                is HomeViewModel.HomeState.MODULES -> 12.dp
+//                is HomeViewModel.HomeState.SearchState -> 0.dp
+//            }
+//        }
+//        searchTransition.AnimatedContent {
+//            when (it) {
+//                is HomeViewModel.HomeState.SearchState -> {
+//                    SearchScreen(
+//                        it.searchResult,
+//                        onSearchSampleClick = onSearchSampleClick
+//                    )
+//                }
+//                is HomeViewModel.HomeState.MODULES -> {
+//                    ModuleList(
+//                        moduleList = moduleList,
+//                        onModuleClick = onModuleClick,
+//                        toolbarHeight = 48.dp
+//                    )
+//                }
+//            }
+//        }
+//        searchTransition.SearchBox(
+//            searchStr = homeViewModel.searchStr,
+//            onSearchStr = {
+//                homeViewModel.searchStr = it
+//            },
+//            enabled = toolBarNotScrolled,
+//            onLeadingClick = {
+//                homeViewModel.searchStr = null
+//            },
+//            onAboutClick = onAboutClick,
+//            modifier = Modifier
+//                .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
+//                .padding(seachPaddingDp)
+//                .fillMaxWidth()
+//                .requiredHeight(toolbarHeight)
+//        )
+//    }
 }
 
 
@@ -182,6 +234,7 @@ fun Transition<HomeViewModel.HomeState>.SearchBox(
                                 contentDescription = null
                             )
                         }
+
                         is HomeViewModel.HomeState.MODULES -> {
                             Icon(
                                 Icons.Filled.Search,
