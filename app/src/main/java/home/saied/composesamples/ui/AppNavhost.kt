@@ -16,6 +16,7 @@ import androidx.navigation.navDeepLink
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
+import home.saied.samples.SampleModule
 import home.saied.samples.sampleModules
 
 private const val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-legos-0/privacy.html"
@@ -25,7 +26,7 @@ private const val DEEPLINK_SCHEMA = "sample://composelegos/samples"
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalComposeUiApi
 @Composable
-fun MainScreen() {
+fun AppNavHost(sampleModules: List<SampleModule>) {
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setStatusBarColor(Color.Transparent, darkIcons = true)
