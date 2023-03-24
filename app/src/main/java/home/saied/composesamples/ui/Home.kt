@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
@@ -48,12 +49,12 @@ val mockSampleModuleList = List(10) { moduleIndex ->
     SampleModule(
         "module$moduleIndex",
         "package",
-        List(10) {fileIndex ->
+        List(10) { fileIndex ->
             SampleFile(
                 "file$moduleIndex$fileIndex",
                 "",
-                List(10) {sampleIndex ->
-                    Sample("sample$moduleIndex$fileIndex$sampleIndex","","")
+                List(10) { sampleIndex ->
+                    Sample("sample$moduleIndex$fileIndex$sampleIndex", "", "")
                 }
             )
         }
@@ -83,7 +84,8 @@ fun HomeScreen(
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 val delta = available.y
                 newOffset = searchbarOffsetHeightPx.value + delta
-                searchbarOffsetHeightPx.value = newOffset.coerceIn(-2 * searchbarHeightPx - statusBarInset, 0f)
+                searchbarOffsetHeightPx.value =
+                    newOffset.coerceIn(-2 * searchbarHeightPx - statusBarInset, 0f)
                 return Offset.Zero
             }
         }
@@ -100,7 +102,8 @@ fun HomeScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .nestedScroll(nestedScrollConnection)) {
+            .nestedScroll(nestedScrollConnection)
+    ) {
         SearchBar(
             modifier =
             Modifier
@@ -121,10 +124,12 @@ fun HomeScreen(
             },
             placeholder = { Text("Search Samples") },
             leadingIcon = {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = null
-                )
+                if (searchActive)
+                    IconButton(onClick = ::closeSearchBar) {
+                        Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                    }
+                else
+                    Icon(Icons.Default.Search, contentDescription = null)
             },
             trailingIcon = {
                 Box() {
