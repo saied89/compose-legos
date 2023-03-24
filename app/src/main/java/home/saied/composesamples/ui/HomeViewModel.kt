@@ -1,10 +1,18 @@
 package home.saied.composesamples.ui
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.viewModelFactory
 import home.saied.samples.Sample
-import home.saied.samples.sampleModules
+import home.saied.samples.SampleModule
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class SampleWithPath(
     val sample: Sample,
@@ -13,42 +21,35 @@ data class SampleWithPath(
     val sampleIndex: Int
 )
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val sampleModuleList: List<SampleModule>,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+    ) : ViewModel() {
 
-    sealed class HomeState {
-        abstract val searchString: String?
+    data class HomeState(
+        val searchStr: String = "",
+        val searchResult: List<SampleWithPath> = emptyList()
+    )
 
-        object MODULES : HomeState() {
-            override var searchString: String? = null
+
+    private val _homeState = MutableStateFlow(HomeState())
+    val homeState: StateFlow<HomeState> = _homeState.asStateFlow()
+
+    fun setSearchStr(searchStr: String) {
+        _homeState.value = _homeState.value.copy(searchStr = searchStr, searchResult = emptyList())
+        viewModelScope.launch {
+            _homeState.update {
+                val searchResult = findSamples(it.searchStr)
+                it.copy(searchResult = searchResult)
+            }
         }
-
-        data class SearchState(
-            override val searchString: String?,
-            val isSearching: Boolean,
-            val searchResult: List<SampleWithPath>?
-        ) : HomeState()
     }
 
-
-    private val _homeState = mutableStateOf<HomeState>(
-        HomeState.MODULES
-    )
-    val homeState: State<HomeState> = _homeState
-
-    var searchStr: String?
-        get() = _homeState.value.searchString
-        set(value) {
-            if (value == null)
-                _homeState.value = HomeState.MODULES
-            else
-                performSearch(value)
-        }
-
-    private fun performSearch(searchString: String) {
-        _homeState.value = HomeState.SearchState(searchString, true, searchResult = null)
-        val searchRes = run {
+    // TODO maybe move this functionality to repository
+    private suspend fun findSamples(searchString: String): List<SampleWithPath> =
+        withContext(defaultDispatcher) {
             if (searchString.isNotBlank())
-                sampleModules.asSequence()
+                sampleModuleList.asSequence()
                     .flatMapIndexed { moduleIndex, module ->
                         module.sampleFileList.asSequence().flatMapIndexed { fileIndex, file ->
                             file.sampleList.asSequence().mapIndexed { sampleIndex, sample ->
@@ -62,6 +63,12 @@ class HomeViewModel : ViewModel() {
             else
                 emptyList()
         }
-        _homeState.value = HomeState.SearchState(searchString, false, searchResult = searchRes)
+
+    companion object {
+        fun factory(sampleModuleList: List<SampleModule>) = viewModelFactory {
+            addInitializer(HomeViewModel::class) {
+                HomeViewModel(sampleModuleList)
+            }
+        }
     }
 }

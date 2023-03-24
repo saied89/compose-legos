@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import home.saied.composesamples.R
 import home.saied.composesamples.ui.search.SearchScreen
+import home.saied.samples.Sample
 import home.saied.samples.SampleFile
 import home.saied.samples.SampleModule
 import kotlin.math.abs
@@ -40,15 +41,17 @@ import kotlin.math.roundToInt
 
 private const val GITHUB_URL = "https://github.com/saied89/compose-legos"
 
-val mockSampleModuleList = List(20) {
+val mockSampleModuleList = List(10) { moduleIndex ->
     SampleModule(
-        "test",
+        "module$moduleIndex",
         "package",
-        List(20) {
+        List(10) {fileIndex ->
             SampleFile(
+                "file$moduleIndex$fileIndex",
                 "",
-                "",
-                emptyList()
+                List(10) {sampleIndex ->
+                    Sample("sample$moduleIndex$fileIndex$sampleIndex","","")
+                }
             )
         }
     )
@@ -64,14 +67,11 @@ fun HomeScreen(
     onAboutClick: () -> Unit,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
-    val homeViewModel: HomeViewModel = viewModel()
+    val homeViewModel: HomeViewModel = viewModel(
+        factory = HomeViewModel.factory(moduleList)
+    )
     val searchbarHeightPx = with(LocalDensity.current) { SearchbarHeight.roundToPx().toFloat() }
     val searchbarOffsetHeightPx = remember { mutableStateOf(0f) }
-    val searchbarNotScrolled by remember {
-        derivedStateOf {
-            abs(searchbarOffsetHeightPx.value) < 0.1
-        }
-    }
     var searchActive by rememberSaveable { mutableStateOf(false) }
     val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
     var newOffset by remember { mutableStateOf(0f) }
@@ -92,7 +92,12 @@ fun HomeScreen(
         searchActive = false
     }
 
-    Box(Modifier.fillMaxSize().nestedScroll(nestedScrollConnection)) {
+    val state by homeViewModel.homeState.collectAsState()
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .nestedScroll(nestedScrollConnection)) {
         SearchBar(
             modifier =
             Modifier
@@ -103,9 +108,9 @@ fun HomeScreen(
                         y = if (searchActive) 0 else searchbarOffsetHeightPx.value.roundToInt()
                     )
                 },
-            query = "",
-            onQueryChange = { },
-            onSearch = { closeSearchBar() },
+            query = state.searchStr,
+            onQueryChange = homeViewModel::setSearchStr,
+            onSearch = { },
             active = searchActive,
             onActiveChange = {
                 searchActive = it
@@ -125,8 +130,12 @@ fun HomeScreen(
                 )
             },
         ) {
+            LaunchedEffect(key1 = searchActive) {
+                if (!searchActive)
+                    searchbarOffsetHeightPx.value = 0f
+            }
             SearchScreen(
-                emptyList(),
+                searchRes = state.searchResult,
                 onSearchSampleClick = onSearchSampleClick
             )
         }
@@ -140,7 +149,7 @@ fun HomeScreen(
 
 @Composable
 fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
-    LazyColumn(contentPadding = PaddingValues(top = toolbarHeight + 16.dp)) {
+    LazyColumn(contentPadding = PaddingValues(top = toolbarHeight + 32.dp)) {
         item {
             Text(
                 text = "Jetpack Compose Modules",
