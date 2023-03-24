@@ -21,7 +21,10 @@ import home.saied.composesamples.R
 
 @Composable
 fun About(onPrivacyPolicyClick: () -> Unit) {
-    Surface(shape = MaterialTheme.shapes.large) {
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.outline
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
