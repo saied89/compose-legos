@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
@@ -24,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -32,11 +35,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import home.saied.composesamples.R
+import home.saied.composesamples.openUrl
 import home.saied.composesamples.ui.search.SearchScreen
 import home.saied.samples.Sample
 import home.saied.samples.SampleFile
 import home.saied.samples.SampleModule
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private const val GITHUB_URL = "https://github.com/saied89/compose-legos"
@@ -124,10 +127,26 @@ fun HomeScreen(
                 )
             },
             trailingIcon = {
-                Icon(
-                    Icons.Default.MoreVert,
-                    contentDescription = null
-                )
+                Box() {
+                    var moreMenuExpanded by remember { mutableStateOf(false) }
+                    IconButton(onClick = { moreMenuExpanded = true }) {
+                        Icon(Icons.Filled.MoreVert, contentDescription = null)
+                    }
+                    val context = LocalContext.current
+                    DropdownMenu(
+                        expanded = moreMenuExpanded,
+                        onDismissRequest = { moreMenuExpanded = false }) {
+                        DropDownMenuContent(
+                            onGithubClick = {
+                                moreMenuExpanded = false
+                                context.openUrl(GITHUB_URL)
+                            }
+                        ) {
+                            moreMenuExpanded = false
+                            onAboutClick()
+                        }
+                    }
+                }
             },
         ) {
             LaunchedEffect(key1 = searchActive) {
@@ -174,7 +193,8 @@ fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick:
                 },
                 modifier = Modifier.clickable {
                     onModuleClick(index)
-                })
+                }
+            )
             Spacer(modifier = Modifier.height(8.dp))
         })
     }
