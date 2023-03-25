@@ -82,9 +82,7 @@ fun HomeScreen(
     val state by homeViewModel.homeState.collectAsState()
 
     Box(
-        Modifier
-            .fillMaxSize()
-            .nestedScroll(nestedScrollConnection)
+        Modifier.nestedScroll(nestedScrollConnection)
     ) {
         SearchBar(
             modifier =
@@ -146,6 +144,7 @@ fun HomeScreen(
             )
         }
         ModuleList(
+            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
             moduleList = moduleList,
             onModuleClick = onModuleClick,
             toolbarHeight = 48.dp
@@ -154,13 +153,18 @@ fun HomeScreen(
 }
 
 @Composable
-fun ModuleList(toolbarHeight: Dp, moduleList: List<SampleModule>, onModuleClick: (Int) -> Unit) {
-    LazyColumn(contentPadding = PaddingValues(top = toolbarHeight + 32.dp)) {
+fun ModuleList(
+    toolbarHeight: Dp,
+    moduleList: List<SampleModule>,
+    onModuleClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(top = toolbarHeight)) {
         item {
             Text(
                 text = "Jetpack Compose Modules",
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 28.dp, bottom = 4.dp)
             )
         }
         itemsIndexed(moduleList, itemContent = { index, item ->
