@@ -6,12 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Launch
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -28,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import home.saied.composesamples.R
 import home.saied.samples.SampleFile
 
-@ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
 fun FileScreen(
@@ -46,7 +44,7 @@ fun FileScreen(
                 title = {
                     Text(
                         text = sampleFile.name,
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 },
@@ -80,7 +78,7 @@ fun FileScreen(
                 sampleFile.sampleList,
                 itemContent = { index, item ->
                     ListItem(
-                        headlineText = { Text(text = item.name) },
+                        headlineContent = { Text(text = item.name) },
                         leadingContent = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_compose_sample_concept),

@@ -1,14 +1,12 @@
 package home.saied.composesamples.ui.search
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.ListItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,17 +17,16 @@ import home.saied.composesamples.R
 import home.saied.composesamples.ui.SampleWithPath
 
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
-    searchRes: List<SampleWithPath>? = null,
+    searchRes: List<SampleWithPath>,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
-    LazyColumn(contentPadding = PaddingValues(top = 60.dp)) {
-        items(searchRes ?: listOf()) { item ->
+    LazyColumn {
+        items(searchRes) { item ->
             ListItem(
-                text = { Text(text = item.sample.name) },
-                icon = {
+                headlineContent = { Text(text = item.sample.name) },
+                leadingContent = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_compose_sample_concept),
                         contentDescription = null,

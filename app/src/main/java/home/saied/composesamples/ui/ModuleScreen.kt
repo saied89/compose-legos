@@ -4,8 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
@@ -26,7 +25,6 @@ import home.saied.composesamples.R
 import home.saied.samples.SampleModule
 
 
-@ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
 fun ModuleScreen(
@@ -34,7 +32,7 @@ fun ModuleScreen(
     onBackClick: () -> Unit,
     onFileClick: (Int) -> Unit
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -43,7 +41,7 @@ fun ModuleScreen(
                 title = {
                     Text(
                         text = sampleModule.name,
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 },
@@ -66,7 +64,7 @@ fun ModuleScreen(
             itemsIndexed(sampleModule.sampleFileList,
                 itemContent = { index, item ->
                     ListItem(
-                        headlineText = { Text(text = item.name) },
+                        headlineContent = { Text(text = item.name) },
                         leadingContent = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_compose_file_concept),

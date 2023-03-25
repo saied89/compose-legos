@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +21,10 @@ import home.saied.composesamples.R
 
 @Composable
 fun About(onPrivacyPolicyClick: () -> Unit) {
-    Surface(shape = MaterialTheme.shapes.large) {
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.outline
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -30,7 +33,7 @@ fun About(onPrivacyPolicyClick: () -> Unit) {
             )
             Text(
                 text = "Generated runnable collection of compose samples",
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
             )
             ClickableText(
