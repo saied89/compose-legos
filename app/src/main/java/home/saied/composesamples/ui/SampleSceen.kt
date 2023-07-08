@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import home.saied.composesamples.ui.codeview.CodeLine
 import home.saied.composesamples.utils.compose.thenIf
 import home.saied.samples.Sample
-import home.saied.samples.SampleWrapper
 
 @ExperimentalMaterial3Api
 @Composable
@@ -41,7 +40,8 @@ fun SampleScreen(
     }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var showSkipBlockgenerationReason by remember { mutableStateOf(true) }
-    val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
+    //TODO: Removing for now. Check how best to add later.
+//    val observeStateMap = remember { mutableStateMapOf<Any, Any>() }
     var codeScrollable by remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier
@@ -112,10 +112,11 @@ fun SampleScreen(
             }
         },
         floatingActionButtonPosition = FabPosition.End,
-        bottomBar = {
-            if (sampleViewSwitchState == SampleViewSwitch.COMPOSABLE)
-                ObservedStateList(observeStateMap = observeStateMap)
-        }
+        //TODO: Removing for now. Check how best to add later.
+//        bottomBar = {
+//            if (sampleViewSwitchState == SampleViewSwitch.COMPOSABLE)
+//                ObservedStateList(observeStateMap = observeStateMap)
+//        }
     ) {
         Crossfade(targetState = sampleViewSwitchState, modifier = Modifier.padding(it)) {
             when (it) {
@@ -124,11 +125,12 @@ fun SampleScreen(
                 }
                 SampleViewSwitch.COMPOSABLE -> {
                     if (sample.block != null)
-                        SampleWrapper(
-                            content = {
+                    //TODO: Removing for now. Check how best to add later.
+//                        SampleWrapper(
+//                            content = {
                                 sample.block!!.invoke()
-                            }, snapshotStateMap = observeStateMap
-                        )
+//                            }, snapshotStateMap = observeStateMap
+//                        )
                     else {
                         if (showSkipBlockgenerationReason)
                             NotGeneratedAlertDialog(reason = sample.skipBlockgenerationReason) {
