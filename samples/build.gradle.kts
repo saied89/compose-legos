@@ -91,7 +91,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
+    implementation("androidx.paging:paging-compose:3.2.0-rc01")
     implementation("androidx.compose.material3:material3:$material3_version")
     ksp(project(":processor"))
 

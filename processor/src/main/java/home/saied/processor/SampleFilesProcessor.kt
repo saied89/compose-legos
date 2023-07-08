@@ -43,6 +43,8 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
                     line == "import androidx.compose.runtime.remember" -> "import home.saied.samples.remember"
                     line == "import androidx.annotation.Sampled" -> "import home.saied.samples.gensampled.GenSampled\n" +
                             "import home.saied.samples.R"
+                    line == "import androidx.paging.compose.itemKey" -> "import androidx.paging.compose.itemKey\n" +
+                            "import androidx.paging.compose.samples.TestBackend"
                     line.contains("R.") && !line.contains("android.R.") -> line.replace(
                         "R.",
                         "home.saied.samples.R."
