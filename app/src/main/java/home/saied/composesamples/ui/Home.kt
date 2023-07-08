@@ -172,7 +172,7 @@ fun ModuleList(
                 headlineContent = { Text(text = item.name) },
                 supportingContent = {
                     // Drop .sample from package names
-                    Text(text = item.cleanPackageName)
+                    Text(text = item.cleanPackageName, style = MaterialTheme.typography.bodySmall)
                 },
                 leadingContent = {
                     Icon(
