@@ -58,7 +58,6 @@ fun HomeScreen(
     )
     val searchbarHeightPx = with(LocalDensity.current) { SearchbarHeight.roundToPx().toFloat() }
     val searchbarOffsetHeightPx = remember { mutableStateOf(0f) }
-    var searchActive by rememberSaveable { mutableStateOf(false) }
     val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
     var newOffset by remember { mutableStateOf(0f) }
     val nestedScrollConnection = remember {
@@ -72,21 +71,15 @@ fun HomeScreen(
             }
         }
     }
-    val focusManager = LocalFocusManager.current
-
-    fun closeSearchBar() {
-        focusManager.clearFocus()
-        searchActive = false
-    }
 
     val state by homeViewModel.homeState.collectAsState()
 
     Box(
         Modifier.nestedScroll(nestedScrollConnection)
     ) {
+        var searchActive by rememberSaveable { mutableStateOf(false) }
         SearchBar(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .align(Alignment.TopCenter)
                 .offset {
                     IntOffset(
@@ -94,45 +87,11 @@ fun HomeScreen(
                         y = if (searchActive) 0 else searchbarOffsetHeightPx.value.roundToInt()
                     )
                 },
-            query = state.searchStr,
-            onQueryChange = homeViewModel::setSearchStr,
-            onSearch = { },
-            active = searchActive,
-            onActiveChange = {
-                searchActive = it
-                if (!searchActive) focusManager.clearFocus()
-            },
-            placeholder = { Text("Search Samples") },
-            leadingIcon = {
-                if (searchActive)
-                    IconButton(onClick = ::closeSearchBar) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = null)
-                    }
-                else
-                    Icon(Icons.Default.Search, contentDescription = null)
-            },
-            trailingIcon = {
-                Box() {
-                    var moreMenuExpanded by remember { mutableStateOf(false) }
-                    IconButton(onClick = { moreMenuExpanded = true }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = null)
-                    }
-                    val context = LocalContext.current
-                    DropdownMenu(
-                        expanded = moreMenuExpanded,
-                        onDismissRequest = { moreMenuExpanded = false }) {
-                        DropDownMenuContent(
-                            onGithubClick = {
-                                moreMenuExpanded = false
-                                context.openUrl(GITHUB_URL)
-                            }
-                        ) {
-                            moreMenuExpanded = false
-                            onAboutClick()
-                        }
-                    }
-                }
-            },
+            searchStr = state.searchStr,
+            setSearchStr = homeViewModel::setSearchStr,
+            searchActive = searchActive,
+            setSearchActive = { searchActive = it },
+            onAboutClick = onAboutClick
         ) {
             LaunchedEffect(key1 = searchActive) {
                 if (!searchActive)
@@ -150,6 +109,70 @@ fun HomeScreen(
             toolbarHeight = 48.dp
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchBar(
+    modifier: Modifier,
+    searchActive: Boolean,
+    setSearchActive: (Boolean) -> Unit,
+    searchStr: String,
+    setSearchStr: (String) -> Unit,
+    onAboutClick: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+    SearchBar(
+        modifier = modifier,
+        query = searchStr,
+        onQueryChange = setSearchStr,
+        onSearch = { },
+        active = searchActive,
+        onActiveChange = {
+            setSearchActive(it)
+            if (!searchActive) focusManager.clearFocus()
+        },
+        placeholder = { Text("Search Samples") },
+        leadingIcon = {
+            if (searchActive)
+                IconButton(
+                    onClick = {
+                        focusManager.clearFocus()
+                        setSearchActive(false)
+                        setSearchStr("")
+                    },
+                    content = {
+                        Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                    }
+                )
+            else
+                Icon(Icons.Default.Search, contentDescription = null)
+        },
+        trailingIcon = {
+            Box {
+                var moreMenuExpanded by remember { mutableStateOf(false) }
+                IconButton(onClick = { moreMenuExpanded = true }) {
+                    Icon(Icons.Filled.MoreVert, contentDescription = null)
+                }
+                val context = LocalContext.current
+                DropdownMenu(
+                    expanded = moreMenuExpanded,
+                    onDismissRequest = { moreMenuExpanded = false }) {
+                    DropDownMenuContent(
+                        onGithubClick = {
+                            moreMenuExpanded = false
+                            context.openUrl(GITHUB_URL)
+                        }
+                    ) {
+                        moreMenuExpanded = false
+                        onAboutClick()
+                    }
+                }
+            }
+        },
+        content = content
+    )
 }
 
 @Composable

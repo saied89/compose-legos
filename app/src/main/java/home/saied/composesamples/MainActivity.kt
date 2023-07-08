@@ -2,12 +2,12 @@ package home.saied.composesamples
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.ReportDrawnAfter
 import androidx.activity.compose.setContent
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.view.WindowCompat
 import home.saied.composesamples.ui.AppNavHost
 import home.saied.composesamples.ui.theme.ComposeSamplesTheme
+import home.saied.composesamples.ui.utils.mockSampleModuleList
 import home.saied.samples.sampleModules
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             ComposeSamplesTheme {
-                AppNavHost(sampleModules = sampleModules)
+                AppNavHost(sampleModules = mockSampleModuleList)
             }
         }
     }
