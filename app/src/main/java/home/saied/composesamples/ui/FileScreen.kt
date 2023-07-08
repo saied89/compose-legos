@@ -2,6 +2,7 @@ package home.saied.composesamples.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +32,7 @@ import home.saied.samples.SampleFile
 @Composable
 fun FileScreen(
     sampleFile: SampleFile,
+    moduleName: String,
     onSampleClicked: (Int) -> Unit,
     onSourceLaunch: () -> Unit,
     onBackClick: () -> Unit
@@ -42,11 +44,16 @@ fun FileScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = sampleFile.name,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        Text(
+                            text = "$moduleName/",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = sampleFile.name,
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {

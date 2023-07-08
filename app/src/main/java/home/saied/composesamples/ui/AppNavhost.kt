@@ -82,6 +82,7 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
             val context = LocalContext.current
             FileScreen(
                 sampleFile = sampleModules[moduleIndex].sampleFileList[fileIndex],
+                moduleName = sampleModules[moduleIndex].name,
                 onSampleClicked = { sampleIndex ->
                     navController.navigate("sample/$moduleIndex/$fileIndex/$sampleIndex")
                 },
