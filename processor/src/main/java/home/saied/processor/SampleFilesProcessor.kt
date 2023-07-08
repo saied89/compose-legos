@@ -4,6 +4,8 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.visitor.KSDefaultVisitor
 import java.io.File
+import kotlin.io.path.Path
+import kotlin.io.path.deleteIfExists
 
 class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogger) :
     SymbolProcessor {
@@ -14,7 +16,7 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
         val allFiles = resolver.getAllFiles()
         logger.warn("process called with ${allFiles.count()} files.")
         allFiles.filter { file ->
-            file.declarations.any(::isSampled) && !processedSet.contains(file.uniqueId())
+            file.declarations.any(::isSampled) && !processedSet.contains(file.filePath)
         }.forEach {
             processedSet.add(it.accept(SampleFileVisitor(), Unit))
         }
@@ -32,8 +34,6 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
         }
         return isSampled
     }
-
-    private fun KSFile.uniqueId() = filePath
 
     inner class SampleFileVisitor : KSDefaultVisitor<Unit, String>() {
         override fun visitFile(file: KSFile, data: Unit): String {
@@ -71,7 +71,7 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
                     writer.newLine()
                 }
             }
-            return file.uniqueId()
+            return file.filePath
         }
 
         override fun defaultHandler(node: KSNode, data: Unit): String {
