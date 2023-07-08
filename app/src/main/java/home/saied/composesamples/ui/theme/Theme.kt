@@ -33,7 +33,8 @@ import androidx.compose.ui.graphics.Color
 
 private val colorScheme = lightColorScheme(
     surface = Color.White,
-    background = Color.White
+    background = Color.White,
+    onSurfaceVariant = Color.Gray
 )
 
 @Composable

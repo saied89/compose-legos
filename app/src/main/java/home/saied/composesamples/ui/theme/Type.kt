@@ -14,8 +14,7 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        letterSpacing = 0.25.sp,
-        color = Color.Gray
+        letterSpacing = 0.25.sp
     ),
     bodyMedium = TextStyle(),
     headlineMedium = TextStyle(
