@@ -32,6 +32,10 @@ import home.saied.samples.Sample
 @Composable
 fun SampleScreen(
     sample: Sample,
+    filname: String,
+    onFileClick: () -> Unit,
+    moduleName: String,
+    onModuleClick: () -> Unit,
     onSourceLaunch: () -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -47,42 +51,52 @@ fun SampleScreen(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-                    }
-                },
-                actions = {
-                    val context = LocalContext.current
-                    val localClipboardManager = LocalClipboardManager.current
-                    IconButton(
-                        onClick = onSourceLaunch
-                    ) {
-                        Icon(imageVector = Icons.Filled.Launch, contentDescription = null)
-                    }
-                    IconButton(
-                        onClick = {
-                            localClipboardManager.setText(AnnotatedString(sample.body))
-                            Toast
-                                .makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT)
-                                .show()
+            Column {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                         }
-                    ) {
-                        Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = null)
-                    }
-                    IconButton(
-                        onClick = { codeScrollable = !codeScrollable },
-                    ) {
-                        Icon(
-                            imageVector = if (codeScrollable) Icons.Outlined.Dehaze else Icons.Outlined.TableRows,
-                            contentDescription = null
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior
-            )
+                    },
+                    actions = {
+                        val context = LocalContext.current
+                        val localClipboardManager = LocalClipboardManager.current
+                        IconButton(
+                            onClick = onSourceLaunch
+                        ) {
+                            Icon(imageVector = Icons.Filled.Launch, contentDescription = null)
+                        }
+                        IconButton(
+                            onClick = {
+                                localClipboardManager.setText(AnnotatedString(sample.body))
+                                Toast
+                                    .makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        ) {
+                            Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = null)
+                        }
+                        IconButton(
+                            onClick = { codeScrollable = !codeScrollable },
+                        ) {
+                            Icon(
+                                imageVector = if (codeScrollable) Icons.Outlined.Dehaze else Icons.Outlined.TableRows,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+                BreadCrumbsLazyRow(
+                    overLapFraction = scrollBehavior.state.overlappedFraction,
+                    currentLocationName = sample.name,
+                    breadCrumbDetails = listOf(
+                        BreadCrumbDetail(moduleName, onModuleClick),
+                        BreadCrumbDetail(filname, onFileClick)
+                    )
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(

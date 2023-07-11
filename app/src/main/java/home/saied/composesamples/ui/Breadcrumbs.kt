@@ -5,9 +5,9 @@ import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -42,7 +42,6 @@ fun BreadCrumbsLazyRow(
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(bottom = 12.dp, start = 16.dp, end = 16.dp)
         ) {
             itemsIndexed(breadCrumbDetails) { index, item ->
@@ -52,6 +51,7 @@ fun BreadCrumbsLazyRow(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Icon(
+                    modifier = Modifier.padding(horizontal = 4.dp),
                     imageVector = Icons.Filled.ChevronRight,
                     contentDescription = null
                 )

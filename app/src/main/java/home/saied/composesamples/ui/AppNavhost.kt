@@ -17,7 +17,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
 import home.saied.samples.SampleModule
-import home.saied.samples.sampleModules
 
 private const val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-legos-0/privacy.html"
 private const val DEEPLINK_SCHEMA = "sample://composelegos/samples"
@@ -92,9 +91,10 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
                     )
                     context.openUrl(sampleSourceUrl)
                 },
-                onBackClick = navController::popBackStack
+                onBackClick = navController::navigateUp
             )
         }
+        // TODO add deep link navigation tests
         composable(
             "sample/{moduleIndex}/{fileIndex}/{sampleIndex}",
             arguments = listOf(navArgument("moduleIndex") {
@@ -113,9 +113,18 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
             val sampleIndex: Int = it.arguments!!.getInt("sampleIndex")
             val context = LocalContext.current
             val sampleModule = sampleModules[moduleIndex]
-            val sample = sampleModule.sampleFileList[fileIndex].sampleList[sampleIndex]
+            val sampleFile = sampleModule.sampleFileList[fileIndex]
+            val sample = sampleFile.sampleList[sampleIndex]
             SampleScreen(
                 sample,
+                filname = sampleFile.name,
+                onFileClick = {
+                    navController.navigate("file/$moduleIndex/$fileIndex")
+                },
+                moduleName = sampleModule.name,
+                onModuleClick = {
+                    navController.navigate("module/$moduleIndex")
+                },
                 onSourceLaunch = {
                     val sampleSourceUrl = sampleSourceUrl(sample.sourcePath)
                     context.openUrl(sampleSourceUrl)
@@ -141,19 +150,32 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
             val sampleQualifiedName = navBackStack.arguments?.getString("sampleQualifiedName")
             val sampleName = sampleQualifiedName?.substringAfterLast('.')
             val modulePackage = sampleQualifiedName?.substringBefore(".samples.$sampleName")
-            val module = sampleModules.find { it.cleanPackageName == modulePackage }
-            val sample = module?.sampleFileList?.flatMap { it.sampleList }
-                ?.find { it.name == sampleName }
+            val moduleIndex = sampleModules.indexOfFirst { it.cleanPackageName == modulePackage }
+            val fileIndex = sampleModules[moduleIndex].sampleFileList.indexOfFirst { sampleFile ->
+                sampleFile.sampleList.any { sample -> sample.name == sampleName }
+            }
+            val sample = sampleModules[moduleIndex]
+                .sampleFileList[fileIndex]
+                .sampleList.first { sample ->
+                    sample.name == sampleName
+                }
             val context = LocalContext.current
-            if (sample != null)
-                SampleScreen(
-                    sample = sample,
-                    onSourceLaunch = {
-                        val sampleSourceUrl = sampleSourceUrl(sample.sourcePath)
-                        context.openUrl(sampleSourceUrl)
-                    },
-                    onBackClick = navController::navigateUp
-                )
+            SampleScreen(
+                sample = sample,
+                filname = sampleModules[moduleIndex].sampleFileList[fileIndex].name,
+                onFileClick = {
+                    navController.navigate("sample/$moduleIndex/$fileIndex")
+                },
+                moduleName = sampleModules[moduleIndex].name,
+                onModuleClick = {
+                    navController.navigate("sample/$moduleIndex")
+                },
+                onSourceLaunch = {
+                    val sampleSourceUrl = sampleSourceUrl(sample.sourcePath)
+                    context.openUrl(sampleSourceUrl)
+                },
+                onBackClick = navController::navigateUp
+            )
         }
 
         dialog("about") {
