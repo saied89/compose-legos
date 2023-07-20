@@ -13,6 +13,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import androidx.navigation.navOptions
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
@@ -43,6 +44,15 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
                 },
                 onSearchSampleClick = {
                     navController.navigate(
+                        "module/${it.moduleIndex}",
+                        navOptions = navOptions {
+                            popUpTo("home")
+                        }
+                    )
+                    navController.navigate(
+                        "file/${it.moduleIndex}/${it.fileIndex}"
+                    )
+                    navController.navigate(
                         "sample/${it.moduleIndex}/${it.fileIndex}/${it.sampleIndex}"
                     )
                 },
@@ -61,20 +71,23 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
             val index: Int = it.arguments!!.getInt("index")
             ModuleScreen(
                 sampleModule = sampleModules[index],
-                onBackClick = navController::popBackStack
+                onBackClick = navController::navigateUp
             ) { fileIndex ->
                 navController.navigate("file/$index/$fileIndex")
             }
         }
         composable(
             "file/{moduleIndex}/{fileIndex}",
-            arguments = listOf(navArgument("moduleIndex") {
-                nullable = false
-                type = NavType.IntType
-            }, navArgument("fileIndex") {
-                nullable = false
-                type = NavType.IntType
-            })
+            arguments = listOf(
+                navArgument("moduleIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                },
+                navArgument("fileIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                }
+            )
         ) {
             val moduleIndex: Int = it.arguments!!.getInt("moduleIndex")
             val fileIndex: Int = it.arguments!!.getInt("fileIndex")
@@ -97,16 +110,20 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
         // TODO add deep link navigation tests
         composable(
             "sample/{moduleIndex}/{fileIndex}/{sampleIndex}",
-            arguments = listOf(navArgument("moduleIndex") {
-                nullable = false
-                type = NavType.IntType
-            }, navArgument("fileIndex") {
-                nullable = false
-                type = NavType.IntType
-            }, navArgument("sampleIndex") {
-                nullable = false
-                type = NavType.IntType
-            })
+            arguments = listOf(
+                navArgument("moduleIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                },
+                navArgument("fileIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                },
+                navArgument("sampleIndex") {
+                    nullable = false
+                    type = NavType.IntType
+                }
+            )
         ) {
             val moduleIndex: Int = it.arguments!!.getInt("moduleIndex")
             val fileIndex: Int = it.arguments!!.getInt("fileIndex")
@@ -119,11 +136,12 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
                 sample,
                 filname = sampleFile.name,
                 onFileClick = {
-                    navController.navigate("file/$moduleIndex/$fileIndex")
+                    navController.popBackStack()
                 },
                 moduleName = sampleModule.name,
                 onModuleClick = {
-                    navController.navigate("module/$moduleIndex")
+                    navController.popBackStack()
+                    navController.popBackStack()
                 },
                 onSourceLaunch = {
                     val sampleSourceUrl = sampleSourceUrl(sample.sourcePath)

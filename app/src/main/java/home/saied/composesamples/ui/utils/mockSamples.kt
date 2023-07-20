@@ -4,6 +4,12 @@ import home.saied.samples.Sample
 import home.saied.samples.SampleFile
 import home.saied.samples.SampleModule
 
+val mockSampleBody: String = buildString {
+    repeat(50) {
+        appendLine("line$it")
+    }
+}
+
 val mockSampleModuleList = List(10) { moduleIndex ->
     SampleModule(
         "module$moduleIndex",
@@ -13,7 +19,7 @@ val mockSampleModuleList = List(10) { moduleIndex ->
                 "file$moduleIndex$fileIndex",
                 "",
                 List(10) { sampleIndex ->
-                    Sample("sample$moduleIndex$fileIndex$sampleIndex", "", "")
+                    Sample("sample$moduleIndex$fileIndex$sampleIndex", mockSampleBody, "")
                 }
             )
         }
