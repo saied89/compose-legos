@@ -36,6 +36,16 @@ fun About(onPrivacyPolicyClick: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
             )
+            Text(
+                text = "Compose Version: 1.5.0-beta03",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+            )
+            Text(
+                text = "Material3 Version: 1.2.0-alpha02",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+            )
             ClickableText(
                 text = AnnotatedString("Privacy Policy"),
                 style = LocalTextStyle.current.copy(
