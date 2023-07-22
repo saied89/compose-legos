@@ -40,7 +40,7 @@ class SampleFilesProcessor(val codeGenerator: CodeGenerator, val logger: KSPLogg
             val res = readDeclarationLines(file) { line ->
                 when {
                     line.startsWith("package") -> "package home.saied.samples.GenSampled.${file.packageName.asString()}"
-                    line == "import androidx.compose.runtime.remember" -> "import home.saied.samples.remember"
+//                    line == "import androidx.compose.runtime.remember" -> "import home.saied.samples.remember"
                     line == "import androidx.annotation.Sampled" -> "import home.saied.samples.gensampled.GenSampled\n" +
                             "import home.saied.samples.R"
                     line == "import androidx.paging.compose.itemKey" -> "import androidx.paging.compose.itemKey\n" +
