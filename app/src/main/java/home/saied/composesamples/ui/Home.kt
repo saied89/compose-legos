@@ -182,7 +182,7 @@ fun ModuleList(
     onModuleClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(top = toolbarHeight)) {
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(top = toolbarHeight, bottom = 56.dp)) {
         item {
             Text(
                 text = "Jetpack Compose Modules",
