@@ -8,12 +8,10 @@ plugins {
 val compose_version: String by project
 val material3_version: String by project
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 32
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        consumerProguardFiles = "consumer-rules.pro"
     }
@@ -25,11 +23,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -44,8 +42,8 @@ android {
     }
     namespace = "home.saied.samples"
     kotlin {
-        sourceSets {
-            main {
+        this@android.sourceSets {
+            getByName("main") {
                 kotlin.srcDir("build/generated/ksp/debug/kotlin")
                 kotlin.srcDir("../support/compose/ui/ui/samples/src/main/java/androidx/compose/ui/samples")
                 kotlin.srcDir("../support/compose/animation/animation/samples/src/main/java/androidx/compose/animation/samples")
@@ -54,7 +52,7 @@ android {
                 kotlin.srcDir("../support/compose/foundation/foundation/samples/src/main/java/androidx/compose/foundation/samples")
                 kotlin.srcDir("../support/compose/ui/ui-unit/samples/src/main/java/androidx/compose/ui/unit/samples")
                 kotlin.srcDir("../support/compose/ui/ui-graphics/samples/src/main/java/androidx/compose/ui/graphics/samples")
-//                kotlin.srcDir("../support/compose/ui/ui-viewbinding/samples/src/main/java/androidx/compose/ui/samples")
+    //                kotlin.srcDir("../support/compose/ui/ui-viewbinding/samples/src/main/java/androidx/compose/ui/samples")
                 kotlin.srcDir("../support/compose/ui/ui-text/samples/src/main/java/androidx/compose/ui/text/samples")
                 kotlin.srcDir("../support/compose/material/material-icons-core/samples/src/main/java/androidx/compose/material/icons/samples")
                 kotlin.srcDir("../support/compose/material/material/samples/src/main/java/androidx/compose/material/samples")
