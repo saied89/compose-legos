@@ -1,12 +1,11 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.0"
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlinx.serialization.plugin)
     id ("kotlin-parcelize")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.ksp)
 }
-val compose_version: String by project
-val material3_version: String by project
+
 android {
     compileSdk = 33
 
@@ -33,13 +32,13 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.2"
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+//    packagingOptions {
+//        resources {
+//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+//        }
+//    }
     namespace = "home.saied.samples"
     kotlin {
         this@android.sourceSets {
@@ -73,27 +72,27 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation( "androidx.compose.ui:ui:$compose_version")
-    implementation("androidx.compose.material:material:$compose_version")
-    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-    implementation("androidx.compose.runtime:runtime:$compose_version")
-    implementation("androidx.activity:activity-compose:1.7.0-beta01")
-    implementation("androidx.compose.material:material-icons-extended:$compose_version")
-    implementation("androidx.compose.animation:animation-graphics:$compose_version")
-    implementation("androidx.compose.runtime:runtime-rxjava3:$compose_version")
-    implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
-    implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
-    implementation("androidx.compose.foundation:foundation:1.4.0-beta01")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    implementation("androidx.paging:paging-compose:3.2.0-rc01")
-    implementation("androidx.compose.material3:material3:$material3_version")
+    implementation(libs.android.core)
+    implementation(libs.android.appCompat)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.runtime)
+    implementation(libs.activity.compose)
+    implementation(libs.compose.material.iconsExtended)
+    implementation(libs.compose.animation.graphics)
+    implementation(libs.compose.runtime.rxjava3)
+    implementation(libs.compose.runtime.rxjava2)
+    implementation(libs.compose.runtime.livedata)
+    implementation(libs.compose.foundation)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.paging.compose)
+    implementation(libs.compose.material3)
     ksp(project(":processor"))
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 }
