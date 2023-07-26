@@ -6,7 +6,6 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.writeTo
 import java.io.File
 
@@ -103,7 +102,6 @@ class SamplesProcessor(
         return isSampled
     }
 
-    @OptIn(KotlinPoetKspPreview::class)
     override fun finish() {
         samplesFileSpec(moduleInfoList).writeTo(
             codeGenerator,
