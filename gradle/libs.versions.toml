@@ -16,6 +16,8 @@ lifecycle = "2.6.1"
 navigation = "2.6.0"
 paging = "3.2.0-rc01"
 compose-compiler = "1.4.8"
+firebaseCrashlyticsPlugin = "2.9.7"
+gmsPlugin = "4.3.14"
 
 [libraries]
 android-core = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
@@ -63,4 +65,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlinx-serialization-plugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin" }
 

@@ -12,12 +12,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://androidx.dev/snapshots/builds/8683091/artifacts/repository' }
+        maven("https://androidx.dev/snapshots/builds/8683091/artifacts/repository")
     }
 }
 rootProject.name = "ComposeLegos"
-include ':app'
-include ':samples'
-include ':processor'
-include ':processor-api'
-include ':ideaplugin'
+include(":app")
+include(":samples")
+include(":processor")
+include(":processor-api")
+include(":ideaplugin")
