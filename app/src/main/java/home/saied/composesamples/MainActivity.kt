@@ -3,12 +3,17 @@ package home.saied.composesamples
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import home.saied.composesamples.ui.AppNavHost
+import home.saied.composesamples.ui.graphics.AnimatedLogo
+import home.saied.composesamples.ui.graphics.Logo
 import home.saied.composesamples.ui.theme.ComposeSamplesTheme
-import home.saied.composesamples.ui.utils.mockSampleModuleList
-import home.saied.samples.sampleModules
 
 class MainActivity : ComponentActivity() {
 
@@ -18,7 +23,10 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             ComposeSamplesTheme {
-                AppNavHost(sampleModules = sampleModules)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    AnimatedLogo(modifier = Modifier.align(Alignment.Center))
+                }
+//                AppNavHost(sampleModules = sampleModules)
             }
         }
     }
