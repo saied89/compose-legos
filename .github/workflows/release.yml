@@ -13,7 +13,11 @@ jobs:
      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
       - name: Setup support submodule
         run: |
           git submodule init
@@ -26,10 +30,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-              app/build/outputs/apk/release/app-release.apk
-              app/build/outputs/bundle/release/app-release.aab
-              samples/build/generated/ksp/release/resources/samples_report.txt
-              samples/build/generated/ksp/release/resources/skipped_report.txt
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/bundle/release/app-release.aab
+            samples/build/generated/ksp/release/resources/samples_report.txt
+            samples/build/generated/ksp/release/resources/skipped_report.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
