@@ -1,26 +1,23 @@
 package home.saied.composesamples.ui.about
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
@@ -34,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import home.saied.composesamples.ui.theme.composeBlue
 import home.saied.composesamples.ui.theme.composeDarkBlue
 import home.saied.composesamples.ui.theme.composeGreen
-import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -88,7 +84,7 @@ private fun Logo(
 @Preview
 @Composable
 fun AnimatedLogo(modifier: Modifier = Modifier) {
-    var animatedRotation by remember { mutableFloatStateOf(0f) }
+    var animatedRotation by remember { mutableFloatStateOf(-240f) }
     var restartKey by remember { mutableStateOf("") }
     LaunchedEffect(key1 = restartKey) {
         flow {
@@ -115,6 +111,7 @@ fun AnimatedLogo(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .clickable(interactionSource = interactionSource, indication = null) { restartKey = UUID.randomUUID().toString() }
                 .size(120.dp)
+                .scale(1.5f)
         )
     }
 }
