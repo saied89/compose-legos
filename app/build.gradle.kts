@@ -31,8 +31,8 @@ android {
         applicationId = "home.saied.composesamples"
         minSdk = 21
         targetSdk = 33
-        versionCode = 14
-        versionName = "0.3.1"
+        versionCode = 15
+        versionName = "0.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
