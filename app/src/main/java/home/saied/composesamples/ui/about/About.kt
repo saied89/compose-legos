@@ -1,4 +1,4 @@
-package home.saied.composesamples.ui
+package home.saied.composesamples.ui.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -17,20 +17,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import home.saied.composesamples.R
 
 @Composable
 fun About(onPrivacyPolicyClick: () -> Unit) {
-    Surface(
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.outline
-    ) {
+    Dialog(onDismissRequest = { /*TODO*/ }) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier = Modifier.size(256.dp)
-            )
+            AnimatedLogo()
             Text(
                 text = "Generated runnable collection of compose samples",
                 style = MaterialTheme.typography.bodyMedium,

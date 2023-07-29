@@ -1,4 +1,4 @@
-package home.saied.composesamples.ui.graphics
+package home.saied.composesamples.ui.about
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.SpringSpec
@@ -6,6 +6,8 @@ import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -13,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -31,7 +34,12 @@ import androidx.compose.ui.unit.dp
 import home.saied.composesamples.ui.theme.composeBlue
 import home.saied.composesamples.ui.theme.composeDarkBlue
 import home.saied.composesamples.ui.theme.composeGreen
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.ticker
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
+import java.util.UUID
 
 private const val pathData =
     "m1.74,0c-1.14,1.97 -1.74,4.21 -1.74,6.49L0,55.83a9.17,9.17 0,0 0,4.58 7.94l45.08,26.02a9.17," +
@@ -39,7 +47,7 @@ private const val pathData =
             "1.74 6.49,1.74L108.48,61.63Z"
 
 @Composable
-fun Logo(
+private fun Logo(
     rotationState: () -> Float,
     modifier: Modifier = Modifier
 ) {
@@ -81,34 +89,32 @@ fun Logo(
 @Composable
 fun AnimatedLogo(modifier: Modifier = Modifier) {
     var animatedRotation by remember { mutableFloatStateOf(0f) }
-    LaunchedEffect(key1 = Unit) {
-        animate(
-            0f,
-            -240f,
-            animationSpec = SpringSpec()
-        ) { value, _ ->
-            animatedRotation = value
-        }
+    var restartKey by remember { mutableStateOf("") }
+    LaunchedEffect(key1 = restartKey) {
+        flow {
+            if (restartKey.isEmpty())
+                delay(500)
+            while (true) {
+                emit(Unit)
+                delay(4000)
+            }
+        }.onEach {
+            animate(
+                0f,
+                -240f,
+                animationSpec = tween(1000, easing = LinearEasing)
+            ) { value, _ ->
+                animatedRotation = value
+            }
+        }.collect()
     }
-    val scope = rememberCoroutineScope()
+    val interactionSource = remember { MutableInteractionSource() }
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Logo(
             rotationState = { animatedRotation },
-            modifier = Modifier.size(120.dp)
-        )
-        Text(
-            "animatedRotation.toString()",
-            modifier = Modifier.clickable {
-                scope.launch {
-                    animate(
-                        0f,
-                        -240f,
-                        animationSpec = tween(1000, easing = LinearEasing)
-                    ) { value, _ ->
-                        animatedRotation = value
-                    }
-                }
-            }
+            modifier = Modifier
+                .clickable(interactionSource = interactionSource, indication = null) { restartKey = UUID.randomUUID().toString() }
+                .size(120.dp)
         )
     }
 }

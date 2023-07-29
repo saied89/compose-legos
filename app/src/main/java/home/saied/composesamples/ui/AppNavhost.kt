@@ -17,6 +17,7 @@ import androidx.navigation.navOptions
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
+import home.saied.composesamples.ui.about.About
 import home.saied.samples.SampleModule
 
 private const val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-legos-0/privacy.html"
