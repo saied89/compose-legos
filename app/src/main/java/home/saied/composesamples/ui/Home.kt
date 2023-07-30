@@ -190,7 +190,7 @@ fun ModuleList(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 28.dp, bottom = 4.dp)
             )
         }
-        itemsIndexed(moduleList, itemContent = { index, item ->
+        itemsIndexed(moduleList) { index, item ->
             ListItem(
                 headlineContent = { Text(text = item.name) },
                 supportingContent = {
@@ -214,7 +214,7 @@ fun ModuleList(
                 }
             )
             Spacer(modifier = Modifier.height(8.dp))
-        })
+        }
     }
 }
 
