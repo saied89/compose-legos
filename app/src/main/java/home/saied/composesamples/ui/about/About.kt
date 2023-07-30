@@ -15,6 +15,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import home.saied.composesamples.BuildConfig
 
 @Composable
 fun About(onPrivacyPolicyClick: () -> Unit) {
@@ -27,12 +28,12 @@ fun About(onPrivacyPolicyClick: () -> Unit) {
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
             )
             Text(
-                text = "Compose Version: 1.5.0-beta03",
+                text = "Compose Version: ${BuildConfig.composeVersion}",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp)
             )
             Text(
-                text = "Material3 Version: 1.2.0-alpha02",
+                text = "Material3 Version: ${BuildConfig.material3Version}",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp)
             )

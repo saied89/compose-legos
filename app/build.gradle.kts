@@ -38,6 +38,16 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField(
+            "String",
+            "composeVersion",
+            "\"${libs.versions.compose.asProvider().get()}\""
+        )
+        buildConfigField(
+            "String",
+            "material3Version",
+            "\"${libs.versions.material3.get()}\""
+        )
     }
 
 
@@ -62,6 +72,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -105,3 +116,4 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 }
+
