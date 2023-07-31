@@ -10,7 +10,7 @@ val material3_version: String by project
 
 android {
     namespace = "home.saied.composesamples"
-    compileSdk = 33
+    compileSdk = 34
 
     signingConfigs {
         create("release") {
@@ -30,7 +30,7 @@ android {
     defaultConfig {
         applicationId = "home.saied.composesamples"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 15
         versionName = "0.3.2"
 
