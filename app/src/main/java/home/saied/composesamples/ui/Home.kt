@@ -1,14 +1,22 @@
 package home.saied.composesamples.ui
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.NewReleases
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,10 +24,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -29,7 +49,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -39,13 +58,13 @@ import home.saied.composesamples.R
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.ui.search.SearchScreen
 import home.saied.samples.SampleModule
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 private const val GITHUB_URL = "https://github.com/saied89/compose-legos"
 
 private val SearchbarHeight = 64.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     moduleList: List<SampleModule>,
@@ -58,7 +77,6 @@ fun HomeScreen(
     )
     val searchbarHeightPx = with(LocalDensity.current) { SearchbarHeight.roundToPx().toFloat() }
     val searchbarOffsetHeightPx = remember { mutableStateOf(0f) }
-    val statusBarInset = WindowInsets.statusBars.getTop(LocalDensity.current)
     var newOffset by remember { mutableStateOf(0f) }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -66,7 +84,7 @@ fun HomeScreen(
                 val delta = available.y
                 newOffset = searchbarOffsetHeightPx.value + delta
                 searchbarOffsetHeightPx.value =
-                    newOffset.coerceIn(-2 * searchbarHeightPx - statusBarInset, 0f)
+                    newOffset.coerceIn(-2 * searchbarHeightPx, 0f)
                 return Offset.Zero
             }
         }
@@ -74,40 +92,62 @@ fun HomeScreen(
 
     val state by homeViewModel.homeState.collectAsState()
 
-    Box(
-        Modifier.nestedScroll(nestedScrollConnection)
-    ) {
-        var searchActive by rememberSaveable { mutableStateOf(false) }
-        SearchBar(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset {
-                    IntOffset(
-                        x = 0,
-                        y = if (searchActive) 0 else searchbarOffsetHeightPx.value.roundToInt()
-                    )
-                },
-            searchStr = state.searchStr,
-            setSearchStr = homeViewModel::setSearchStr,
-            searchActive = searchActive,
-            setSearchActive = { searchActive = it },
-            onAboutClick = onAboutClick
-        ) {
-            LaunchedEffect(key1 = searchActive) {
-                if (!searchActive)
-                    searchbarOffsetHeightPx.value = 0f
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Spacer(modifier = Modifier.height(50.dp))
+                NavigationDrawerItem(
+                    label = { Text(text = "New Samples") },
+                    icon = {
+                        Icon(imageVector = Icons.Default.NewReleases, contentDescription = null)
+                    },
+                    selected = false,
+                    onClick = { /*TODO*/ }
+                )
             }
-            SearchScreen(
-                searchRes = state.searchResult,
-                onSearchSampleClick = onSearchSampleClick
-            )
         }
-        ModuleList(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
-            moduleList = moduleList,
-            onModuleClick = onModuleClick,
-            toolbarHeight = 48.dp
-        )
+    ) {
+        Scaffold {
+            Box(
+                Modifier.nestedScroll(nestedScrollConnection)
+            ) {
+                var searchActive by rememberSaveable { mutableStateOf(false) }
+                val scope = rememberCoroutineScope()
+                SearchBar(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .offset {
+                            IntOffset(
+                                x = 0,
+                                y = if (searchActive) 0 else searchbarOffsetHeightPx.value.roundToInt()
+                            )
+                        },
+                    searchStr = state.searchStr,
+                    setSearchStr = homeViewModel::setSearchStr,
+                    searchActive = searchActive,
+                    setSearchActive = { searchActive = it },
+                    onMenuClick = { scope.launch { drawerState.open() } },
+                    onAboutClick = onAboutClick
+                ) {
+                    LaunchedEffect(key1 = searchActive) {
+                        if (!searchActive)
+                            searchbarOffsetHeightPx.value = 0f
+                    }
+                    SearchScreen(
+                        searchRes = state.searchResult,
+                        onSearchSampleClick = onSearchSampleClick
+                    )
+                }
+                ModuleList(
+                    moduleList = moduleList,
+                    onModuleClick = onModuleClick,
+                    toolbarHeight = 48.dp,
+                    modifier = Modifier.padding(it)
+                )
+            }
+        }
     }
 }
 
@@ -120,6 +160,7 @@ private fun SearchBar(
     searchStr: String,
     setSearchStr: (String) -> Unit,
     onAboutClick: () -> Unit,
+    onMenuClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
     SearchBar(
@@ -142,7 +183,9 @@ private fun SearchBar(
                     }
                 )
             else
-                Icon(Icons.Default.Search, contentDescription = null)
+                IconButton(onClick = onMenuClick) {
+                    Icon(Icons.Default.Menu, contentDescription = null)
+                }
         },
         trailingIcon = {
             Box {
@@ -177,7 +220,10 @@ fun ModuleList(
     onModuleClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(top = toolbarHeight, bottom = 56.dp)) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(top = toolbarHeight, bottom = 56.dp)
+    ) {
         item {
             Text(
                 text = "Jetpack Compose Modules",
