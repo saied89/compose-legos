@@ -1,5 +1,6 @@
 package home.saied.composesamples.ui
 
+import android.app.Activity
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -18,6 +19,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import home.saied.composesamples.openUrl
 import home.saied.composesamples.sampleSourceUrl
 import home.saied.composesamples.ui.about.About
+import home.saied.composesamples.ui.newsamples.NewSamplesScreen
+import home.saied.composesamples.ui.newsamples.NewSamplesViewModel
 import home.saied.samples.SampleModule
 
 private const val PRIVACY_POLICY_URL = "https://pages.flycricket.io/compose-legos-0/privacy.html"
@@ -59,6 +62,9 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
                 },
                 onAboutClick = {
                     navController.navigate("about")
+                },
+                onNewSampleClick = {
+                    navController.navigate("new-samples")
                 }
             )
         }
@@ -195,6 +201,12 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
                 },
                 onBackClick = navController::navigateUp
             )
+        }
+
+        composable("new-samples") {
+            val application = (LocalContext.current as Activity).application
+            val newSamplesViewModel = NewSamplesViewModel(application)
+            NewSamplesScreen(newSamplesViewModel.newSamples)
         }
 
         dialog("about") {

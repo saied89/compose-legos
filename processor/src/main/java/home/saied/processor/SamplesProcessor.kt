@@ -124,11 +124,10 @@ class SamplesProcessor(
                 }
             }
         }
-        codeGenerator.createNewFile(
+        codeGenerator.createNewFileByPath(
             Dependencies(false),
-            "",
-            "samples_report",
-            "txt"
+            "assets/samples_report_new",
+            extensionName = "txt"
         ).use {
             it.bufferedWriter().use { writer ->
                 var count = 0

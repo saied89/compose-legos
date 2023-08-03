@@ -70,6 +70,7 @@ fun HomeScreen(
     moduleList: List<SampleModule>,
     onModuleClick: (Int) -> Unit,
     onAboutClick: () -> Unit,
+    onNewSampleClick: () -> Unit,
     onSearchSampleClick: (SampleWithPath) -> Unit
 ) {
     val homeViewModel: HomeViewModel = viewModel(
@@ -104,7 +105,7 @@ fun HomeScreen(
                         Icon(imageVector = Icons.Default.NewReleases, contentDescription = null)
                     },
                     selected = false,
-                    onClick = { /*TODO*/ }
+                    onClick = onNewSampleClick
                 )
             }
         }
