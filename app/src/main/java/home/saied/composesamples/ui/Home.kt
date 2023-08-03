@@ -122,23 +122,18 @@ private fun SearchBar(
     onAboutClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
     SearchBar(
         modifier = modifier,
         query = searchStr,
         onQueryChange = setSearchStr,
         onSearch = { },
         active = searchActive,
-        onActiveChange = {
-            setSearchActive(it)
-            if (!searchActive) focusManager.clearFocus()
-        },
+        onActiveChange = setSearchActive,
         placeholder = { Text("Search Samples") },
         leadingIcon = {
             if (searchActive)
                 IconButton(
                     onClick = {
-                        focusManager.clearFocus()
                         setSearchActive(false)
                         setSearchStr("")
                     },
