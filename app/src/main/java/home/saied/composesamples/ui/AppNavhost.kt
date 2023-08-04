@@ -206,7 +206,25 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
         composable("new-samples") {
             val application = (LocalContext.current as Activity).application
             val newSamplesViewModel = NewSamplesViewModel(application)
-            NewSamplesScreen(newSamplesViewModel.newSamples)
+            NewSamplesScreen(
+                newSamplesViewModel.newModuleSamples,
+                navigateToSample = { sampleName, moduleName ->
+                    val moduleIndex = sampleModules.indexOfFirst { it.name == moduleName }
+                    sampleSearchLoop@ for (sampleFileIndex in sampleModules[moduleIndex].sampleFileList.indices)
+                        for (sampleIndex in sampleModules[moduleIndex].sampleFileList[sampleFileIndex].sampleList.indices) {
+                            val sample =
+                                sampleModules[moduleIndex].sampleFileList[sampleFileIndex].sampleList[sampleIndex]
+                            if (sample.name == sampleName) {
+                                navController.navigate("module/$moduleIndex")
+                                navController.navigate("file/$moduleIndex/$sampleFileIndex")
+                                navController.navigate("sample/$moduleIndex/$sampleFileIndex/$sampleIndex")
+                                break@sampleSearchLoop
+                            }
+                        }
+
+                },
+                onBackPress = navController::navigateUp
+            )
         }
 
         dialog("about") {

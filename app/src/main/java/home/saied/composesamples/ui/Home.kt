@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -26,7 +28,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -97,15 +98,20 @@ fun HomeScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(windowInsets = WindowInsets.systemBars) {
                 Spacer(modifier = Modifier.height(50.dp))
-                NavigationDrawerItem(
-                    label = { Text(text = "New Samples") },
-                    icon = {
+                val scope = rememberCoroutineScope()
+                ListItem(
+                    headlineContent = { Text(text = "New Samples") },
+                    trailingContent = {
                         Icon(imageVector = Icons.Default.NewReleases, contentDescription = null)
                     },
-                    selected = false,
-                    onClick = onNewSampleClick
+                    modifier = Modifier.clickable {
+                        onNewSampleClick()
+                        scope.launch {
+                            drawerState.close()
+                        }
+                    }
                 )
             }
         }

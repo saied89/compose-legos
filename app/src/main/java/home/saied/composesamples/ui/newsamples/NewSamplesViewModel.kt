@@ -5,32 +5,43 @@ import androidx.lifecycle.AndroidViewModel
 
 class NewSamplesViewModel(application: Application) : AndroidViewModel(application) {
 
-    val newSamples: List<NewSample>
+    val newModuleSamples: List<NewModuleSamples>
 
     init {
         val assetsManager = application.assets
         val oldSamples: Set<String> = buildSet {
-            assetsManager.open("samples_report_baseline.txt").bufferedReader().forEachLine { line ->
-                if (line.endsWith( " Processed")) {
-                    val sampleName = line.trim().split(' ').first()
-                    add(sampleName)
+            assetsManager.open("samples_report_baseline.txt")
+                .bufferedReader().forEachLine { line ->
+                    if (line.endsWith(" Processed")) {
+                        val sampleName = line.trim().split(' ').first()
+                        add(sampleName)
+                    }
                 }
-            }
         }
-        newSamples = buildList {
+        newModuleSamples = buildList {
             var moduleName = ""
+            val curSamples = mutableListOf<String>()
             assetsManager.open("samples_report_new.txt").bufferedReader().forEachLine { line ->
                 if (line.endsWith(" Module:")) {
                     val newModuleName = line.trim().split(' ').first()
+                    if (moduleName.isNotEmpty() && curSamples.isNotEmpty()) {
+                        add(NewModuleSamples(moduleName, buildList { addAll(curSamples) }))
+                        curSamples.clear()
+                    }
                     moduleName = newModuleName
-                } else if (line.startsWith("      ")) {
+                } else if (line.endsWith(" Processed")) {
                     val sampleName = line.trim().split(' ').first()
                     if (sampleName !in oldSamples)
-                        add(NewSample(sampleName, moduleName))
+                        curSamples.add(sampleName)
                 }
             }
         }
     }
+
+
 }
 
-data class NewSample(val sampleName: String, val moduleName: String)
+data class NewModuleSamples(
+    val moduleName: String,
+    val samples: List<String>
+)
