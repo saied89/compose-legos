@@ -33,6 +33,7 @@ import home.saied.composesamples.BuildConfig
 @Composable
 fun NewSamplesScreen(
     newSamples: List<NewModuleSamples>,
+    baseLineVersion: String,
     navigateToSample: (sample: String, module: String) -> Unit,
     onBackPress: () -> Unit
 ) {
@@ -92,7 +93,7 @@ fun NewSamplesScreen(
                 },
                 text = {
                     Surface {
-                        Text(text = "List of new Samples added in compose version: ${BuildConfig.composeVersion}")
+                        Text(text = "List of new Samples added since version ${baseLineVersion}")
                     }
                 }
             )

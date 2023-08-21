@@ -208,6 +208,7 @@ fun AppNavHost(sampleModules: List<SampleModule>) {
             val newSamplesViewModel = NewSamplesViewModel(application)
             NewSamplesScreen(
                 newSamplesViewModel.newModuleSamples,
+                baseLineVersion = newSamplesViewModel.baseLineVersion,
                 navigateToSample = { sampleName, moduleName ->
                     val moduleIndex = sampleModules.indexOfFirst { it.name == moduleName }
                     sampleSearchLoop@ for (sampleFileIndex in sampleModules[moduleIndex].sampleFileList.indices)
