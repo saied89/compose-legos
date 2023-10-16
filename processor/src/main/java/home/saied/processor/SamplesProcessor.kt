@@ -126,7 +126,7 @@ class SamplesProcessor(
         }
         codeGenerator.createNewFileByPath(
             Dependencies(false),
-            "assets/samples_report_new",
+            "assets/samples_report",
             extensionName = "txt"
         ).use {
             it.bufferedWriter().use { writer ->
