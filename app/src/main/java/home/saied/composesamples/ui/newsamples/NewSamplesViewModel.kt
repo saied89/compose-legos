@@ -26,7 +26,7 @@ class NewSamplesViewModel(application: Application) : AndroidViewModel(applicati
             newModuleSamples = buildList {
                 var moduleName = ""
                 val curSamples = mutableListOf<String>()
-                assetsManager.open("samples_report_new.txt").bufferedReader().forEachLine { line ->
+                assetsManager.open("samples_report.txt").bufferedReader().forEachLine { line ->
                     if (line.endsWith(" Module:")) {
                         val newModuleName = line.trim().split(' ').first()
                         if (moduleName.isNotEmpty() && curSamples.isNotEmpty()) {
