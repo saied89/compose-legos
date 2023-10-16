@@ -32,7 +32,7 @@ jobs:
           files: |
             app/build/outputs/apk/release/app-release.apk
             app/build/outputs/bundle/release/app-release.aab
-            samples/build/generated/ksp/release/resources/samples_report.txt
+            samples/build/generated/ksp/release/resources/assets/samples_report.txt
             samples/build/generated/ksp/release/resources/skipped_report.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
