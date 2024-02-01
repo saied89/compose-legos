@@ -1,28 +1,28 @@
 [versions]
 androidx-junit = "1.1.5"
-core-ktx = "1.10.1"
-compose = "1.5.0-rc01"
+core-ktx = "1.12.0"
+compose = "1.6.0"
 junit = "4.13.2"
-material = "1.9.0"
-material3 = "1.2.0-alpha02"
-firebase = "32.2.0"
+material = "1.11.0"
+material3 = "1.2.0-alpha12"
+firebase = "32.3.1"
 accompanist = "0.31.5-beta"
 coroutines = "1.7.2"
 espresso-core = "3.5.1"
-agp = "8.2.0-beta06"
-kotlin = "1.9.0"
-ksp = "1.9.0-1.0.13"
-lifecycle = "2.6.1"
-navigation = "2.7.0-rc01"
-paging = "3.2.0"
-compose-compiler = "1.5.1"
-firebaseCrashlyticsPlugin = "2.9.8"
-gmsPlugin = "4.3.15"
+agp = "8.1.4"
+kotlin = "1.9.22"
+ksp = "1.9.22-1.0.17"
+lifecycle = "2.7.0"
+navigation = "2.7.6"
+paging = "3.2.1"
+compose-compiler = "1.5.8"
+firebaseCrashlyticsPlugin = "2.9.9"
+gmsPlugin = "4.4.0"
 
 [libraries]
 android-core = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 android-appCompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
-activity-compose = { module = "androidx.activity:activity-compose", version = "1.7.2" }
+activity-compose = { module = "androidx.activity:activity-compose", version = "1.8.0" }
 ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
 junit = { module = "junit:junit", version.ref = "junit" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
