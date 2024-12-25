@@ -2,6 +2,7 @@
   activity-compose Module:
     BackHandlerSample.kt File:
       BackHandler Processed
+      PredictiveBack Processed
     RememberLauncherForActivityResult.kt File:
       RememberLauncherForActivityResult Processed
     ReportLoadedSamples.kt File:
@@ -63,6 +64,14 @@
       FloatKeyframesBuilderInline Processed
       KeyframesBuilderForPosition Processed
       KeyframesBuilderWithEasing Processed
+      floatAtFractionSample Processed
+      floatAtSample Processed
+    KeyframesWithSplineBuilderSample.kt File:
+      KeyframesBuilderForDpOffsetWithSplines Processed
+      KeyframesBuilderForIntOffsetWithSplines Processed
+      KeyframesBuilderForOffsetWithSplines Processed
+    PathEasingSamples.kt File:
+      PathEasingSample Processed
     SuspendAnimationSamples.kt File:
       animateToOnAnimationState Processed
       suspendAnimateFloatVariant Processed
@@ -72,15 +81,33 @@
       DoubleTapToLikeSample Processed
       GestureAnimationSample Processed
       InitialStateSample Processed
+      SeekingAnimationSample Processed
       TransitionStateIsIdleSample Processed
   animation-graphics Module:
     AnimatedVectorSample.kt File:
       AnimatedVectorSample Processed
   foundation Module:
+    AndroidExternalSurfaceSamples.kt File:
+      AndroidEmbeddedExternalSurfaceColors Processed
+      AndroidExternalSurfaceColors Processed
     BasicMarqueeSamples.kt File:
       BasicFocusableMarqueeSample Processed
       BasicMarqueeSample Processed
       BasicMarqueeWithFadedEdgesSample Processed
+    BasicTextField2Samples.kt File:
+      BasicTextField2ChangeIterationSample Processed
+      BasicTextField2ChangeReverseIterationSample Processed
+      BasicTextField2CustomInputTransformationSample Processed
+      BasicTextField2DecoratorSample Processed
+      BasicTextField2ForEachTextValueSample Processed
+      BasicTextField2InputTransformationByValueChooseSample Processed
+      BasicTextField2InputTransformationByValueReplaceSample Processed
+      BasicTextField2InputTransformationChainingSample Processed
+      BasicTextField2StateCompleteSample Processed
+      BasicTextField2StateEditSample Processed
+      BasicTextField2TextDerivedStateSample Processed
+      BasicTextField2TextValuesSample Processed
+      BasicTextField2UndoSample Processed
     BasicTextFieldSamples.kt File:
       BasicTextFieldSample Processed
       BasicTextFieldWithStringSample Processed
@@ -105,6 +132,10 @@
       LongClickableText Processed
     DarkThemeSample.kt File:
       DarkThemeSample Processed
+    DragAndDropSamples.kt File:
+      DragAndDropSourceWithColoredDragShadowSample Processed
+      TextDragAndDropSourceSample Processed
+      TextDragAndDropTargetSample Processed
     DragGestureDetectorSamples.kt File:
       AwaitDragOrCancellationSample Processed
       AwaitHorizontalDragOrCancellationSample Processed
@@ -116,6 +147,8 @@
       DragSample Processed
       HorizontalDragSample Processed
       VerticalDragSample Processed
+    Draggable2DSamples.kt File:
+      Draggable2DSample Processed
     DraggableSamples.kt File:
       DraggableSample Processed
     DrawBackgroundSamples.kt File:
@@ -173,10 +206,12 @@
       CustomPageSizeSample Processed
       HorizontalPagerWithScrollableContent Processed
       ObservingStateChangesInPagerStateSample Processed
+      PagerCustomAnimateScrollToPage Processed
       PagerWithStateSample Processed
       ScrollToPageSample Processed
       SimpleHorizontalPagerSample Processed
       SimpleVerticalPagerSample Processed
+      UsingPagerLayoutInfoForSideEffectSample Processed
     ProgressSemanticsSamples.kt File:
       DeterminateProgressSemanticsSample Processed
       IndeterminateProgressSemanticsSample Processed
@@ -424,15 +459,17 @@
   material-icons Module:
     IconSamples.kt File:
       AppIcons Processed
+      AutoMirroredIcon Processed
       DrawIcon Processed
   material3 Module:
     AlertDialogSamples.kt File:
       AlertDialogSample Processed
-      AlertDialogWithCustomContentSample Processed
       AlertDialogWithIconSample Processed
+      BasicAlertDialogSample Processed
     AppBarSamples.kt File:
       BottomAppBarWithFAB Processed
       EnterAlwaysTopAppBar Processed
+      ExitAlwaysBottomAppBar Processed
       ExitUntilCollapsedLargeTopAppBar Processed
       ExitUntilCollapsedMediumTopAppBar Processed
       PinnedTopAppBar Processed
@@ -505,7 +542,8 @@
       OutlinedIconToggleButtonSample Processed
     ListSamples.kt File:
       OneLineListItem Processed
-      ThreeLineListItem Processed
+      ThreeLineListItemWithExtendedSupporting Processed
+      ThreeLineListItemWithOverlineAndSupporting Processed
       TwoLineListItem Processed
     MenuSamples.kt File:
       MenuSample Processed
@@ -519,6 +557,10 @@
       IndeterminateCircularProgressIndicatorSample Processed
       IndeterminateLinearProgressIndicatorSample Processed
       LinearProgressIndicatorSample Processed
+    PullToRefreshSamples.kt File:
+      PullToRefreshLinearProgressIndicatorSample Processed
+      PullToRefreshSample Processed
+      PullToRefreshSampleCustomState Processed
     RadioButtonSamples.kt File:
       RadioButtonSample Processed
       RadioGroupSample Processed
@@ -532,6 +574,9 @@
     SearchBarSamples.kt File:
       DockedSearchBarSample Processed
       SearchBarSample Processed
+    SegmentedButtonSamples.kt File:
+      SegmentedButtonMultiSelectSample Processed
+      SegmentedButtonSingleSelectSample Processed
     SliderSamples.kt File:
       RangeSliderSample Processed
       RangeSliderWithCustomComponents Processed
@@ -557,6 +602,8 @@
       FancyIndicatorTabs Processed
       FancyTab Processed
       FancyTabs Processed
+      PrimaryTextTabs Processed
+      SecondaryTextTabs Processed
       TextTabs Processed
     TextFieldSamples.kt File:
       CustomOutlinedTextFieldBasedOnDecorationBox Processed
@@ -593,8 +640,6 @@
     PagingPreviewSample.kt File:
       PagingPreview Processed
     PagingSample.kt File:
-      ItemsDemo Processed
-      ItemsIndexedDemo Processed
       PagingBackendSample Processed
   runtime Module:
     CompositionLocalSamples.kt File:
@@ -710,10 +755,13 @@
       CustomFocusExitSample Processed
       CustomFocusOrderSample Processed
       FocusPropertiesSample Processed
+      FocusRestorerCustomFallbackSample Processed
+      FocusRestorerSample Processed
       FocusableSample Processed
       FocusableSampleUsingLowerLevelFocusTarget Processed
       MoveFocusSample Processed
       RequestFocusSample Processed
+      RestoreFocusSample Processed
     InspectableModifierSample.kt File:
       InspectableModifierSample Processed
     InspectorInfoInComposedModifierSamples.kt File:
@@ -731,7 +779,7 @@
       LayoutUsage Processed
       LayoutWithMultipleContentsUsage Processed
       LayoutWithProvidedIntrinsicsUsage Processed
-    LookaheadLayoutSample.kt File:
+    LookaheadScopeSample.kt File:
       IntermediateLayoutSample Processed
       LookaheadLayoutCoordinatesSample Processed
       animateContentSizeAfterLookaheadPass Processed
@@ -778,6 +826,8 @@
       PainterResourceSample Processed
     PlacementScopeCoordinatesSample.kt File:
       PlacementScopeCoordinatesSample Processed
+    PlatformTextInputModifierNodeSample.kt File:
+      platformTextInputModifierNodeSample Processed
     PointerIconSample.kt File:
       PointerIconSample Processed
     PointerInputModifierSamples.kt File:
@@ -796,7 +846,13 @@
       SoftwareKeyboardControllerSample Processed
     SubcomposeLayoutSample.kt File:
       SubcomposeLayoutSample Processed
-      SubcomposeLayoutWithIntermediateMeasurePolicySample Processed
+    TraverseModifierDemo.kt File:
+      traverseAncestorsDemo Processed
+      traverseAncestorsWithKeyDemo Processed
+      traverseChildrenDemo Processed
+      traverseChildrenWithKeyDemo Processed
+      traverseDescendantsDemo Processed
+      traverseDescendantsWithKeyDemo Processed
     ZIndexModifierSample.kt File:
       ZIndexModifierSample Processed
   ui-graphics Module:
@@ -816,6 +872,7 @@
       DrawScopeBatchedTransformSample Processed
       DrawScopeOvalBrushSample Processed
       DrawScopeOvalColorSample Processed
+      DrawScopeRetargetingSample Processed
       DrawScopeSample Processed
     ImageBitmapSample.kt File:
       ImageBitmapReadPixelsSample Processed
@@ -886,4 +943,4 @@
       ToPxSample Processed
 
 
-661 Samples Processed
+708 Samples Processed

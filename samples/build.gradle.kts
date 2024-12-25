@@ -1,13 +1,14 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization.plugin)
     id ("kotlin-parcelize")
     alias(libs.plugins.ksp)
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -24,6 +25,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        kotlinOptions.freeCompilerArgs += "-Xcontext-receivers"
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -31,14 +33,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-//    packagingOptions {
-//        resources {
-//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-//        }
-//    }
     namespace = "home.saied.samples"
     kotlin {
         this@android.sourceSets {

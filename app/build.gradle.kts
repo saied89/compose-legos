@@ -1,16 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.gms)
     alias(libs.plugins.firebase.crashlytics)
 }
 
-val compose_version: String by project
-val material3_version: String by project
-
 android {
     namespace = "home.saied.composesamples"
-    compileSdk = 34
+    compileSdk = 35
 
     signingConfigs {
         create("release") {
@@ -30,9 +28,9 @@ android {
     defaultConfig {
         applicationId = "home.saied.composesamples"
         minSdk = 21
-        targetSdk = 34
-        versionCode = 17
-        versionName = "0.3.4"
+        targetSdk = 35
+        versionCode = 18
+        versionName = "0.3.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -41,7 +39,7 @@ android {
         buildConfigField(
             "String",
             "composeVersion",
-            "\"${libs.versions.compose.asProvider().get()}\""
+            "\"${libs.versions.compose.get()}\""
         )
         buildConfigField(
             "String",
@@ -74,9 +72,6 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
         resources {

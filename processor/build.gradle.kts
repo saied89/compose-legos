@@ -1,5 +1,3 @@
-val kspVersion: String by project
-
 plugins {
     kotlin("jvm")
 }

@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("java-library")
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.intellij") version "1.15.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.jetbrains.intellij)
 }
 
 repositories {
@@ -22,7 +24,7 @@ tasks {
         targetCompatibility = "17"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
     patchPluginXml {
@@ -39,4 +41,8 @@ tasks {
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
